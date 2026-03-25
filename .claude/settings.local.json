@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add:*)",
+      "Bash(mkdir -p /c/Users/wooriPC-008/.claude/commands)",
+      "Bash(cp /c/Users/wooriPC-008/Desktop/김결휘store/gyeolhwi_claude_setup/commands/git/commit-auto.md /c/Users/wooriPC-008/.claude/commands/)",
+      "Bash(cp /c/Users/wooriPC-008/Desktop/김결휘store/gyeolhwi_claude_setup/commands/obsidian/obsidian-*.md /c/Users/wooriPC-008/.claude/commands/)",
+      "Bash(cp /c/Users/wooriPC-008/Desktop/김결휘store/gyeolhwi_claude_setup/commands/project/project-docs.md /c/Users/wooriPC-008/Desktop/김결휘store/gyeolhwi_claude_setup/commands/project/project-docs-gen.md /c/Users/wooriPC-008/Desktop/김결휘store/gyeolhwi_claude_setup/commands/project/project-workflow.md /c/Users/wooriPC-008/.claude/commands/)",
+      "Bash(mkdir -p /c/Users/wooriPC-008/.claude/skills/omc-learned)",
+      "Bash(cp -r /c/Users/wooriPC-008/Desktop/김결휘store/gyeolhwi_claude_setup/skills/omc-learned/project-docs-gen/ /c/Users/wooriPC-008/.claude/skills/omc-learned/)",
+      "Bash(cp /c/Users/wooriPC-008/Desktop/김결휘store/gyeolhwi_claude_setup/commands/project/project-docs-gen.md /c/Users/wooriPC-008/.claude/commands/project-docs-gen.md)",
+      "Bash(cp /c/Users/wooriPC-008/Desktop/김결휘store/gyeolhwi_claude_setup/commands/project/project-workflow.md /c/Users/wooriPC-008/.claude/commands/project-workflow.md)",
+      "Bash(cp -r /c/Users/wooriPC-008/Desktop/김결휘store/gyeolhwi_claude_setup/skills/omc-learned/project-docs-gen/ /c/Users/wooriPC-008/.claude/skills/omc-learned/project-docs-gen/)"
+    ]
+  }
+}
