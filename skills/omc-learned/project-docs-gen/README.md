@@ -1,6 +1,6 @@
 # project-docs-gen 스킬 템플릿
 
-`project-docs-gen` 커맨드가 문서를 생성할 때 사용하는 10종 템플릿 모음입니다.
+`/project-docs-gen` 커맨드가 문서를 생성할 때 사용하는 10종 템플릿 모음입니다.
 
 ## 템플릿 목록
 
@@ -11,7 +11,7 @@
 | `03-roles.md` | 역할/권한 매트릭스 | requirements |
 | `04-sitemap.md` | 정보구조도 | requirements, roles |
 | `05-features.md` | 기능명세서 | requirements, sitemap |
-| `06-erd.md` | ERD 설계서 | features |
+| `06-erd.md` | ERD 설계서 | features, roles |
 | `07-api.md` | API 명세서 | features, erd |
 | `08-flowchart.md` | 플로우차트 | features, sitemap |
 | `09-wireframe.md` | 와이어프레임 설계서 | sitemap, features |
@@ -19,17 +19,9 @@
 
 ## ID 체계
 
-문서 간 일관성을 유지하기 위해 아래 ID 체계를 사용합니다.
+`project-docs-gen` 커맨드의 ID 체계 규칙을 따릅니다. 상세는 `~/.claude/commands/project-docs-gen.md` 참조.
 
-| 접두사 | 대상 | 예시 |
-|--------|------|------|
-| `REQ-` | 요구사항 | `REQ-AUTH-001` |
-| `FEAT-` | 기능 | `FEAT-AUTH-001` |
-| `SCR-` | 화면 | `SCR-AUTH-001` |
-| `API-` | API | `API-POST-001` |
-| `TC-` | 테스트 케이스 | `TC-AUTH-001` |
-| `FLOW-` | 플로우 | `FLOW-AUTH-001` |
-| `EDGE-` | 엣지 케이스 | `EDGE-001` |
+접두사: `REQ-`, `FEAT-`, `SCR-`, `API-`, `TC-`, `FLOW-`, `EDGE-`
 
 ## 설치
 

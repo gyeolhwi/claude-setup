@@ -1,6 +1,6 @@
 ---
 name: project-docs-gen
-description: "프로젝트 개발 문서를 일관된 템플릿으로 자동 생성하는 스킬. 요구사항정의서, 기능명세서, 정보구조도, 플로우차트, 와이어프레임 설계서, ERD 설계서, API 명세서, 시나리오 케이스, 기술 스택 결정서, 역할/권한 매트릭스 총 10종의 문서를 커맨드로 생성한다. **초안이나 기획서, 요구사항 내용을 붙여넣으면 자동으로 컨텍스트로 인식하여 문서를 생성한다.** '개발 문서 만들어줘', '프로젝트 문서 생성', '/docs-gen', '요구사항정의서 작성해줘', '기능명세서 만들어줘', 'ERD 작성', 'API 명세서', '시나리오 케이스', '이 내용으로 문서 작성해줘', '기획서 보고 문서 만들어줘' 등의 요청에 트리거된다. project-docs 스킬과 독립적으로 동작하며, 생성된 문서는 docs/inbox/에 저장된다."
+description: "프로젝트 개발 문서를 일관된 템플릿으로 자동 생성하는 스킬. 요구사항정의서, 기능명세서, 정보구조도, 플로우차트, 와이어프레임 설계서, ERD 설계서, API 명세서, 시나리오 케이스, 기술 스택 결정서, 역할/권한 매트릭스 총 10종의 문서를 커맨드로 생성한다. **초안이나 기획서, 요구사항 내용을 붙여넣으면 자동으로 컨텍스트로 인식하여 문서를 생성한다.** '개발 문서 만들어줘', '프로젝트 문서 생성', '요구사항정의서 작성해줘', '기능명세서 만들어줘', 'ERD 작성', 'API 명세서', '시나리오 케이스', '이 내용으로 문서 작성해줘', '기획서 보고 문서 만들어줘' 등의 요청에 트리거된다. project-docs 스킬과 독립적으로 동작하며, 생성된 문서는 docs/99_inbox/에 저장된다."
 ---
 
 # Project Docs Generator
@@ -12,11 +12,11 @@ description: "프로젝트 개발 문서를 일관된 템플릿으로 자동 생
 
 ## 출력 경로
 
-- `docs/` 폴더가 존재하면 → `docs/inbox/` 에 저장 (폴더 없으면 자동 생성)
-- `docs/` 폴더가 없으면 → 현재 디렉토리의 `./specs/` 폴더에 저장
+항상 `docs/99_inbox/`에 저장한다. 폴더가 없으면 자동 생성한다.
 
 생성 완료 후 안내:
-> "이제 `/project-docs`로 docs/ 폴더를 생성하고, `/classify`로 문서를 자동 분류할 수 있습니다."
+> "분류해줘"로 문서를 `01_specs/` 등으로 분류할 수 있습니다.
+> `docs/` 전체 구조가 아직 없다면 `/project-docs`로 먼저 생성하세요.
 
 ## 초안/기획서 수신 시 동작
 
@@ -33,9 +33,18 @@ description: "프로젝트 개발 문서를 일관된 템플릿으로 자동 생
 
 ## 문서 생성 흐름
 
-### 전체 생성: `/docs-gen`
+### 전체 생성
 
-모든 문서를 순서대로 생성한다. 순서가 중요하다 — 앞 문서가 뒤 문서의 입력이 된다.
+생성할 범위를 사용자에게 먼저 확인한다:
+
+```
+생성할 문서 범위를 선택하세요:
+- 전체 (10종)
+- 핵심 (4종: requirements.md, features.md, erd.md, api.md) ← 1인 개발 추천
+- 개별 선택
+```
+
+순서가 중요하다 — 앞 문서가 뒤 문서의 입력이 된다.
 
 ```
 생성 순서 (의존 관계):
@@ -55,25 +64,25 @@ description: "프로젝트 개발 문서를 일관된 템플릿으로 자동 생
 
 | 커맨드 | 문서 | 저장 파일명 |
 |--------|------|-------------|
-| `/docs-gen requirements` | 요구사항정의서 | `requirements.md` |
-| `/docs-gen tech-stack` | 기술 스택 결정서 | `tech-stack.md` |
-| `/docs-gen roles` | 역할/권한 매트릭스 | `roles.md` |
-| `/docs-gen sitemap` | 정보구조도 | `sitemap.md` |
-| `/docs-gen features` | 기능명세서 | `features.md` |
-| `/docs-gen erd` | ERD 설계서 | `erd.md` |
-| `/docs-gen api` | API 명세서 | `api.md` |
-| `/docs-gen flowchart` | 플로우차트 | `flowchart.md` |
-| `/docs-gen wireframe` | 와이어프레임 설계서 | `wireframe.md` |
-| `/docs-gen scenarios` | 시나리오 케이스 | `scenarios.md` |
+| `/project-docs-gen requirements` | 요구사항정의서 | `requirements.md` |
+| `/project-docs-gen tech-stack` | 기술 스택 결정서 | `tech-stack.md` |
+| `/project-docs-gen roles` | 역할/권한 매트릭스 | `roles.md` |
+| `/project-docs-gen sitemap` | 정보구조도 | `sitemap.md` |
+| `/project-docs-gen features` | 기능명세서 | `features.md` |
+| `/project-docs-gen erd` | ERD 설계서 | `erd.md` |
+| `/project-docs-gen api` | API 명세서 | `api.md` |
+| `/project-docs-gen flowchart` | 플로우차트 | `flowchart.md` |
+| `/project-docs-gen wireframe` | 와이어프레임 설계서 | `wireframe.md` |
+| `/project-docs-gen scenarios` | 시나리오 케이스 | `scenarios.md` |
 
-자연어로도 동작한다: "요구사항정의서 작성해줘" = `/docs-gen requirements`
+자연어로도 동작한다: "요구사항정의서 작성해줘" = `/project-docs-gen requirements`
 
 ## 실행 규칙
 
 ### 문서 생성 전
 
-1. 출력 경로를 결정한다 (`docs/inbox/` 또는 `./specs/`)
-2. `docs/INDEX.md`가 있으면 읽어서 프로젝트 컨텍스트를 보완한다
+1. `docs/99_inbox/` 폴더가 없으면 생성한다
+2. `docs/INDEX.md`가 있으면 읽어서 프로젝트 컨텍스트를 보완한다 (없으면 스킵)
 3. 해당 문서의 의존 문서가 출력 경로에 이미 존재하는지 확인한다
 4. 의존 문서가 있으면 읽어서 참조한다
 5. 의존 문서가 없으면 사용자 컨텍스트로 직접 작성한다
@@ -101,6 +110,8 @@ description: "프로젝트 개발 문서를 일관된 템플릿으로 자동 생
 - API: `API-{메서드}-{번호}` (예: `API-POST-001`)
 - 시나리오: `TC-{카테고리}-{번호}` (예: `TC-AUTH-001`)
 - 화면: `SCR-{카테고리}-{번호}` (예: `SCR-AUTH-001`)
+- 플로우: `FLOW-{카테고리}-{번호}` (예: `FLOW-AUTH-001`)
+- 엣지 케이스: `EDGE-{번호}` (예: `EDGE-001`)
 
 카테고리는 요구사항정의서에서 정의된 것을 모든 문서에서 동일하게 사용한다.
 
@@ -122,15 +133,6 @@ description: "프로젝트 개발 문서를 일관된 템플릿으로 자동 생
 | `08-flowchart.md` | 플로우차트 |
 | `09-wireframe.md` | 와이어프레임 설계서 |
 | `10-scenarios.md` | 시나리오 케이스 |
-
-### 템플릿 커스터마이징
-
-사용자가 `/docs-gen config` 커맨드를 실행하면 템플릿을 수정할 수 있다:
-
-1. 수정할 문서를 선택
-2. 현재 템플릿을 보여줌
-3. 사용자가 섹션 추가/삭제/수정 요청
-4. 수정된 템플릿으로 이후 문서 생성
 
 ## 공통 문서 헤더
 
