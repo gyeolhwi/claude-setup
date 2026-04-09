@@ -11,8 +11,11 @@ cp commands/obsidian/obsidian-*.md ~/.claude/commands/
 cp commands/project/project-docs.md commands/project/project-docs-gen.md commands/project/project-workflow.md ~/.claude/commands/
 
 # 스킬 설치
+cp -r skills/create-pr/ ~/.claude/skills/
 cp -r skills/omc-learned/project-docs-gen/ ~/.claude/skills/omc-learned/
 ```
+
+> **Obsidian 커맨드 참고:** 각 파일의 `{{OBSIDIAN_VAULT_PATH}}`를 자신의 볼트 경로로 치환하세요. 치환하지 않으면 첫 실행 시 Claude가 경로를 물어봅니다.
 
 ---
 
@@ -71,6 +74,10 @@ cp -r skills/omc-learned/project-docs-gen/ ~/.claude/skills/omc-learned/
 
 ## 스킬
 
+### [create-pr](./skills/create-pr/SKILL.md)
+
+PR 생성 스킬. 변경사항 분석, 커밋 히스토리 요약, 한국어 PR 작성을 자동 수행합니다.
+
 ### [project-docs-gen](./skills/omc-learned/project-docs-gen/README.md)
 
 `/project-docs-gen` 커맨드가 사용하는 문서 템플릿 10종입니다.
@@ -112,6 +119,8 @@ claude-code-kit/
 │       ├── project-docs-gen.md
 │       └── project-workflow.md
 └── skills/
+    ├── create-pr/
+    │   └── SKILL.md
     └── omc-learned/
         └── project-docs-gen/
             ├── README.md
