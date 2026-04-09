@@ -4,18 +4,19 @@ Claude Code에서 사용하는 커스텀 커맨드 & 스킬 모음입니다.
 
 ## 설치
 
-```bash
-# 커맨드 설치
-cp commands/git/commit-auto.md ~/.claude/commands/
-cp commands/obsidian/obsidian-*.md ~/.claude/commands/
-cp commands/project/project-docs.md commands/project/project-docs-gen.md commands/project/project-workflow.md ~/.claude/commands/
+아래 파일들을 `~/.claude/` 하위에 복사합니다. (디렉토리가 없으면 생성)
 
-# 스킬 설치
-cp -r skills/create-pr/ ~/.claude/skills/
-cp -r skills/omc-learned/project-docs-gen/ ~/.claude/skills/omc-learned/
-```
+| 원본 | 복사 위치 | 비고 |
+|------|----------|------|
+| `commands/git/commit-auto.md` | `~/.claude/commands/` | |
+| `commands/obsidian/obsidian-*.md` | `~/.claude/commands/` | Obsidian 사용자만 |
+| `commands/project/project-docs.md` | `~/.claude/commands/` | |
+| `commands/project/project-docs-gen.md` | `~/.claude/commands/` | |
+| `commands/project/project-workflow.md` | `~/.claude/commands/` | |
+| `skills/create-pr/` | `~/.claude/skills/create-pr/` | 폴더째 복사 |
+| `skills/omc-learned/project-docs-gen/` | `~/.claude/skills/omc-learned/project-docs-gen/` | 폴더째 복사 |
 
-> **Obsidian 커맨드 참고:** 각 파일의 `{{OBSIDIAN_VAULT_PATH}}`를 자신의 볼트 경로로 치환하세요. 치환하지 않으면 첫 실행 시 Claude가 경로를 물어봅니다.
+> **Obsidian 사용자:** 설치 후 `/obsidian-init`을 실행하면 볼트 경로 설정, 카테고리 확인, 폴더/인덱스 생성까지 한 번에 처리됩니다.
 
 ---
 
