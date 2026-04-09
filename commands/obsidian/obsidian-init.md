@@ -58,13 +58,10 @@ updated: YYYY-MM-DD
 
 ```
 
-### 5. 템플릿 동기화
+### 5. 기본 템플릿 생성
 
-`/obsidian-categories.md`의 **문서 템플릿** 섹션과 `~/.claude/commands/templates/` 폴더를 비교한다.
-
-- 카테고리에 매핑된 템플릿이 없으면 → 기본 구조로 새로 생성
-- 카테고리가 삭제되어 더 이상 참조되지 않는 템플릿 → 사용자에게 삭제 여부 확인
-- 이미 존재하는 템플릿 → 건너뛴다 (사용자 수정 보존)
+`~/.claude/commands/templates/` 폴더에 기본 문서 템플릿을 생성한다.
+레포의 `commands/obsidian/templates/` 파일들을 복사한다.
 
 ### 6. 커맨드 파일 경로 치환
 
