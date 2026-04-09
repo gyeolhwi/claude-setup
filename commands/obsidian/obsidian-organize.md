@@ -1,7 +1,6 @@
 # /obsidian-organize — 전체 정리 (format → move → index)
 
 00_Sandbox 및 Clippings의 모든 문서를 **한 번에** 형식화하고 분류 이동합니다.
-`/obsidian-format` → `/obsidian-move` → `/obsidian-index` 순서로 실행하는 마스터 커맨드입니다.
 
 **볼트:** `{{OBSIDIAN_VAULT_PATH}}`
 
@@ -13,6 +12,38 @@
 ---
 
 ## 실행 순서
+
+### Phase 0 — 구조 동기화
+
+`/obsidian-categories.md`의 **폴더 구조**와 실제 볼트 폴더를 비교한다.
+
+**자동 처리 (사용자에게 묻지 않음):**
+- 볼트에 새 폴더가 있는데 categories.md에 없음 → categories.md에 자동 추가 (폴더명 기반으로 분류 기준, 인덱스 매핑, 템플릿 매핑 추론)
+- categories.md에 있는 폴더가 볼트에 없음 → categories.md에서 자동 제거
+- 새로 추가된 폴더에 인덱스 파일이 없음 → 자동 생성
+
+### Phase 0.5 — 새 카테고리 제안
+
+`00_Sandbox/*.md`, `Clippings/*.md`, 볼트 루트 단독 `.md` 파일을 읽는다.
+
+기존 카테고리에 맞지 않는 파일이 있으면, 유사한 파일끼리 묶어서 한 번에 질문한다:
+
+```
+다음 파일들이 기존 카테고리에 맞지 않습니다:
+- 피아노연습.md, 기타코드.md → "Music" 카테고리 생성?
+- 여행계획.md → "Travel" 카테고리 생성?
+
+각 항목에 대해: [새 카테고리 생성] / [기존 카테고리에 이동]
+```
+
+**새 카테고리 생성 시:**
+- 볼트에 번호 접두사 폴더 생성 (기존 번호 체계에 맞춰 자동 채번)
+- 인덱스 파일 생성
+- `/obsidian-categories.md` 자동 업데이트 (폴더 구조, 분류 기준, 인덱스 매핑, 부모 인덱스 링크)
+- `~/.claude/commands/templates/`에 기본 템플릿 매핑 (기존 TPL 중 가장 적합한 것 선택)
+
+**기존 카테고리에 이동 시:**
+- 사용자에게 어느 카테고리로 이동할지 물어본 후 해당 카테고리로 분류
 
 ### Phase 1 — Format (형식 정규화)
 `/obsidian-format` 명령 전체 내용을 따른다.
@@ -42,6 +73,8 @@
 ## 최종 출력
 
 ```
+✅ Phase 0 완료: 구조 동기화 (추가 N개, 제거 N개)
+✅ Phase 0.5 완료: 새 카테고리 N개 생성
 ✅ Phase 1 완료: N개 파일 형식화
 ✅ Phase 2 완료: N개 파일 이동, wikilink N건 업데이트
 ✅ Phase 3 완료: N개 인덱스 파일 업데이트
