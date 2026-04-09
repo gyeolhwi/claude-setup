@@ -5,7 +5,9 @@ Obsidian 문서의 YAML frontmatter를 정규화하고 description 필드를 추
 - 인수 없음: `00_Sandbox/*.md` 전체 처리
 - 인수 있음: 해당 파일 또는 폴더 경로 처리 (예: `Dev/Backend/MySQL.md`)
 
-**볼트:** `/Users/gimgyeolhwi/Library/Mobile Documents/iCloud~md~obsidian/Documents/Document`
+**볼트:** `{{OBSIDIAN_VAULT_PATH}}`
+
+> 경로가 `{{OBSIDIAN_VAULT_PATH}}`이면 사용자에게 볼트 경로를 물어본 후 진행한다. 실제 경로가 입력되어 있으면 그대로 사용한다.
 
 ---
 

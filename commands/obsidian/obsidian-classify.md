@@ -2,7 +2,9 @@
 Obsidian 볼트의 00_Sandbox 파일들을 분석해 분류 계획을 출력합니다. **파일을 수정하거나 이동하지 않습니다.**
 
 ## 볼트 경로
-`/Users/gimgyeolhwi/Library/Mobile Documents/iCloud~md~obsidian/Documents/Document`
+`{{OBSIDIAN_VAULT_PATH}}`
+
+> 경로가 `{{OBSIDIAN_VAULT_PATH}}`이면 사용자에게 볼트 경로를 물어본 후 진행한다. 실제 경로가 입력되어 있으면 그대로 사용한다.
 
 ## 작업 순서
 

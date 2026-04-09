@@ -3,7 +3,9 @@
 00_Sandbox 및 Clippings 파일들을 내용 기반으로 분류하여 올바른 폴더로 이동한다.
 **파일 목록이 하드코딩되어 있지 않으므로 새 파일이 추가돼도 그대로 실행하면 된다.**
 
-**볼트:** `/Users/gimgyeolhwi/Library/Mobile Documents/iCloud~md~obsidian/Documents/Document`
+**볼트:** `{{OBSIDIAN_VAULT_PATH}}`
+
+> 경로가 `{{OBSIDIAN_VAULT_PATH}}`이면 사용자에게 볼트 경로를 물어본 후 진행한다. 실제 경로가 입력되어 있으면 그대로 사용한다.
 
 ---
 
@@ -107,7 +109,7 @@ Step 2-4에서 기록한 `rename_map`을 사용해 볼트 전체 `.md` 파일에
 import re
 from pathlib import Path
 
-vault = Path("/Users/gimgyeolhwi/Library/Mobile Documents/iCloud~md~obsidian/Documents/Document")
+vault = Path("{{OBSIDIAN_VAULT_PATH}}")  # 실제 볼트 경로로 치환
 
 # rename_map은 Step 2-4에서 수집한 딕셔너리
 for md_file in vault.rglob("*.md"):

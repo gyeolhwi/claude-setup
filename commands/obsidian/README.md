@@ -1,6 +1,6 @@
 # Obsidian 볼트 관리 커맨드
 
-> 볼트 경로: `~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Document`
+> 볼트 경로: 각 커맨드 파일의 `{{OBSIDIAN_VAULT_PATH}}`를 자신의 볼트 경로로 치환하여 사용
 
 ## 커맨드 목록
 

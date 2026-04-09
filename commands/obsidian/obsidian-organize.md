@@ -3,7 +3,9 @@
 00_Sandbox 및 Clippings의 모든 문서를 **한 번에** 형식화하고 분류 이동합니다.
 `/obsidian-format` → `/obsidian-move` → `/obsidian-index` 순서로 실행하는 마스터 커맨드입니다.
 
-**볼트:** `/Users/gimgyeolhwi/Library/Mobile Documents/iCloud~md~obsidian/Documents/Document`
+**볼트:** `{{OBSIDIAN_VAULT_PATH}}`
+
+> 경로가 `{{OBSIDIAN_VAULT_PATH}}`이면 사용자에게 볼트 경로를 물어본 후 진행한다. 실제 경로가 입력되어 있으면 그대로 사용한다.
 
 ---
 

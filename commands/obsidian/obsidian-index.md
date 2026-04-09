@@ -5,7 +5,9 @@
 - 인수 없음: 볼트 전체 폴더의 인덱스 파일을 검사하여 누락된 문서 모두 추가
 - 인수 있음: 해당 폴더만 처리 (예: `10_Dev/Backend`)
 
-**볼트:** `/Users/gimgyeolhwi/Library/Mobile Documents/iCloud~md~obsidian/Documents/Document`
+**볼트:** `{{OBSIDIAN_VAULT_PATH}}`
+
+> 경로가 `{{OBSIDIAN_VAULT_PATH}}`이면 사용자에게 볼트 경로를 물어본 후 진행한다. 실제 경로가 입력되어 있으면 그대로 사용한다.
 
 ---
 
