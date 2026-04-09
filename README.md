@@ -31,11 +31,13 @@ cp -r skills/omc-learned/project-docs-gen/ ~/.claude/skills/omc-learned/
 
 | 커맨드 | 설명 |
 |--------|------|
-| `/obsidian-classify` | 분류 계획 출력 (읽기 전용) |
+| `/obsidian-init` | 초기 세팅 (볼트 경로, 카테고리, 폴더/인덱스 생성) |
+| `/obsidian-preview` | 분류/변환 미리보기 (읽기 전용) |
 | `/obsidian-format [경로]` | YAML frontmatter 정규화 |
 | `/obsidian-move` | 내용 기반 파일 분류 이동 |
 | `/obsidian-index [폴더]` | 인덱스 파일 갱신 |
 | `/obsidian-organize` | format → move → index 순서로 전체 정리 |
+| `/obsidian-categories` | 카테고리 설정 (다른 커맨드가 참조) |
 
 ### [Project](./commands/project/README.md)
 
@@ -108,11 +110,13 @@ claude-code-kit/
 │   │   └── commit-auto.md
 │   ├── obsidian/
 │   │   ├── README.md
-│   │   ├── obsidian-classify.md
+│   │   ├── obsidian-categories.md
 │   │   ├── obsidian-format.md
 │   │   ├── obsidian-index.md
+│   │   ├── obsidian-init.md
 │   │   ├── obsidian-move.md
-│   │   └── obsidian-organize.md
+│   │   ├── obsidian-organize.md
+│   │   └── obsidian-preview.md
 │   └── project/
 │       ├── README.md
 │       ├── project-docs.md

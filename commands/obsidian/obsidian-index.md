@@ -9,26 +9,14 @@
 
 > 경로가 `{{OBSIDIAN_VAULT_PATH}}`이면 사용자에게 볼트 경로를 물어본 후 진행한다. 실제 경로가 입력되어 있으면 그대로 사용한다.
 
+## 카테고리 설정
+`/obsidian-categories.md` 파일의 **인덱스 파일 매핑** 섹션을 참조한다.
+
 ---
 
 ## 인덱스 파일 위치
 
-| 폴더 | 인덱스 파일명 |
-|------|------------|
-| `10_Dev/` | `💻 개발 인덱스.md` |
-| `10_Dev/Backend/` | `⚙️ Backend 인덱스.md` |
-| `10_Dev/Frontend/` | `⚛️ Frontend 인덱스.md` |
-| `10_Dev/Server/` | `🖥️ Server 인덱스.md` |
-| `10_Dev/DevOps/` | `DevOps 인덱스.md` |
-| `10_Dev/Architecture/` | `Architecture 인덱스.md` |
-| `10_Dev/Design/` | `🎨 Design 인덱스.md` |
-| `10_Dev/Ai/` | `🤖 Ai 인덱스.md` |
-| `10_Dev/Standards/` | `📋 컨벤션 인덱스.md` |
-| `20_Personal/` | `👤 프로필 인덱스.md` |
-| `20_Personal/서재/` | `📖 서재 인덱스.md` |
-| `30_Tools/` | `🛠️ Tools 인덱스.md` |
-| `40_Gaming/` | `🎮 Gaming 인덱스.md` (없으면 생성) |
-| `50_Recipes/` | `🍳 Recipes 인덱스.md` (없으면 생성) |
+`/obsidian-categories.md`의 **인덱스 파일 매핑** 테이블에 따른다. 인덱스 파일이 없는 폴더는 새로 생성한다.
 
 ---
 

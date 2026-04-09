@@ -7,21 +7,15 @@
 
 > 경로가 `{{OBSIDIAN_VAULT_PATH}}`이면 사용자에게 볼트 경로를 물어본 후 진행한다. 실제 경로가 입력되어 있으면 그대로 사용한다.
 
+## 카테고리 설정
+`/obsidian-categories.md` 파일의 **분류 기준**, **폴더 구조**, **부모 인덱스 링크** 섹션을 참조한다.
+
 ---
 
 ## Step 1: 폴더 번호화
 
-아래 폴더가 아직 번호 없이 존재하면 mv로 변경한다. 이미 번호가 붙어 있으면 건너뛴다.
-
-```
-Dev/       → 10_Dev/
-Personal/  → 20_Personal/
-Tools/     → 30_Tools/
-Gaming/    → 40_Gaming/
-Recipes/   → 50_Recipes/
-```
-
-필요하면 `99_Archive/` 폴더도 생성한다.
+`/obsidian-categories.md`의 **폴더 구조**를 참조하여, 번호 없이 존재하는 폴더에 번호 접두사를 붙인다.
+이미 번호가 붙어 있으면 건너뛴다. 필요한 폴더가 없으면 생성한다.
 
 ---
 
@@ -36,24 +30,7 @@ Recipes/   → 50_Recipes/
 
 ### 2-2. 각 파일에 대해: 내용 읽기 → 분류 → 이동
 
-파일 내용을 읽고 아래 분류 기준에 따라 이동 대상 폴더를 결정한다:
-
-| 내용 유형 | 이동 폴더 |
-|---------|---------|
-| Backend, DB, API, Java/Spring, OAuth, Servlet/JSP, Eclipse 웹개발 | `10_Dev/Backend/` |
-| React, JS/TS, HTML/CSS, 프론트엔드 도구, 포트폴리오 개발 | `10_Dev/Frontend/` |
-| AWS, 서버 설정, 도메인, Nginx, SSH, 배포 환경 | `10_Dev/Server/` |
-| 배포, CI/CD, GitHub Actions, DevOps | `10_Dev/DevOps/` |
-| 아키텍처, 설계 패턴, 폴더 구조, IA 전략 | `10_Dev/Architecture/` |
-| 코딩 컨벤션, 표준 정의, 개발 용어 가이드 | `10_Dev/Standards/` |
-| AI 프롬프트, 에이전트, 시스템 인스트럭션, Claude Code | `10_Dev/Ai/` |
-| UI/UX 디자인, Figma, 디자인 시스템, Glassmorphism | `10_Dev/Design/` |
-| IDE, 개발 도구, 단축키, 앱 사용법 | `30_Tools/` |
-| 개인, 목표, 아이디어, 심리/성격 분석 | `20_Personal/` |
-| 독서, 서평, 책 기록 | `20_Personal/서재/` |
-| 게임 관련 | `40_Gaming/` |
-| 레시피, 요리 | `50_Recipes/` |
-| 분류 불명확, 임시 보관, 삭제 예정 | `99_Archive/` |
+파일 내용을 읽고 `/obsidian-categories.md`의 **분류 기준** 테이블에 따라 이동 대상 폴더를 결정한다.
 
 ### 2-3. 파일명 정규화 (이동 시 동시 처리)
 

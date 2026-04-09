@@ -1,35 +1,21 @@
-# /obsidian-classify
-Obsidian 볼트의 00_Sandbox 파일들을 분석해 분류 계획을 출력합니다. **파일을 수정하거나 이동하지 않습니다.**
+# /obsidian-preview
+
+Obsidian 볼트의 00_Sandbox, Clippings 파일들을 분석해 분류 계획을 출력합니다. **파일을 수정하거나 이동하지 않습니다.**
 
 ## 볼트 경로
 `{{OBSIDIAN_VAULT_PATH}}`
 
 > 경로가 `{{OBSIDIAN_VAULT_PATH}}`이면 사용자에게 볼트 경로를 물어본 후 진행한다. 실제 경로가 입력되어 있으면 그대로 사용한다.
 
+## 카테고리 설정
+`/obsidian-categories.md` 파일의 **분류 기준**, **분류 템플릿** 섹션을 참조한다.
+
 ## 작업 순서
 
 1. `00_Sandbox/*.md` 파일 목록 전체를 가져온다 (assets/, .DS_Store 제외)
 2. `Clippings/*.md` 파일 목록도 포함한다 (웹 클리핑 및 임시 보관 파일)
 3. 볼트 루트의 단독 .md 파일도 포함한다
-4. 각 파일 내용을 읽고, 아래 분류 기준에 따라 결정한다
-
-## 분류 기준
-
-| 내용 유형 | 대상 폴더 | 적용 템플릿 |
-|----------|----------|------------|
-| Backend, DB, API, Java/Spring, OAuth, Servlet/JSP, Eclipse 웹개발 | 10_Dev/Backend | TPL_기술가이드 |
-| React, JS/TS, HTML/CSS, 프론트엔드 도구, 포트폴리오 개발 | 10_Dev/Frontend | TPL_기술가이드 |
-| AWS, 서버 설정, 도메인, Nginx, SSH | 10_Dev/Server | TPL_기술가이드 |
-| 배포, CI/CD, GitHub Actions, DevOps | 10_Dev/DevOps | TPL_기술가이드 |
-| 아키텍처, 설계 패턴, 폴더 구조 가이드, IA 전략 | 10_Dev/Architecture | TPL_아키텍처 |
-| 코딩 컨벤션, 표준 정의, 개발 용어 가이드 | 10_Dev/Standards | TPL_컨벤션 |
-| AI 프롬프트, 에이전트, 시스템 인스트럭션, Claude Code | 10_Dev/Ai | TPL_AI프롬프트 |
-| UI/UX 디자인, Figma, 디자인 시스템, Glassmorphism | 10_Dev/Design | TPL_기술가이드 |
-| IDE, 개발 도구, 단축키, 앱 사용법 | 30_Tools | TPL_기술가이드 |
-| 개인, 목표, 아이디어, 심리/성격 분석 | 20_Personal | TPL_개인노트 |
-| 독서, 서평, 책 기록 | 20_Personal/서재 | TPL_서재 |
-| 게임 관련 | 40_Gaming | TPL_개인노트 |
-| 레시피, 요리 | 50_Recipes | TPL_개인노트 |
+4. 각 파일 내용을 읽고, `/obsidian-categories.md`의 분류 기준에 따라 결정한다
 
 ## status 결정 기준
 

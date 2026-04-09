@@ -9,6 +9,9 @@ Obsidian 문서의 YAML frontmatter를 정규화하고 description 필드를 추
 
 > 경로가 `{{OBSIDIAN_VAULT_PATH}}`이면 사용자에게 볼트 경로를 물어본 후 진행한다. 실제 경로가 입력되어 있으면 그대로 사용한다.
 
+## 카테고리 설정
+`/obsidian-categories.md` 파일의 **부모 인덱스 링크**, **표준 태그 어휘** 섹션을 참조한다.
+
 ---
 
 ## 적용할 frontmatter 스키마
@@ -38,23 +41,8 @@ updated: YYYY-MM-DD
 
 #### 표준 태그 어휘 목록
 
-아래 태그를 우선 사용한다. 목록에 없는 개념은 소문자 하이픈 형식으로 새로 만든다 (예: `react-query`).
-
-| 카테고리 | 사용할 태그 |
-|---------|-----------|
-| **언어** | `java` `javascript` `typescript` `python` `html` `css` |
-| **프레임워크** | `spring` `spring-boot` `react` `next` `vue` |
-| **백엔드** | `backend` `database` `mysql` `jpa` `api` `rest` `oauth` `jwt` `servlet` `jsp` |
-| **프론트엔드** | `frontend` `styled-components` `css-in-js` `framer-motion` |
-| **서버/인프라** | `server` `aws` `docker` `nginx` `linux` `ssh` `dns` |
-| **DevOps** | `devops` `cicd` `github-actions` `deployment` |
-| **아키텍처** | `architecture` `design-pattern` `mvvm` |
-| **디자인** | `design` `figma` `ui` `ux` `glassmorphism` `theme` |
-| **AI** | `ai` `claude-code` `prompt` `agent` |
-| **도구** | `tools` `ide` `git` `obsidian` `openclaw` `telegram` |
-| **개인** | `personal` `goal` `idea` `portfolio` |
-| **컨벤션** | `convention` `standard` |
-| **웹 클리핑** | `clippings` |
+`/obsidian-categories.md`의 **표준 태그 어휘** 섹션을 참조한다.
+목록에 없는 개념은 소문자 하이픈 형식으로 새로 만든다 (예: `react-query`).
 
 ### 2. description 추가 (없는 경우)
 아래 우선순위로 결정한다:
@@ -64,24 +52,8 @@ updated: YYYY-MM-DD
 
 ### 3. 부모 인덱스 wikilink 확인
 frontmatter 바로 다음 첫 줄이 `> 📂 [[...]]` 형식인지 확인한다.
-없고, 파일 위치가 아래 폴더 중 하나면 추가한다:
-
-| 현재 폴더 | 추가할 링크 |
-|---------|-----------|
-| 10_Dev/Backend | `> 📂 [[⚙️ Backend 인덱스]]` |
-| 10_Dev/Frontend | `> 📂 [[⚛️ Frontend 인덱스]]` |
-| 10_Dev/Server | `> 📂 [[🖥️ Server 인덱스]]` |
-| 10_Dev/DevOps | `> 📂 [[DevOps 인덱스]]` |
-| 10_Dev/Architecture | `> 📂 [[Architecture 인덱스]]` |
-| 10_Dev/Design | `> 📂 [[🎨 Design 인덱스]]` |
-| 10_Dev/Ai | `> 📂 [[🤖 Ai 인덱스]]` |
-| 10_Dev/Standards | `> 📂 [[📋 컨벤션 인덱스]]` |
-| 20_Personal | `> 📂 [[👤 프로필 인덱스]]` |
-| 20_Personal/서재 | `> 📂 [[📖 서재 인덱스]]` |
-| 30_Tools | `> 📂 [[🛠️ Tools 인덱스]]` |
-| 40_Gaming | `> 📂 [[🎮 Gaming 인덱스]]` |
-| 50_Recipes | `> 📂 [[🍳 Recipes 인덱스]]` |
-| 00_Sandbox | 생략 (이동 후 추가됨) |
+없고, 파일 위치가 카테고리 폴더에 해당하면 추가한다.
+매핑은 `/obsidian-categories.md`의 **부모 인덱스 링크** 섹션을 참조한다.
 
 ### 4. 파일 저장
 - 본문 내용은 수정하지 않는다 (YAML + 부모 링크 줄만 수정)
