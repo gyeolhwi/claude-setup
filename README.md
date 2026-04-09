@@ -32,33 +32,36 @@ Claude가 이 README를 읽고 OS에 맞게 자동으로 세팅합니다.
 
 ---
 
-## 커맨드
+## 기능 목록
+
+> 커맨드(`/명령`)는 슬래시로 직접 호출, 스킬은 자연어로 자동 트리거됩니다.
 
 ### [Git](./commands/git/README.md)
 
-| 커맨드 | 설명 |
-|--------|------|
-| `/commit-auto` | staged diff를 기능별로 그룹화하여 자동 커밋 |
+| 이름 | 유형 | 설명 |
+|------|------|------|
+| `/commit-auto` | 커맨드 | staged diff를 기능별로 그룹화하여 자동 커밋 |
+| `create-pr` | 스킬 | 변경사항 분석, 커밋 히스토리 요약, 한국어 PR 자동 생성 |
 
 ### [Obsidian](./commands/obsidian/README.md)
 
-| 커맨드 | 설명 |
-|--------|------|
-| `/obsidian-init` | 초기 세팅 (볼트 경로, 카테고리, 폴더/인덱스 생성) |
-| `/obsidian-preview` | 분류/변환 미리보기 (읽기 전용) |
-| `/obsidian-format [경로]` | YAML frontmatter 정규화 |
-| `/obsidian-move` | 내용 기반 파일 분류 이동 |
-| `/obsidian-index [폴더]` | 인덱스 파일 갱신 |
-| `/obsidian-organize` | format → move → index 순서로 전체 정리 |
-| `/obsidian-categories` | 카테고리 설정 (다른 커맨드가 참조) |
+| 이름 | 유형 | 설명 |
+|------|------|------|
+| `/obsidian-init` | 커맨드 | 초기 세팅 (볼트 경로, 카테고리, 폴더/인덱스 생성) |
+| `/obsidian-preview` | 커맨드 | 분류/변환 미리보기 (읽기 전용) |
+| `/obsidian-format [경로]` | 커맨드 | YAML frontmatter 정규화 |
+| `/obsidian-move` | 커맨드 | 내용 기반 파일 분류 이동 |
+| `/obsidian-index [폴더]` | 커맨드 | 인덱스 파일 갱신 |
+| `/obsidian-organize` | 커맨드 | format → move → index 순서로 전체 정리 |
+| `/obsidian-categories` | 커맨드 | 카테고리 설정 (다른 커맨드가 참조) |
 
 ### [Project](./commands/project/README.md)
 
-| 커맨드 | 설명 |
-|--------|------|
-| `/project-docs` | AI 협업용 docs/ 폴더 구조 생성 (입력 방식 선택: 채팅 / 템플릿 파일) |
-| `/project-docs-gen` | 초안/기획서로 개발 문서 생성 (10종/핵심4종/개별) |
-| `/project-workflow` | docs/ 기반 협업 워크플로우 (자연어 호출) |
+| 이름 | 유형 | 설명 |
+|------|------|------|
+| `/project-docs` | 커맨드 | AI 협업용 docs/ 폴더 구조 생성 (입력 방식 선택: 채팅 / 템플릿 파일) |
+| `/project-docs-gen` | 커맨드 | 초안/기획서로 개발 문서 생성 (10종/핵심4종/개별) |
+| `/project-workflow` | 커맨드 | docs/ 기반 협업 워크플로우 (자연어 호출) |
 
 **A. 새 프로젝트 — 기획서/초안이 있는 경우:**
 ```
@@ -87,11 +90,7 @@ Claude가 이 README를 읽고 OS에 맞게 자동으로 세팅합니다.
 
 ---
 
-## 스킬
-
-### [create-pr](./skills/create-pr/SKILL.md)
-
-PR 생성 스킬. 변경사항 분석, 커밋 히스토리 요약, 한국어 PR 작성을 자동 수행합니다.
+## 템플릿
 
 ### [project-docs-gen](./skills/omc-learned/project-docs-gen/README.md)
 
