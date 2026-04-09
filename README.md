@@ -4,7 +4,19 @@ Claude Code에서 사용하는 커스텀 커맨드 & 스킬 모음입니다.
 
 ## 설치
 
-아래 파일들을 `~/.claude/` 하위에 복사합니다. (디렉토리가 없으면 생성)
+```bash
+git clone https://github.com/gyeolhwi/claude-setup.git
+```
+
+clone한 폴더에서 Claude Code를 열고 아래와 같이 말하세요:
+
+```
+내 컴퓨터에 맞게 세팅해줘
+```
+
+Claude가 이 README를 읽고 OS에 맞게 자동으로 세팅합니다.
+
+### 설치 대상
 
 | 원본 | 복사 위치 | 비고 |
 |------|----------|------|
