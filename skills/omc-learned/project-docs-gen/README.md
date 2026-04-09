@@ -22,11 +22,3 @@
 `project-docs-gen` 커맨드의 ID 체계 규칙을 따릅니다. 상세는 `~/.claude/commands/project-docs-gen.md` 참조.
 
 접두사: `REQ-`, `FEAT-`, `SCR-`, `API-`, `TC-`, `FLOW-`, `EDGE-`
-
-## 설치
-
-```bash
-cp -r project-docs-gen/ ~/.claude/skills/omc-learned/
-```
-
-> `project-docs-gen` 커맨드(`~/.claude/commands/project-docs-gen.md`)가 함께 설치되어야 작동합니다.

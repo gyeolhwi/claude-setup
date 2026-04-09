@@ -98,14 +98,3 @@ docs/
 | "현재 상태 알려줘" | status | 현황 대시보드 |
 | "분류해줘" | classify | 99_inbox/ → 올바른 폴더로 분류 |
 
----
-
-## 설치
-
-```bash
-# 커맨드 설치 (README.md 제외)
-cp project-docs.md project-docs-gen.md project-workflow.md ~/.claude/commands/
-
-# 스킬 템플릿 설치 (project-docs-gen용)
-cp -r ../../skills/omc-learned/project-docs-gen/ ~/.claude/skills/omc-learned/
-```
