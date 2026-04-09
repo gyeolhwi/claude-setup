@@ -22,6 +22,7 @@ Claude가 이 README를 읽고 OS에 맞게 자동으로 세팅합니다.
 |------|----------|------|
 | `commands/git/commit-auto.md` | `~/.claude/commands/` | |
 | `commands/obsidian/obsidian-*.md` | `~/.claude/commands/` | Obsidian 사용자만 |
+| `commands/obsidian/templates/` | `~/.claude/commands/templates/` | Obsidian 문서 템플릿 |
 | `commands/project/project-docs.md` | `~/.claude/commands/` | |
 | `commands/project/project-docs-gen.md` | `~/.claude/commands/` | |
 | `commands/project/project-workflow.md` | `~/.claude/commands/` | |
@@ -128,7 +129,14 @@ claude-code-kit/
 │   │   ├── obsidian-init.md
 │   │   ├── obsidian-move.md
 │   │   ├── obsidian-organize.md
-│   │   └── obsidian-preview.md
+│   │   ├── obsidian-preview.md
+│   │   └── templates/
+│   │       ├── TPL_기술가이드.md
+│   │       ├── TPL_아키텍처.md
+│   │       ├── TPL_컨벤션.md
+│   │       ├── TPL_AI프롬프트.md
+│   │       ├── TPL_개인노트.md
+│   │       └── TPL_서재.md
 │   └── project/
 │       ├── README.md
 │       ├── project-docs.md
