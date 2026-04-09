@@ -1,4 +1,4 @@
-# /obsidian-preview
+# /obsidian-preview — 분류/변환 미리보기
 
 Obsidian 볼트의 00_Sandbox, Clippings 파일들을 분석해 분류 계획을 출력합니다. **파일을 수정하거나 이동하지 않습니다.**
 

@@ -1,4 +1,4 @@
-# /obsidian-organize
+# /obsidian-organize — 전체 정리 (format → move → index)
 
 00_Sandbox 및 Clippings의 모든 문서를 **한 번에** 형식화하고 분류 이동합니다.
 `/obsidian-format` → `/obsidian-move` → `/obsidian-index` 순서로 실행하는 마스터 커맨드입니다.

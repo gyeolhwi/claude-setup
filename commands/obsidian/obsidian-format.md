@@ -1,4 +1,4 @@
-# /obsidian-format [$ARGUMENTS]
+# /obsidian-format — YAML frontmatter 정규화
 
 Obsidian 문서의 YAML frontmatter를 정규화하고 description 필드를 추가합니다.
 

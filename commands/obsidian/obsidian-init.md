@@ -1,4 +1,4 @@
-# /obsidian-init
+# /obsidian-init — 볼트 초기 세팅
 
 Obsidian 볼트를 초기 세팅한다. **최초 1회만 실행한다.**
 

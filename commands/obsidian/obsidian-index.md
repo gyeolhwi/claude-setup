@@ -1,4 +1,4 @@
-# /obsidian-index [$ARGUMENTS]
+# /obsidian-index — 인덱스 파일 갱신
 
 새로 추가된 문서들을 해당 폴더의 인덱스 파일에 등록합니다.
 
