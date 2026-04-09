@@ -116,13 +116,13 @@ Clippings/           # 웹 클리핑
 
 ## 분류 템플릿 (preview용)
 
-`templates/` 폴더의 템플릿 파일을 참조한다. 사용자가 자유롭게 수정 가능.
+`~/.claude/commands/templates/` 폴더의 템플릿 파일을 참조한다. 사용자가 자유롭게 수정 가능.
 
 | 내용 유형 | 적용 템플릿 |
 |---------|-----------|
-| Backend, Server, Frontend, DevOps, Design, Tools | `templates/TPL_기술가이드.md` |
-| 아키텍처, 설계 패턴 | `templates/TPL_아키텍처.md` |
-| 코딩 컨벤션, 표준 | `templates/TPL_컨벤션.md` |
-| AI 프롬프트, 에이전트 | `templates/TPL_AI프롬프트.md` |
-| 개인, 목표, 게임, 레시피 | `templates/TPL_개인노트.md` |
-| 독서, 서평 | `templates/TPL_서재.md` |
+| Backend, Server, Frontend, DevOps, Design, Tools | TPL_기술가이드.md |
+| 아키텍처, 설계 패턴 | TPL_아키텍처.md |
+| 코딩 컨벤션, 표준 | TPL_컨벤션.md |
+| AI 프롬프트, 에이전트 | TPL_AI프롬프트.md |
+| 개인, 목표, 게임, 레시피 | TPL_개인노트.md |
+| 독서, 서평 | TPL_서재.md |
