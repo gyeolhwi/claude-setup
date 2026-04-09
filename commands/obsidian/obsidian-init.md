@@ -58,7 +58,15 @@ updated: YYYY-MM-DD
 
 ```
 
-### 5. 커맨드 파일 경로 치환
+### 5. 템플릿 동기화
+
+`/obsidian-categories.md`의 **문서 템플릿** 섹션과 `~/.claude/commands/templates/` 폴더를 비교한다.
+
+- 카테고리에 매핑된 템플릿이 없으면 → 기본 구조로 새로 생성
+- 카테고리가 삭제되어 더 이상 참조되지 않는 템플릿 → 사용자에게 삭제 여부 확인
+- 이미 존재하는 템플릿 → 건너뛴다 (사용자 수정 보존)
+
+### 6. 커맨드 파일 경로 치환
 
 `~/.claude/commands/` 내의 obsidian 커맨드 파일들에서
 `{{OBSIDIAN_VAULT_PATH}}`를 입력받은 볼트 경로로 치환한다.
@@ -70,7 +78,7 @@ updated: YYYY-MM-DD
 - `obsidian-index.md`
 - `obsidian-organize.md`
 
-### 6. 완료 출력
+### 7. 완료 출력
 
 ```
 ✅ 볼트 경로: /path/to/vault
