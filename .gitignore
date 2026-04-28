@@ -1,2 +1,6 @@
 .omc/
 .claude/settings.local.json
+
+# Supanova: 외부 git repo 클론 + skills/ 안의 junction (별도 관리)
+external/
+skills/supanova-*
