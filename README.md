@@ -1,35 +1,65 @@
 # claude-code-kit
 
-Claude Code에서 사용하는 커스텀 커맨드 & 스킬 모음입니다.
+Claude Code 에서 사용하는 커스텀 커맨드 & 스킬 모음입니다. **Windows / Mac / Linux 동일 동작.**
 
-## 설치
+## 설치 (최초)
 
 ```bash
 git clone https://github.com/gyeolhwi/claude-setup.git
+cd claude-setup
 ```
 
-clone한 폴더에서 Claude Code를 열고 아래와 같이 말하세요:
+clone한 폴더에서 Claude Code 를 열고 다음 중 하나로 호출:
 
 ```
-내 컴퓨터에 맞게 세팅해줘
+세팅해줘            ← 자연어 트리거
+/g-setting          ← 직접 호출
 ```
 
-Claude가 이 README를 읽고 OS에 맞게 자동으로 세팅합니다.
+`g-setting` 스킬이 `~/.claude/` 로 모든 항목을 복사합니다.
+
+설치 완료 후 **clone 한 폴더는 삭제해도 됩니다** (모두 user-level 로 복사됨).
+
+## 업데이트 (이후)
+
+clone 한 폴더가 있든 없든 어디서든 다음 호출:
+
+```
+업데이트해줘
+/g-setting
+```
+
+같은 스킬이 **재실행 시 자동으로 업데이트 모드** 로 동작합니다:
+
+- 임시 폴더에 fresh clone → user-level 과 비교
+- **일반 영역** (커맨드/스킬): 변경분 일괄 보고 → 사용자 동의 후 적용
+- **Obsidian 영역**: 파일별 diff 표시 → 사용자가 개별 검토 (자기 스타일 보존)
+- 변경 전 `~/.claude/.gyeolhwi/backup-{ts}/` 로 백업
 
 ### 설치 대상
 
-| 원본 | 복사 위치 | 비고 |
-|------|----------|------|
-| `commands/git/commit-auto.md` | `~/.claude/commands/` | |
-| `commands/obsidian/obsidian-*.md` | `~/.claude/commands/` | Obsidian 사용자만 |
-| `commands/obsidian/templates/` | `~/.claude/commands/templates/` | Obsidian 문서 템플릿 |
-| `commands/project/project-docs.md` | `~/.claude/commands/` | |
-| `commands/project/project-docs-gen.md` | `~/.claude/commands/` | |
-| `commands/project/project-workflow.md` | `~/.claude/commands/` | |
-| `skills/create-pr/` | `~/.claude/skills/create-pr/` | 폴더째 복사 |
-| `skills/omc-learned/project-docs-gen/` | `~/.claude/skills/omc-learned/project-docs-gen/` | 폴더째 복사 |
+| 영역 | 원본 | 대상 | 업데이트 정책 |
+|------|------|------|--------------|
+| 일반 | `commands/git/commit-auto.md` | `~/.claude/commands/` | 변경분 일괄 동의 |
+| 일반 | `commands/project/project-*.md` | `~/.claude/commands/` | 변경분 일괄 동의 |
+| 일반 | `skills/create-pr/` | `~/.claude/skills/` | 변경분 일괄 동의 |
+| 일반 | `skills/omc-learned/` | `~/.claude/skills/` | 변경분 일괄 동의 |
+| 일반 | `skills/g-setting/` | `~/.claude/skills/` | 변경분 일괄 동의 |
+| Obsidian | `commands/obsidian/*.md` | `~/.claude/commands/obsidian/` | 첫 설치 후 파일별 검토 |
+| Obsidian | `commands/obsidian/templates/` | `~/.claude/commands/templates/` | 첫 설치 후 파일별 검토 |
 
-> **Obsidian 사용자:** 설치 후 `/obsidian-init`을 실행하면 볼트 경로 설정, 카테고리 확인, 폴더/인덱스 생성까지 한 번에 처리됩니다.
+> **Obsidian 사용자:** 설치 후 `/obsidian-init` 으로 볼트 경로/카테고리/폴더/인덱스를 한 번에 세팅할 수 있습니다. 본인이 직접 수정한 obsidian 파일은 업데이트 시 자동으로 보존되지 않으니 항상 검토 단계를 거칩니다.
+
+### 메타데이터 위치
+
+```
+~/.claude/.gyeolhwi/
+├── version.txt           ← 본체 git rev
+├── installed-at.txt      ← 설치 시각
+└── backup-{ts}/          ← 업데이트 시 백업
+```
+
+전체 초기화는 `~/.claude/.gyeolhwi/` 삭제 후 재실행.
 
 ---
 
@@ -109,6 +139,14 @@ Claude가 이 README를 읽고 OS에 맞게 자동으로 세팅합니다.
 | `08-flowchart.md` | 플로우차트 |
 | `09-wireframe.md` | 와이어프레임 설계서 |
 | `10-scenarios.md` | 시나리오 케이스 |
+
+---
+
+## 디자인 참고
+
+Claude Code 로 디자인 잘하는 방법: [uxjoseph/supanova-design-skill](https://github.com/uxjoseph/supanova-design-skill)
+
+필요한 스킬만 골라서 `~/.claude/skills/` 에 직접 넣어 쓰면 됩니다.
 
 ---
 

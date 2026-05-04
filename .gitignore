@@ -1,2 +1,5 @@
 .omc/
 .claude/settings.local.json
+external/
+skills/supanova-*
+
