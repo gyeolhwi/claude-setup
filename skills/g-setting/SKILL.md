@@ -1,6 +1,6 @@
 ---
 name: g-setting
-description: gyeolhwi의 Claude Code 커맨드/스킬 모음을 user-level (`~/.claude/`)에 글로벌 설치하거나 업데이트한다. 처음 실행 시 설치, 재실행 시 자동으로 업데이트 모드로 전환. 사용자가 'g-setting', '세팅해줘', '키트 설치', '키트 업데이트', '글로벌 설치', '업데이트해줘' 등을 요청할 때 사용한다. obsidian 사용자 커스텀은 항상 보존(검토 후 적용), supanova는 자동 fetch. Windows/Mac/Linux 동일 동작.
+description: gyeolhwi의 Claude Code 커맨드/스킬 모음을 user-level (`~/.claude/`)에 글로벌 설치하거나 업데이트한다. 처음 실행 시 설치, 재실행 시 자동으로 업데이트 모드로 전환. 사용자가 'g-setting', '세팅해줘', '키트 설치', '키트 업데이트', '글로벌 설치', '업데이트해줘' 등을 요청할 때 사용한다. obsidian 사용자 커스텀은 항상 보존(검토 후 적용). Windows/Mac/Linux 동일 동작.
 ---
 
 # /g-setting — 키트 설치 및 업데이트
@@ -25,7 +25,6 @@ description: gyeolhwi의 Claude Code 커맨드/스킬 모음을 user-level (`~/.
 ## 외부 git URL
 
 - 본체: `https://github.com/gyeolhwi/claude-setup.git`
-- Supanova: `https://github.com/uxjoseph/supanova-design-skill.git`
 
 ## 설치 인벤토리
 
@@ -48,15 +47,6 @@ description: gyeolhwi의 Claude Code 커맨드/스킬 모음을 user-level (`~/.
 | `commands/obsidian/*.md` | `~/.claude/commands/obsidian/*.md` |
 | `commands/obsidian/templates/TPL_*.md` | `~/.claude/commands/templates/TPL_*.md` |
 
-### C. Supanova (외부 — 자동 fetch + 복사)
-
-| 원본 | 대상 |
-|------|------|
-| `<supanova>/taste-skill/` | `~/.claude/skills/supanova-design-engine/` |
-| `<supanova>/output-skill/` | `~/.claude/skills/supanova-full-output/` |
-| `<supanova>/soft-skill/` | `~/.claude/skills/supanova-premium-aesthetic/` |
-| `<supanova>/redesign-skill/` | `~/.claude/skills/supanova-redesign-engine/` |
-
 ## 1. 설치 모드 (최초)
 
 ### 1-1. 진입점 감지
@@ -66,20 +56,17 @@ description: gyeolhwi의 Claude Code 커맨드/스킬 모음을 user-level (`~/.
 - **루트 아님** → 사용자에게 "본체를 임시 폴더에 클론할까요? [Y/n]" 묻고 동의 시 임시 클론 진행
 
 ### 1-2. 외부 fetch
-임시 폴더에 fresh clone (depth 1):
-- 본체 (루트 아닌 경우): `~/.claude/.gyeolhwi/.tmp-install/repo/`
-- Supanova: `~/.claude/.gyeolhwi/.tmp-install/supanova/`
+본체가 루트가 아닌 경우에만 임시 폴더에 fresh clone (depth 1):
+- 본체: `~/.claude/.gyeolhwi/.tmp-install/repo/`
 
 ### 1-3. 복사 실행
 - **A 영역**: 인벤토리대로 모두 복사
 - **B 영역**: 대상 폴더가 비어있거나 없으면 복사. 이미 파일 1개 이상 있으면 사용자에게 보고: "기존 obsidian 설정 발견 — 그대로 둘까요? [Y/n/검토]". 검토 선택 시 파일별 diff 후 개별 결정.
-- **C 영역**: 임시 supanova 폴더에서 4개 하위 폴더 복사
 
 ### 1-4. 메타데이터 기록
 ```
 ~/.claude/.gyeolhwi/
 ├── version.txt          ← 본체 git rev (예: "371efa0")
-├── supanova-version.txt ← supanova git rev
 └── installed-at.txt     ← 설치 시각 (디버깅용)
 ```
 
@@ -90,14 +77,13 @@ description: gyeolhwi의 Claude Code 커맨드/스킬 모음을 user-level (`~/.
 ✅ 설치 완료
 - 일반: N개 (커맨드 4 + 스킬 3)
 - Obsidian: [신규 시드 N개 | 보존됨]
-- Supanova: 4개 스킬
 
 📍 설치 위치: ~/.claude/
 📌 메타: ~/.claude/.gyeolhwi/version.txt = <rev>
 
 다음 세션부터 사용 가능:
 - 커맨드: /commit-auto, /project-docs, /project-docs-gen, /project-workflow, /obsidian-*
-- 스킬: create-pr, g-setting, supanova-*
+- 스킬: create-pr, g-setting
 
 원본 clone 폴더는 이제 삭제해도 됩니다.
 ```
@@ -107,8 +93,7 @@ description: gyeolhwi의 Claude Code 커맨드/스킬 모음을 user-level (`~/.
 ### 2-1. Fresh clone (임시)
 ```
 ~/.claude/.gyeolhwi/.tmp-update/
-├── repo/        ← git clone --depth 1 본체
-└── supanova/    ← git clone --depth 1 supanova
+└── repo/        ← git clone --depth 1 본체
 ```
 
 기존 `.tmp-update/` 가 있으면 (지난번 비정상 종료) 먼저 정리.
@@ -119,7 +104,6 @@ description: gyeolhwi의 Claude Code 커맨드/스킬 모음을 user-level (`~/.
 - **일반 영역**: `[NEW]`, `[CHANGED]`, `[REMOVED]` 목록
   - `[REMOVED]` = upstream 에서 사라진 항목 (폴더 구조 변경 등). 사용자에게 "삭제할까요? [Y/n]" 별도 묻기
 - **Obsidian 영역**: `[NEW]`, `[CHANGED]`, `[REMOVED]` 목록 (REMOVED 는 항상 묻기, 사용자 커스텀일 수 있음)
-- **Supanova**: `supanova-version.txt` 의 rev 와 새 clone 의 HEAD rev 비교
 
 ### 2-3. 사용자 동의 (그룹별)
 
@@ -141,25 +125,18 @@ description: gyeolhwi의 Claude Code 커맨드/스킬 모음을 user-level (`~/.
   → [덮어쓰기 / 유지 / 더보기]
 ```
 
-```
-📋 Supanova
-  현재: <old-rev> → 신규: <new-rev> (N커밋 변경)
-→ [업데이트 / skip]
-```
-
 ### 2-4. 적용
 1. 백업 폴더 생성: `~/.claude/.gyeolhwi/backup-{YYYYMMDD-HHmmss}/`
 2. 동의 받은 항목만 처리:
    - 변경 대상 원본을 백업 폴더로 이동 (구조 유지)
    - 새 파일 복사
-3. `version.txt`, `supanova-version.txt` 갱신
+3. `version.txt` 갱신
 
 ### 2-5. 정리 + 보고
 ```
 ✅ 업데이트 완료
 - 일반: N개 적용 / M개 skip
 - Obsidian: N개 적용 / M개 유지 (사용자 선택)
-- Supanova: [업데이트됨 <new-rev> | skip]
 - 백업: ~/.claude/.gyeolhwi/backup-{ts}/
 ```
 
@@ -167,8 +144,7 @@ description: gyeolhwi의 Claude Code 커맨드/스킬 모음을 user-level (`~/.
 
 ## 3. 안전장치
 
-- **네트워크 실패 (전체)** → 임시 폴더 정리 후 명확히 보고. user-level 변경 없음.
-- **외부 fetch 부분 실패 (supanova 만)** → 본체는 정상 진행, supanova 만 skip 하고 보고에 명시 (`⚠ Supanova fetch 실패: <사유> — 다음 실행 시 재시도`). user-level 의 기존 supanova 는 그대로 유지.
+- **네트워크 실패** → 임시 폴더 정리 후 명확히 보고. user-level 변경 없음.
 - **부분 적용 실패** → 백업에서 수동 복구 안내
 - **권한 문제** → 즉시 중단, 어느 경로에서 막혔는지 출력
 - **비정상 종료 후 재실행** → `.tmp-install/`, `.tmp-update/` 자동 정리

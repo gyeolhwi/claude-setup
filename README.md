@@ -16,7 +16,7 @@ clone한 폴더에서 Claude Code 를 열고 다음 중 하나로 호출:
 /g-setting          ← 직접 호출
 ```
 
-`g-setting` 스킬이 `~/.claude/` 로 모든 항목을 복사하고, **외부 디자인 스킬 (supanova) 도 자동 fetch** 합니다.
+`g-setting` 스킬이 `~/.claude/` 로 모든 항목을 복사합니다.
 
 설치 완료 후 **clone 한 폴더는 삭제해도 됩니다** (모두 user-level 로 복사됨).
 
@@ -34,7 +34,6 @@ clone 한 폴더가 있든 없든 어디서든 다음 호출:
 - 임시 폴더에 fresh clone → user-level 과 비교
 - **일반 영역** (커맨드/스킬): 변경분 일괄 보고 → 사용자 동의 후 적용
 - **Obsidian 영역**: 파일별 diff 표시 → 사용자가 개별 검토 (자기 스타일 보존)
-- **Supanova**: 새 git rev 비교 후 동의 시 갱신
 - 변경 전 `~/.claude/.gyeolhwi/backup-{ts}/` 로 백업
 
 ### 설치 대상
@@ -48,7 +47,6 @@ clone 한 폴더가 있든 없든 어디서든 다음 호출:
 | 일반 | `skills/g-setting/` | `~/.claude/skills/` | 변경분 일괄 동의 |
 | Obsidian | `commands/obsidian/*.md` | `~/.claude/commands/obsidian/` | 첫 설치 후 파일별 검토 |
 | Obsidian | `commands/obsidian/templates/` | `~/.claude/commands/templates/` | 첫 설치 후 파일별 검토 |
-| 외부 | `uxjoseph/supanova-design-skill` (자동 clone) | `~/.claude/skills/supanova-*` | git rev 비교 후 동의 |
 
 > **Obsidian 사용자:** 설치 후 `/obsidian-init` 으로 볼트 경로/카테고리/폴더/인덱스를 한 번에 세팅할 수 있습니다. 본인이 직접 수정한 obsidian 파일은 업데이트 시 자동으로 보존되지 않으니 항상 검토 단계를 거칩니다.
 
@@ -57,7 +55,6 @@ clone 한 폴더가 있든 없든 어디서든 다음 호출:
 ```
 ~/.claude/.gyeolhwi/
 ├── version.txt           ← 본체 git rev
-├── supanova-version.txt  ← supanova git rev
 ├── installed-at.txt      ← 설치 시각
 └── backup-{ts}/          ← 업데이트 시 백업
 ```
@@ -142,6 +139,14 @@ clone 한 폴더가 있든 없든 어디서든 다음 호출:
 | `08-flowchart.md` | 플로우차트 |
 | `09-wireframe.md` | 와이어프레임 설계서 |
 | `10-scenarios.md` | 시나리오 케이스 |
+
+---
+
+## 디자인 참고
+
+Claude Code 로 디자인 잘하는 방법: [uxjoseph/supanova-design-skill](https://github.com/uxjoseph/supanova-design-skill)
+
+필요한 스킬만 골라서 `~/.claude/skills/` 에 직접 넣어 쓰면 됩니다.
 
 ---
 
