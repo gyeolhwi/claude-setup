@@ -2,6 +2,12 @@
 
 Claude Code 에서 사용하는 커스텀 커맨드 & 스킬 모음입니다. **Windows / Mac / Linux 동일 동작.**
 
+## 사전 요구사항
+
+- [Claude Code](https://claude.ai/code) 설치 및 최초 1회 실행 (`~/.claude/` 생성 필요)
+- oh-my-claudecode 설치 — 스킬 자동 트리거 기능에 필요 (`omc` CLI로 설치)
+- git
+
 ## 설치 (최초)
 
 ```bash
@@ -29,6 +35,8 @@ clone 한 폴더가 있든 없든 어디서든 다음 호출:
 /g-setting
 ```
 
+> 설치 시 `g-setting` 스킬 자체도 `~/.claude/skills/`에 복사되기 때문에, 원본 clone 폴더를 삭제한 후에도 어디서든 호출할 수 있습니다.
+
 같은 스킬이 **재실행 시 자동으로 업데이트 모드** 로 동작합니다:
 
 - 임시 폴더에 fresh clone → user-level 과 비교
@@ -55,6 +63,7 @@ clone 한 폴더가 있든 없든 어디서든 다음 호출:
 ```
 ~/.claude/.claude-code-kit/
 ├── version.txt           ← 본체 git rev
+├── source-url.txt        ← 리포지터리 URL (업데이트 시 클론에 사용)
 ├── installed-at.txt      ← 설치 시각
 └── backup-{ts}/          ← 업데이트 시 백업
 ```
@@ -66,6 +75,12 @@ clone 한 폴더가 있든 없든 어디서든 다음 호출:
 ## 기능 목록
 
 > 커맨드(`/명령`)는 슬래시로 직접 호출, 스킬은 자연어로 자동 트리거됩니다.
+
+### 키트 설치 / 업데이트
+
+| 이름 | 유형 | 설명 |
+|------|------|------|
+| `g-setting` | 스킬 | 이 키트 전체를 `~/.claude/`에 설치하거나 업데이트 |
 
 ### [Git](./commands/git/README.md)
 
