@@ -34,7 +34,7 @@ clone 한 폴더가 있든 없든 어디서든 다음 호출:
 - 임시 폴더에 fresh clone → user-level 과 비교
 - **일반 영역** (커맨드/스킬): 변경분 일괄 보고 → 사용자 동의 후 적용
 - **Obsidian 영역**: 파일별 diff 표시 → 사용자가 개별 검토 (자기 스타일 보존)
-- 변경 전 `~/.claude/.gyeolhwi/backup-{ts}/` 로 백업
+- 변경 전 `~/.claude/.claude-code-kit/backup-{ts}/` 로 백업
 
 ### 설치 대상
 
@@ -53,13 +53,13 @@ clone 한 폴더가 있든 없든 어디서든 다음 호출:
 ### 메타데이터 위치
 
 ```
-~/.claude/.gyeolhwi/
+~/.claude/.claude-code-kit/
 ├── version.txt           ← 본체 git rev
 ├── installed-at.txt      ← 설치 시각
 └── backup-{ts}/          ← 업데이트 시 백업
 ```
 
-전체 초기화는 `~/.claude/.gyeolhwi/` 삭제 후 재실행.
+전체 초기화는 `~/.claude/.claude-code-kit/` 삭제 후 재실행.
 
 ---
 
@@ -182,6 +182,8 @@ claude-code-kit/
 │       └── project-workflow.md
 └── skills/
     ├── create-pr/
+    │   └── SKILL.md
+    ├── g-setting/
     │   └── SKILL.md
     └── omc-learned/
         └── project-docs-gen/

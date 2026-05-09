@@ -1,30 +1,37 @@
 ---
 name: g-setting
-description: gyeolhwi의 Claude Code 커맨드/스킬 모음을 user-level (`~/.claude/`)에 글로벌 설치하거나 업데이트한다. 처음 실행 시 설치, 재실행 시 자동으로 업데이트 모드로 전환. 사용자가 'g-setting', '세팅해줘', '키트 설치', '키트 업데이트', '글로벌 설치', '업데이트해줘' 등을 요청할 때 사용한다. obsidian 사용자 커스텀은 항상 보존(검토 후 적용). Windows/Mac/Linux 동일 동작.
+description: Claude Code 커맨드/스킬 모음을 user-level (`~/.claude/`)에 글로벌 설치하거나 업데이트한다. 처음 실행 시 설치, 재실행 시 자동으로 업데이트 모드로 전환. 사용자가 'g-setting', '세팅해줘', '키트 설치', '키트 업데이트', '글로벌 설치', '업데이트해줘' 등을 요청할 때 사용한다. obsidian 사용자 커스텀은 항상 보존(검토 후 적용). Windows/Mac/Linux 동일 동작.
 ---
 
 # /g-setting — 키트 설치 및 업데이트
 
-`gyeolhwi/claude-setup` 의 커맨드와 스킬을 `~/.claude/` 에 설치한다. **모든 OS 동일 동작** (전부 복사 기반, link 없음).
+이 키트의 커맨드와 스킬을 `~/.claude/` 에 설치한다. **모든 OS 동일 동작** (전부 복사 기반, link 없음).
 
 ## 핵심 원칙
 
 1. **모든 항목 복사** — junction/symlink 안 씀. 원본 폴더 삭제 가능, OS 무관, 한글 경로 안전.
-2. **단일 진실: `~/.claude/.gyeolhwi/version.txt`** — 설치 git rev 1줄. 모드 자동 감지에 사용.
+2. **단일 진실: `~/.claude/.claude-code-kit/version.txt`** — 설치 git rev 1줄. 모드 자동 감지에 사용.
 3. **사용자 커스텀 영역은 보존** — Obsidian 커맨드/템플릿은 첫 설치만 시드, 업데이트 시 항상 파일별 diff + 사용자 검토.
 4. **업데이트 = 임시 fresh clone 후 비교** — 영구 캐시 폴더 두지 않음. 작업 후 임시 폴더 정리.
-5. **충돌 시 백업** — 덮어쓰기 전 `~/.claude/.gyeolhwi/backup-{timestamp}/` 로 이동.
+5. **충돌 시 백업** — 덮어쓰기 전 `~/.claude/.claude-code-kit/backup-{timestamp}/` 로 이동.
 
 ## 모드 자동 감지
 
 | 조건 | 모드 |
 |------|------|
-| `~/.claude/.gyeolhwi/version.txt` 없음 | **설치** |
-| `~/.claude/.gyeolhwi/version.txt` 있음 | **업데이트** |
+| `~/.claude/.claude-code-kit/version.txt` 없음 | **설치** |
+| `~/.claude/.claude-code-kit/version.txt` 있음 | **업데이트** |
 
-## 외부 git URL
+## 리포지터리 URL 결정
 
-- 본체: `https://github.com/gyeolhwi/claude-setup.git`
+URL을 하드코딩하지 않는다. 우선순위대로:
+
+1. **설치 모드 (루트 감지됨)**: `git remote get-url origin` 으로 URL 자동 감지
+2. **설치 모드 (루트 아님)**: 사용자에게 URL 직접 입력 요청
+3. **업데이트 모드**: `~/.claude/.claude-code-kit/source-url.txt` 에서 읽기
+4. **source-url.txt 없음 (레거시 설치)**: 사용자에게 URL 입력 요청
+
+감지/입력된 URL은 설치 완료 후 `~/.claude/.claude-code-kit/source-url.txt` 에 저장.
 
 ## 설치 인벤토리
 
@@ -57,7 +64,7 @@ description: gyeolhwi의 Claude Code 커맨드/스킬 모음을 user-level (`~/.
 
 ### 1-2. 외부 fetch
 본체가 루트가 아닌 경우에만 임시 폴더에 fresh clone (depth 1):
-- 본체: `~/.claude/.gyeolhwi/.tmp-install/repo/`
+- 본체: `~/.claude/.claude-code-kit/.tmp-install/repo/`
 
 ### 1-3. 복사 실행
 - **A 영역**: 인벤토리대로 모두 복사
@@ -65,8 +72,9 @@ description: gyeolhwi의 Claude Code 커맨드/스킬 모음을 user-level (`~/.
 
 ### 1-4. 메타데이터 기록
 ```
-~/.claude/.gyeolhwi/
+~/.claude/.claude-code-kit/
 ├── version.txt          ← 본체 git rev (예: "371efa0")
+├── source-url.txt       ← 리포지터리 URL (업데이트 시 클론에 사용)
 └── installed-at.txt     ← 설치 시각 (디버깅용)
 ```
 
@@ -79,7 +87,7 @@ description: gyeolhwi의 Claude Code 커맨드/스킬 모음을 user-level (`~/.
 - Obsidian: [신규 시드 N개 | 보존됨]
 
 📍 설치 위치: ~/.claude/
-📌 메타: ~/.claude/.gyeolhwi/version.txt = <rev>
+📌 메타: ~/.claude/.claude-code-kit/version.txt = <rev>
 
 다음 세션부터 사용 가능:
 - 커맨드: /commit-auto, /project-docs, /project-docs-gen, /project-workflow, /obsidian-*
@@ -92,7 +100,7 @@ description: gyeolhwi의 Claude Code 커맨드/스킬 모음을 user-level (`~/.
 
 ### 2-1. Fresh clone (임시)
 ```
-~/.claude/.gyeolhwi/.tmp-update/
+~/.claude/.claude-code-kit/.tmp-update/
 └── repo/        ← git clone --depth 1 본체
 ```
 
@@ -126,7 +134,7 @@ description: gyeolhwi의 Claude Code 커맨드/스킬 모음을 user-level (`~/.
 ```
 
 ### 2-4. 적용
-1. 백업 폴더 생성: `~/.claude/.gyeolhwi/backup-{YYYYMMDD-HHmmss}/`
+1. 백업 폴더 생성: `~/.claude/.claude-code-kit/backup-{YYYYMMDD-HHmmss}/`
 2. 동의 받은 항목만 처리:
    - 변경 대상 원본을 백업 폴더로 이동 (구조 유지)
    - 새 파일 복사
@@ -137,7 +145,7 @@ description: gyeolhwi의 Claude Code 커맨드/스킬 모음을 user-level (`~/.
 ✅ 업데이트 완료
 - 일반: N개 적용 / M개 skip
 - Obsidian: N개 적용 / M개 유지 (사용자 선택)
-- 백업: ~/.claude/.gyeolhwi/backup-{ts}/
+- 백업: ~/.claude/.claude-code-kit/backup-{ts}/
 ```
 
 임시 폴더 삭제.
@@ -168,7 +176,7 @@ description: gyeolhwi의 Claude Code 커맨드/스킬 모음을 user-level (`~/.
 
 ## 5. 백업 정책
 
-- 위치: `~/.claude/.gyeolhwi/backup-{YYYYMMDD-HHmmss}/` (구조 유지)
+- 위치: `~/.claude/.claude-code-kit/backup-{YYYYMMDD-HHmmss}/` (구조 유지)
 - 보관: 사용자가 수동 삭제할 때까지
 - 7일 이상 누적된 백업이 있으면 보고 시 안내 ("backup-* 폴더 N개, 정리하시려면…")
 
@@ -180,4 +188,4 @@ description: gyeolhwi의 Claude Code 커맨드/스킬 모음을 user-level (`~/.
 | version.txt 있는데 파일 누락 | 사용자가 user-level 파일 직접 삭제 | 업데이트 모드에서 `[NEW]` 로 잡혀 자동 복구 제안 |
 | 임시 폴더 충돌 | 비정상 종료 | 다음 실행 첫 단계에서 자동 정리 |
 | Obsidian 강제 재설치 원함 | — | `~/.claude/commands/obsidian/` 비우고 g-setting 재실행 |
-| 전체 초기화 원함 | — | `~/.claude/.gyeolhwi/` 삭제 후 재실행 (백업 권장) |
+| 전체 초기화 원함 | — | `~/.claude/.claude-code-kit/` 삭제 후 재실행 (백업 권장) |

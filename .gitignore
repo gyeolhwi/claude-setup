@@ -2,4 +2,6 @@
 .claude/settings.local.json
 external/
 skills/supanova-*
+.DS_Store
+**/.DS_Store
 
