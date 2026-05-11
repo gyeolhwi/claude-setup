@@ -1,12 +1,12 @@
-# claude-code-kit
+# claude-setup
 
 Claude Code 에서 사용하는 커스텀 커맨드 & 스킬 모음입니다. **Git 커밋 자동화, Obsidian 볼트 관리, 프로젝트 문서화** 워크플로우를 포함합니다. Windows / Mac / Linux 동일 동작.
 
 ## 사전 요구사항
 
 - [Claude Code](https://claude.ai/code) 설치 및 최초 1회 실행 (`~/.claude/` 생성 필요)
-- oh-my-claudecode 설치 — 스킬 자동 트리거 기능에 필요 (`omc` CLI로 설치)
-- git
+- [oh-my-claudecode](https://github.com/jbkim-dev/oh-my-claudecode) 설치 — 스킬 자연어 자동 트리거에 사용 (없어도 슬래시 직접 호출은 가능)
+- git (Windows: Git Bash 또는 PowerShell 5.1+)
 
 ## 설치 (최초)
 
@@ -68,13 +68,24 @@ clone 한 폴더가 있든 없든 어디서든 다음 호출:
 └── backup-{ts}/          ← 업데이트 시 백업
 ```
 
+> 메타 폴더명 `.claude-code-kit/` 은 레거시 명칭이며 기존 설치자 호환을 위해 유지됩니다.
+
 전체 초기화는 `~/.claude/.claude-code-kit/` 삭제 후 재실행.
+
+### 기존 사용자 마이그레이션 안내
+
+`skills/omc-learned/project-docs-gen/` 가 `skills/project-docs-gen/` 으로 이동되었습니다. 이전에 설치한 사용자는 다음 업데이트 시:
+
+- `[REMOVED] ~/.claude/skills/omc-learned/` → 삭제 동의
+- `[NEW] ~/.claude/skills/project-docs-gen/` → 추가 동의
+
+두 항목을 모두 동의하면 동일한 템플릿이 새 위치로 옮겨집니다.
 
 ---
 
 ## 기능 목록
 
-> 커맨드(`/명령`)는 슬래시로 직접 호출, 스킬은 자연어로 자동 트리거됩니다.
+> 커맨드(`/명령`)는 슬래시로 직접 호출, 스킬은 자연어로 자동 트리거됩니다. `/project-docs-gen` 처럼 동일 이름이 커맨드와 스킬에 모두 정의된 경우, 본문은 동일하며 호출 방식만 다릅니다.
 
 ### 키트 설치 / 업데이트
 
