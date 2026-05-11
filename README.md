@@ -1,6 +1,6 @@
 # claude-code-kit
 
-Claude Code 에서 사용하는 커스텀 커맨드 & 스킬 모음입니다. **Windows / Mac / Linux 동일 동작.**
+Claude Code 에서 사용하는 커스텀 커맨드 & 스킬 모음입니다. **Git 커밋 자동화, Obsidian 볼트 관리, 프로젝트 문서화** 워크플로우를 포함합니다. Windows / Mac / Linux 동일 동작.
 
 ## 사전 요구사항
 
@@ -26,6 +26,20 @@ clone한 폴더에서 Claude Code 를 열고 다음 중 하나로 호출:
 
 설치 완료 후 **clone 한 폴더는 삭제해도 됩니다** (모두 user-level 로 복사됨).
 
+## 설치 대상
+
+| 영역 | 원본 | 대상 | 업데이트 정책 |
+|------|------|------|--------------|
+| 일반 | `commands/git/commit-auto.md` | `~/.claude/commands/` | 변경분 일괄 동의 |
+| 일반 | `commands/project/project-*.md` | `~/.claude/commands/` | 변경분 일괄 동의 |
+| 일반 | `skills/create-pr/` | `~/.claude/skills/` | 변경분 일괄 동의 |
+| 일반 | `skills/project-docs-gen/` | `~/.claude/skills/` | 변경분 일괄 동의 |
+| 일반 | `skills/g-setting/` | `~/.claude/skills/` | 변경분 일괄 동의 |
+| Obsidian | `commands/obsidian/*.md` | `~/.claude/commands/obsidian/` | 첫 설치 후 파일별 검토 |
+| Obsidian | `commands/obsidian/templates/` | `~/.claude/commands/templates/` | 첫 설치 후 파일별 검토 |
+
+> **⚠️ Obsidian 사용자:** Obsidian 커맨드들은 **`/obsidian-init` 실행 후에만 정상 동작합니다.** 설치 직후 `/obsidian-init`으로 볼트 경로/카테고리/폴더/인덱스를 세팅하세요. 이후 직접 수정한 파일은 업데이트 시 항상 검토 단계를 거쳐 보존됩니다.
+
 ## 업데이트 (이후)
 
 clone 한 폴더가 있든 없든 어디서든 다음 호출:
@@ -43,20 +57,6 @@ clone 한 폴더가 있든 없든 어디서든 다음 호출:
 - **일반 영역** (커맨드/스킬): 변경분 일괄 보고 → 사용자 동의 후 적용
 - **Obsidian 영역**: 파일별 diff 표시 → 사용자가 개별 검토 (자기 스타일 보존)
 - 변경 전 `~/.claude/.claude-code-kit/backup-{ts}/` 로 백업
-
-### 설치 대상
-
-| 영역 | 원본 | 대상 | 업데이트 정책 |
-|------|------|------|--------------|
-| 일반 | `commands/git/commit-auto.md` | `~/.claude/commands/` | 변경분 일괄 동의 |
-| 일반 | `commands/project/project-*.md` | `~/.claude/commands/` | 변경분 일괄 동의 |
-| 일반 | `skills/create-pr/` | `~/.claude/skills/` | 변경분 일괄 동의 |
-| 일반 | `skills/omc-learned/` | `~/.claude/skills/` | 변경분 일괄 동의 |
-| 일반 | `skills/g-setting/` | `~/.claude/skills/` | 변경분 일괄 동의 |
-| Obsidian | `commands/obsidian/*.md` | `~/.claude/commands/obsidian/` | 첫 설치 후 파일별 검토 |
-| Obsidian | `commands/obsidian/templates/` | `~/.claude/commands/templates/` | 첫 설치 후 파일별 검토 |
-
-> **Obsidian 사용자:** 설치 후 `/obsidian-init` 으로 볼트 경로/카테고리/폴더/인덱스를 한 번에 세팅할 수 있습니다. 본인이 직접 수정한 obsidian 파일은 업데이트 시 자동으로 보존되지 않으니 항상 검토 단계를 거칩니다.
 
 ### 메타데이터 위치
 
@@ -138,7 +138,7 @@ clone 한 폴더가 있든 없든 어디서든 다음 호출:
 
 ## 템플릿
 
-### [project-docs-gen](./skills/omc-learned/project-docs-gen/README.md)
+### [project-docs-gen](./skills/project-docs-gen/README.md)
 
 `/project-docs-gen` 커맨드가 사용하는 문서 템플릿 10종입니다.
 
@@ -168,7 +168,7 @@ Claude Code 로 디자인 잘하는 방법: [uxjoseph/supanova-design-skill](htt
 ## 파일 구조
 
 ```
-claude-code-kit/
+claude-setup/
 ├── README.md
 ├── commands/
 │   ├── git/
@@ -200,18 +200,17 @@ claude-code-kit/
     │   └── SKILL.md
     ├── g-setting/
     │   └── SKILL.md
-    └── omc-learned/
-        └── project-docs-gen/
-            ├── README.md
-            └── templates/
-                ├── 01-requirements.md
-                ├── 02-tech-stack.md
-                ├── 03-roles.md
-                ├── 04-sitemap.md
-                ├── 05-features.md
-                ├── 06-erd.md
-                ├── 07-api.md
-                ├── 08-flowchart.md
-                ├── 09-wireframe.md
-                └── 10-scenarios.md
+    └── project-docs-gen/
+        ├── README.md
+        └── templates/
+            ├── 01-requirements.md
+            ├── 02-tech-stack.md
+            ├── 03-roles.md
+            ├── 04-sitemap.md
+            ├── 05-features.md
+            ├── 06-erd.md
+            ├── 07-api.md
+            ├── 08-flowchart.md
+            ├── 09-wireframe.md
+            └── 10-scenarios.md
 ```

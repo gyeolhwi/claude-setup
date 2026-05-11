@@ -44,7 +44,7 @@ URL을 하드코딩하지 않는다. 우선순위대로:
 | `commands/project/project-docs-gen.md` | `~/.claude/commands/project-docs-gen.md` |
 | `commands/project/project-workflow.md` | `~/.claude/commands/project-workflow.md` |
 | `skills/create-pr/` | `~/.claude/skills/create-pr/` |
-| `skills/omc-learned/` | `~/.claude/skills/omc-learned/` |
+| `skills/project-docs-gen/` | `~/.claude/skills/project-docs-gen/` |
 | `skills/g-setting/` | `~/.claude/skills/g-setting/` (자기 자신) |
 
 ### B. Obsidian 영역 (사용자 커스텀 — 첫 설치만 시드, 업데이트 시 파일별 묻기)

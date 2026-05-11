@@ -90,7 +90,7 @@ description: "프로젝트 개발 문서를 일관된 템플릿으로 자동 생
 ### 문서 생성 시
 
 1. 아래 경로의 템플릿 파일을 먼저 읽고 형식을 따른다:
-   `~/.claude/skills/omc-learned/project-docs-gen/templates/`
+   `~/.claude/skills/project-docs-gen/templates/`
 2. 사용자가 제공한 컨텍스트를 기반으로 내용을 채운다
 3. 추측이 필요한 부분은 `<!-- TODO: 확인 필요 -->` 주석을 남긴다
 4. 이전 문서와 용어, ID 체계를 일관되게 유지한다
@@ -119,7 +119,7 @@ description: "프로젝트 개발 문서를 일관된 템플릿으로 자동 생
 
 ## 템플릿 파일 위치
 
-`~/.claude/skills/omc-learned/project-docs-gen/templates/` 폴더의 개별 파일 참조.
+`~/.claude/skills/project-docs-gen/templates/` 폴더의 개별 파일 참조.
 
 | 템플릿 파일 | 문서 |
 |------------|------|
