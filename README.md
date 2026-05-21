@@ -1,41 +1,97 @@
-# claude-code-kit
+# claude-setup
 
-Claude Code에서 사용하는 커스텀 커맨드 & 스킬 모음입니다.
+Claude Code 에서 사용하는 커스텀 커맨드 & 스킬 모음입니다. **Git 커밋 자동화, Obsidian 볼트 관리, 프로젝트 문서화** 워크플로우를 포함합니다. Windows / Mac / Linux 동일 동작.
 
-## 설치
+## 사전 요구사항
+
+- [Claude Code](https://claude.ai/code) 설치 및 최초 1회 실행 (`~/.claude/` 생성 필요)
+- [oh-my-claudecode](https://github.com/jbkim-dev/oh-my-claudecode) 설치 — 스킬 자연어 자동 트리거에 사용 (없어도 슬래시 직접 호출은 가능)
+- git (Windows: Git Bash 또는 PowerShell 5.1+)
+
+## 설치 (최초)
 
 ```bash
 git clone https://github.com/gyeolhwi/claude-setup.git
+cd claude-setup
 ```
 
-clone한 폴더에서 Claude Code를 열고 아래와 같이 말하세요:
+clone한 폴더에서 Claude Code 를 열고 다음 중 하나로 호출:
 
 ```
-내 컴퓨터에 맞게 세팅해줘
+세팅해줘            ← 자연어 트리거
+/g-setting          ← 직접 호출
 ```
 
-Claude가 이 README를 읽고 OS에 맞게 자동으로 세팅합니다.
+`g-setting` 스킬이 `~/.claude/` 로 모든 항목을 복사합니다.
 
-### 설치 대상
+설치 완료 후 **clone 한 폴더는 삭제해도 됩니다** (모두 user-level 로 복사됨).
 
-| 원본 | 복사 위치 | 비고 |
-|------|----------|------|
-| `commands/git/commit-auto.md` | `~/.claude/commands/` | |
-| `commands/obsidian/obsidian-*.md` | `~/.claude/commands/` | Obsidian 사용자만 |
-| `commands/obsidian/templates/` | `~/.claude/commands/templates/` | Obsidian 문서 템플릿 |
-| `commands/project/project-docs.md` | `~/.claude/commands/` | |
-| `commands/project/project-docs-gen.md` | `~/.claude/commands/` | |
-| `commands/project/project-workflow.md` | `~/.claude/commands/` | |
-| `skills/create-pr/` | `~/.claude/skills/create-pr/` | 폴더째 복사 |
-| `skills/omc-learned/project-docs-gen/` | `~/.claude/skills/omc-learned/project-docs-gen/` | 폴더째 복사 |
+## 설치 대상
 
-> **Obsidian 사용자:** 설치 후 `/obsidian-init`을 실행하면 볼트 경로 설정, 카테고리 확인, 폴더/인덱스 생성까지 한 번에 처리됩니다.
+| 영역 | 원본 | 대상 | 업데이트 정책 |
+|------|------|------|--------------|
+| 일반 | `commands/git/commit-auto.md` | `~/.claude/commands/` | 변경분 일괄 동의 |
+| 일반 | `commands/project/project-*.md` | `~/.claude/commands/` | 변경분 일괄 동의 |
+| 일반 | `skills/create-pr/` | `~/.claude/skills/` | 변경분 일괄 동의 |
+| 일반 | `skills/project-docs-gen/` | `~/.claude/skills/` | 변경분 일괄 동의 |
+| 일반 | `skills/g-setting/` | `~/.claude/skills/` | 변경분 일괄 동의 |
+| Obsidian | `commands/obsidian/*.md` | `~/.claude/commands/obsidian/` | 첫 설치 후 파일별 검토 |
+| Obsidian | `commands/obsidian/templates/` | `~/.claude/commands/templates/` | 첫 설치 후 파일별 검토 |
+
+> **⚠️ Obsidian 사용자:** Obsidian 커맨드들은 **`/obsidian-init` 실행 후에만 정상 동작합니다.** 설치 직후 `/obsidian-init`으로 볼트 경로/카테고리/폴더/인덱스를 세팅하세요. 이후 직접 수정한 파일은 업데이트 시 항상 검토 단계를 거쳐 보존됩니다.
+
+## 업데이트 (이후)
+
+clone 한 폴더가 있든 없든 어디서든 다음 호출:
+
+```
+업데이트해줘
+/g-setting
+```
+
+> 설치 시 `g-setting` 스킬 자체도 `~/.claude/skills/`에 복사되기 때문에, 원본 clone 폴더를 삭제한 후에도 어디서든 호출할 수 있습니다.
+
+같은 스킬이 **재실행 시 자동으로 업데이트 모드** 로 동작합니다:
+
+- 임시 폴더에 fresh clone → user-level 과 비교
+- **일반 영역** (커맨드/스킬): 변경분 일괄 보고 → 사용자 동의 후 적용
+- **Obsidian 영역**: 파일별 diff 표시 → 사용자가 개별 검토 (자기 스타일 보존)
+- 변경 전 `~/.claude/.claude-code-kit/backup-{ts}/` 로 백업
+
+### 메타데이터 위치
+
+```
+~/.claude/.claude-code-kit/
+├── version.txt           ← 본체 git rev
+├── source-url.txt        ← 리포지터리 URL (업데이트 시 클론에 사용)
+├── installed-at.txt      ← 설치 시각
+└── backup-{ts}/          ← 업데이트 시 백업
+```
+
+> 메타 폴더명 `.claude-code-kit/` 은 레거시 명칭이며 기존 설치자 호환을 위해 유지됩니다.
+
+전체 초기화는 `~/.claude/.claude-code-kit/` 삭제 후 재실행.
+
+### 기존 사용자 마이그레이션 안내
+
+`skills/omc-learned/project-docs-gen/` 가 `skills/project-docs-gen/` 으로 이동되었습니다. 이전에 설치한 사용자는 다음 업데이트 시:
+
+- `[REMOVED] ~/.claude/skills/omc-learned/` → 삭제 동의
+- `[NEW] ~/.claude/skills/project-docs-gen/` → 추가 동의
+
+두 항목을 모두 동의하면 동일한 템플릿이 새 위치로 옮겨집니다.
 
 ---
 
 ## 기능 목록
 
-> 커맨드(`/명령`)는 슬래시로 직접 호출, 스킬은 자연어로 자동 트리거됩니다.
+> 커맨드(`/명령`)는 슬래시로 직접 호출, 스킬은 자연어로 자동 트리거됩니다. `/project-docs-gen` 처럼 동일 이름이 커맨드와 스킬에 모두 정의된 경우, 본문은 동일하며 호출 방식만 다릅니다.
+
+### 키트 설치 / 업데이트
+
+| 이름 | 유형 | 설명 |
+|------|------|------|
+| `g-setting` | 스킬 | 이 키트 전체를 `~/.claude/`에 설치하거나 업데이트 |
 
 ### [Git](./commands/git/README.md)
 
@@ -93,7 +149,7 @@ Claude가 이 README를 읽고 OS에 맞게 자동으로 세팅합니다.
 
 ## 템플릿
 
-### [project-docs-gen](./skills/omc-learned/project-docs-gen/README.md)
+### [project-docs-gen](./skills/project-docs-gen/README.md)
 
 `/project-docs-gen` 커맨드가 사용하는 문서 템플릿 10종입니다.
 
@@ -112,10 +168,18 @@ Claude가 이 README를 읽고 OS에 맞게 자동으로 세팅합니다.
 
 ---
 
+## 디자인 참고
+
+Claude Code 로 디자인 잘하는 방법: [uxjoseph/supanova-design-skill](https://github.com/uxjoseph/supanova-design-skill)
+
+필요한 스킬만 골라서 `~/.claude/skills/` 에 직접 넣어 쓰면 됩니다.
+
+---
+
 ## 파일 구조
 
 ```
-claude-code-kit/
+claude-setup/
 ├── README.md
 ├── commands/
 │   ├── git/
@@ -145,18 +209,19 @@ claude-code-kit/
 └── skills/
     ├── create-pr/
     │   └── SKILL.md
-    └── omc-learned/
-        └── project-docs-gen/
-            ├── README.md
-            └── templates/
-                ├── 01-requirements.md
-                ├── 02-tech-stack.md
-                ├── 03-roles.md
-                ├── 04-sitemap.md
-                ├── 05-features.md
-                ├── 06-erd.md
-                ├── 07-api.md
-                ├── 08-flowchart.md
-                ├── 09-wireframe.md
-                └── 10-scenarios.md
+    ├── g-setting/
+    │   └── SKILL.md
+    └── project-docs-gen/
+        ├── README.md
+        └── templates/
+            ├── 01-requirements.md
+            ├── 02-tech-stack.md
+            ├── 03-roles.md
+            ├── 04-sitemap.md
+            ├── 05-features.md
+            ├── 06-erd.md
+            ├── 07-api.md
+            ├── 08-flowchart.md
+            ├── 09-wireframe.md
+            └── 10-scenarios.md
 ```
