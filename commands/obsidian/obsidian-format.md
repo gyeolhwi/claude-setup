@@ -18,10 +18,11 @@ Obsidian 문서의 YAML frontmatter를 정규화하고 description 필드를 추
 
 ```yaml
 ---
-status: done          # 단일값: done | wip | seed | hold | reference | wiki
+status: done          # 단일값: done | wip | seed | hold | reference | wiki | todo | rfc
 tags:
-  - tag1              # 소문자, 2~5개
+  - tag1              # 소문자, 2~5개 — 주제만 (소속/기관명 금지)
   - tag2
+client: 우리기획       # (선택) 업무 노트만 — 소속/클라이언트/기관명. 없으면 개인 노트
 description: "..."    # 한 줄 요약 — AI 검색 및 Obsidian 호버 미리보기용
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
@@ -36,6 +37,8 @@ updated: YYYY-MM-DD
 - `status`가 리스트 형식(`- done`)이면 단일값 `done`으로 변환
 - `tags`가 인라인 배열 형식(`[tag1, tag2]`)이면 YAML block 형식으로 변환
 - `tags`가 없거나 비어 있으면 파일명과 내용 기반으로 2~4개 생성 — **아래 어휘 목록에서 우선 선택**
+- `tags` 안에 **소속·회사·기관 고유명사**(예: `우리기획`, `더프롬프트컴퍼니`, `동그라미재단`)가 있으면 → `tags`에서 제거하고 `client` 필드로 옮긴다
+- 내용·description에 특정 회사/클라이언트 업무임이 분명하면 `client` 필드를 추가한다 (`tags` 다음 줄, `description` 위). 개인 노트면 추가하지 않는다. 판단 기준은 `/obsidian-categories.md`의 **client 필드** 섹션 참조
 - `created`가 없으면 `updated` 값으로 채운다
 - `updated`를 오늘 날짜로 갱신
 
