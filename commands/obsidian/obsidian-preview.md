@@ -49,16 +49,7 @@ Obsidian 볼트의 00_Sandbox, Clippings 파일들을 분석해 `/obsidian-organ
 
 ## status 결정 기준
 
-| 상태 | 기준 |
-|------|------|
-| `done` | 내용이 완성된 문서 |
-| `wip` | 명백히 작성 중인 문서 |
-| `seed` | 아이디어 메모, 초안, 내용이 짧거나 미완성 |
-| `hold` | 작성 보류 중인 문서 |
-| `reference` | 가이드/규칙/기준 문서 |
-| `wiki` | 용어/개념 정의 문서 |
-| `todo` | 할 일/처리 예정 메모 |
-| `rfc` | 논의·검토 중인 제안/초안 |
+status 값과 판단 기준은 `/obsidian-categories.md`의 **status 값** 섹션을 참조한다.
 
 ## client 결정 기준
 

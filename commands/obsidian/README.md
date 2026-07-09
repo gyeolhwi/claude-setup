@@ -44,8 +44,9 @@
 - 인수 있음: 지정 파일/폴더 처리
 
 처리 내용:
-- `status` 단일값 정규화
+- `status` 단일값 정규화 (done/wip/seed/hold/reference/wiki/todo/rfc)
 - `tags` 표준 어휘 기반 보완
+- `client` 필드 — 업무/클라이언트 노트 소속 표시 (개인 노트는 생략)
 - `description` 필드 추가 (AI 검색용 한 줄 요약)
 - 부모 인덱스 wikilink 확인 및 추가
 

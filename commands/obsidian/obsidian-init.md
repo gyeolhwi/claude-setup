@@ -61,11 +61,12 @@ updated: YYYY-MM-DD
 ### 5. 기본 템플릿 생성
 
 `~/.claude/commands/templates/` 폴더에 기본 문서 템플릿을 생성한다.
-레포의 `commands/obsidian/templates/` 파일들을 복사한다.
+- 이 저장소가 로컬에 있으면 `commands/obsidian/templates/` 파일들을 복사한다.
+- 저장소 위치를 모르면 사용자에게 경로를 묻고, 그것도 없으면 `/obsidian-categories.md`의 **문서 템플릿** 매핑을 참고해 기본 템플릿 파일을 직접 생성한다.
 
-### 6. 커맨드 파일 경로 치환
+### 6. 커맨드 파일 경로 치환 (선택)
 
-`~/.claude/commands/` 내의 obsidian 커맨드 파일들에서
+`~/.claude/commands/`(또는 플러그인으로 설치된 경우 해당 커맨드 디렉터리) 내의 obsidian 커맨드 파일들에서
 `{{OBSIDIAN_VAULT_PATH}}`를 입력받은 볼트 경로로 치환한다.
 
 대상 파일:
@@ -74,6 +75,8 @@ updated: YYYY-MM-DD
 - `obsidian-move.md`
 - `obsidian-index.md`
 - `obsidian-organize.md`
+
+경로/설치 레이아웃이 달라 치환하지 못해도, 각 커맨드는 실행 시 볼트 경로를 물어보는 폴백으로 동작하므로 필수는 아니다.
 
 ### 7. 완료 출력
 

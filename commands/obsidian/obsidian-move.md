@@ -67,7 +67,7 @@ rename_map = {
 
 각 파일의 frontmatter 바로 다음 줄에 올바른 부모 인덱스 wikilink가 있는지 확인한다. 없으면 추가한다.
 
-`/obsidian-format` 명령의 부모 인덱스 매핑 테이블 참조.
+매핑은 `/obsidian-categories.md`의 **부모 인덱스 링크** 섹션을 참조한다.
 
 ---
 

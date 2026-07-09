@@ -18,7 +18,7 @@ Obsidian 문서의 YAML frontmatter를 정규화하고 description 필드를 추
 
 ```yaml
 ---
-status: done          # 단일값: done | wip | seed | hold | reference | wiki | todo | rfc
+status: done          # 단일값 (값 목록·정의: /obsidian-categories.md 의 status 값 섹션)
 tags:
   - tag1              # 소문자, 2~5개 — 주제만 (소속/기관명 금지)
   - tag2
