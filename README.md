@@ -21,8 +21,8 @@ Claude가 이 README를 읽고 OS에 맞게 자동으로 세팅합니다.
 | 원본 | 복사 위치 | 비고 |
 |------|----------|------|
 | `commands/git/commit-auto.md` | `~/.claude/commands/` | |
-| `commands/obsidian/obsidian-*.md` | `~/.claude/commands/` | Obsidian 사용자만 |
-| `commands/obsidian/templates/` | `~/.claude/commands/templates/` | Obsidian 문서 템플릿 |
+| `commands/obsidian/obsidian-*.md` | `~/.claude/commands/` | Obsidian 사용자만. `{{OBSIDIAN_VAULT_PATH}}`를 볼트 경로로 치환 |
+| `commands/obsidian/templates/` | `<볼트>/01_문서템플릿/` | Obsidian 문서 템플릿 — 볼트 안이 정본 |
 | `commands/project/project-docs.md` | `~/.claude/commands/` | |
 | `commands/project/project-docs-gen.md` | `~/.claude/commands/` | |
 | `commands/project/project-workflow.md` | `~/.claude/commands/` | |
@@ -130,13 +130,17 @@ claude-code-kit/
 │   │   ├── obsidian-move.md
 │   │   ├── obsidian-organize.md
 │   │   ├── obsidian-preview.md
-│   │   └── templates/
+│   │   └── templates/            # → <볼트>/01_문서템플릿/
+│   │       ├── 00_템플릿_사용규칙.md   # frontmatter·구조·인덱스 규칙 (정본)
+│   │       ├── TPL_공용.md
+│   │       ├── TPL_인덱스.md
 │   │       ├── TPL_기술가이드.md
+│   │       ├── TPL_배포매뉴얼.md
 │   │       ├── TPL_아키텍처.md
 │   │       ├── TPL_컨벤션.md
 │   │       ├── TPL_AI프롬프트.md
 │   │       ├── TPL_개인노트.md
-│   │       └── TPL_서재.md
+│   │       └── TPL_감상기록.md
 │   └── project/
 │       ├── README.md
 │       ├── project-docs.md
