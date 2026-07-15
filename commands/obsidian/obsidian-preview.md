@@ -57,7 +57,7 @@ status 값과 판단 기준은 `/obsidian-categories.md`의 **status 값** 섹�
 
 | 판단 | 처리 |
 |------|------|
-| 내용/description에 특정 회사·클라이언트 업무임이 분명 (예: "우리기획 고객…") | `client: <소속명>` |
+| 내용/description에 특정 회사·클라이언트 업무임이 분명 (예: "우리회사 고객…") | `client: <소속명>` |
 | 본문/태그에 소속·기관 고유명사가 박혀 있음 | 해당 값을 `client`로, 태그에서는 제거 |
 | 개인 학습·기록·취미 | `client` 없음 (개인 노트) |
 
@@ -77,6 +77,6 @@ status 값과 판단 기준은 `/obsidian-categories.md`의 **status 값** 섹�
   구조 변동: N건
   새 카테고리 제안: N건
   분류 대상: N개 파일 (00_Sandbox N개, Clippings N개)
-  폴더별: 10_Dev/Backend N개, 20_Personal N개, ...
+  폴더별: 10_Dev/Backend N개, 20_Work N개, 40_Personal N개, ...
   수동 확인 필요: N건
 ```
