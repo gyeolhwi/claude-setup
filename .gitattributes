@@ -1,0 +1,12 @@
+# 새 환경에서 clone 했을 때 스크립트가 CRLF 로 떨어져 실행이 깨지는 것을 막는다.
+# (core.autocrlf=true 인 환경 대비)
+* text=auto eol=lf
+
+*.sh   text eol=lf
+*.mjs  text eol=lf
+*.js   text eol=lf
+*.py   text eol=lf
+*.md   text eol=lf
+*.json text eol=lf
+
+*.ps1  text eol=crlf
