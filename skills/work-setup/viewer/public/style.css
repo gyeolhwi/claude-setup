@@ -98,7 +98,7 @@ svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width:
   padding: calc(20px + env(safe-area-inset-top)) 0 calc(20px + env(safe-area-inset-bottom));
 }
 .tabbar { display: none; }
-@media (max-width: 1360px) { .app { grid-template-columns: 240px minmax(0, 1fr); } .feed { display: none; } }
+@media (max-width: 1679px) { .app { grid-template-columns: 260px minmax(0, 1fr); } .feed { display: none; } }
 @media (max-width: 860px) {
   .app { grid-template-columns: minmax(0, 1fr); }
   .side { display: none; }
@@ -137,6 +137,8 @@ svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width:
 }
 .nav a:hover, .side-list a:hover { background: var(--fill); }
 .nav a.on, .side-list a.on { background: var(--live); color: #fff; font-weight: 600; }
+.nav a svg { width: 22px; height: 22px; color: var(--live); stroke-width: 1.8; }
+.nav a.on svg { color: #fff; }
 .nav .count { margin-left: auto; font-size: 15px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
 .nav a.on .count { color: rgba(255,255,255,.8); }
 .nav .count:empty { display: none; }
@@ -146,7 +148,9 @@ svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width:
 .side-list { display: flex; flex-direction: column; gap: 2px; }
 .side-list a { min-height: 40px; font-size: 16px; }
 .side-list .n { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.side-list .busy { width: 8px; height: 8px; border-radius: 50%; background: var(--live); }
+.side-list .busy { width: 8px; height: 8px; border-radius: 50%; background: var(--rule); }
+.side-list .busy.live { background: var(--live); }
+.side-list .busy.warn { background: var(--warn-dot); }
 .side-list a.on .busy { background: #fff; }
 .side-empty { padding: 0 12px; font-size: 15px; color: var(--ink-3); }
 @keyframes blink { 50% { opacity: .3; } }
@@ -255,7 +259,6 @@ svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width:
   .ag-row { grid-template-columns: 1fr; gap: 2px; }
   .pg-git { flex-basis: 100%; margin-left: 0; }
 }
-.side-list .busy.warn { background: var(--warn-dot); }
 
 /* ---------- 프로젝트 목록 ---------- */
 .plist { display: flex; flex-direction: column; }
@@ -454,3 +457,10 @@ svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width:
 
 /* 작은 경로 표기는 본문 글꼴로 (고정폭은 코드에만) */
 .drow .p, .pin small { font-family: var(--sans); font-size: 13px; color: var(--ink-3); }
+
+/* 넓은 화면: 홈 프로젝트 묶음을 2열로 (본문 폭이 880px 넘을 때) */
+@media (min-width: 1160px) {
+  .main > .groups { max-width: 1320px; display: block; columns: 2 420px; column-gap: 24px; }
+  .main > .groups > * { break-inside: avoid; margin-bottom: 28px; }
+  .main > .head { max-width: 1320px; }
+}

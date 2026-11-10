@@ -239,15 +239,16 @@ function renderSide() {
     const list = state.projects.filter((p) => p.kind === k).sort((a, b) => a.name.localeCompare(b.name));
     if (!list.length) return "";
     return `<section class="side-group"><h3>${label}</h3><div class="side-list">${list.map((p) => {
-      const busy = (p.touched && now - p.touched < 5 * 60_000) || state.agents.some((a) => a.project === p.name && a.status === "working");
+      // 점: 그 프로젝트 에이전트가 확인을 기다리면 주황, 일하는 중이면 파랑, 방금 파일만 바뀌었으면 회색
+      const ags = state.agents.filter((a) => a.project === p.name);
+      const dot = ags.some((a) => a.status === "blocked") ? "warn" : ags.some((a) => a.status === "working") ? "live"
+        : p.touched && now - p.touched < 5 * 60_000 ? "recent" : "";
       const on = r && (r.project === p.name || (r.path ?? "").startsWith(`Projects/${p.name}`));
-      return `<a href="#/p/${enc(p.name)}" class="${on ? "on" : ""}"><span class="n">${esc(p.name)}</span>${busy ? '<span class="busy" title="방금 바뀜"></span>' : ""}</a>`;
+      return `<a href="#/p/${enc(p.name)}" class="${on ? "on" : ""}"><span class="n">${esc(p.name)}</span>${dot ? `<span class="busy ${dot}"></span>` : ""}</a>`;
     }).join("")}</div></section>`;
   }).join("");
-  const agentHtml = `<section class="side-group"><h3>에이전트</h3><div class="side-list">${state.agents.length
-    ? state.agents.map((a) => `<a href="#/" data-agent="${esc(a.id)}" title="${esc(a.title)}"><span class="n">${esc(a.title || agentName(a))}</span>${a.status === "working" ? '<span class="busy"></span>' : a.status === "blocked" ? '<span class="busy warn"></span>' : ""}</a>`).join("")
-    : '<div class="side-empty">실행 중인 에이전트가 없습니다</div>'}</div></section>`;
-  $("#sideGroups").innerHTML = agentHtml + projHtml;
+  // 에이전트 목록은 홈에 있으므로 사이드바에는 프로젝트만 둔다
+  $("#sideGroups").innerHTML = projHtml;
   $("#sideGroups").onclick = (e) => { const l = e.target.closest("[data-agent]"); if (l) { e.preventDefault(); showAgent(l.dataset.agent); } };
 }
 
