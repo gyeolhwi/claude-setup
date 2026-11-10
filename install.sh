@@ -16,7 +16,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 CORE_COMMANDS=(git/commit-auto.md project/project-docs.md project/project-docs-gen.md project/project-workflow.md)
 OBSIDIAN_COMMANDS=(obsidian-categories obsidian-format obsidian-index obsidian-init obsidian-move obsidian-organize obsidian-preview)
-SKILLS=(create-pr gh-setup issue-create issue-start issue-end issue-merge)
+SKILLS=(create-pr gh-setup issue-create issue-start issue-end issue-merge work-setup)
 NESTED_SKILLS=(omc-learned/project-docs-gen)
 
 MODE=link

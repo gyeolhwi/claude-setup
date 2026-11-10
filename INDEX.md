@@ -68,11 +68,20 @@ docs:
     keywords: [commit-auto, 커밋, commit, 컨벤션, convention, FEAT, FIX, REFACTOR, CHORE,
                create-pr, PR, 풀리퀘스트, staged, diff, 그룹화]
 
+  - path: docs/workflows/work-workspace-workflow.md
+    title: Work 작업공간 세팅과 실시간 뷰어
+    category: workflows
+    summary: >
+      컴퓨터·서버의 작업 폴더를 Projects 중심 + README·INDEX·AGENTS·docs 구조로 세팅하는 work-setup 스킬 사용 순서와,
+      폴더·문서·바뀐 파일·herdr 에이전트 상태를 아이패드에서 실시간으로 보는 Work 뷰어의 설치·원격 접속·운영 명령.
+    keywords: [work-setup, Work, 작업공간, workspace, 뷰어, viewer, 실시간, 모니터링, 아이패드, Projects, README, INDEX,
+               AGENTS, herdr, tailscale, bun, systemd, launchd, 새컴퓨터, 서버]
+
   - path: docs/reference/catalog.md
     title: 커맨드·스킬 카탈로그
     category: reference
     summary: >
-      이 저장소가 제공하는 슬래시 커맨드 11개와 스킬 7개의 전체 목록. 호출 방식(슬래시/자연어), 원본 파일 경로,
+      이 저장소가 제공하는 슬래시 커맨드 11개와 스킬 8개의 전체 목록. 호출 방식(슬래시/자연어), 원본 파일 경로,
       설치 위치, 관련 워크플로우 문서를 한 표에서 찾을 수 있다. project-docs-gen 템플릿 10종의 의존 관계 포함.
     keywords: [카탈로그, catalog, 목록, 커맨드, command, 스킬, skill, 슬래시, 템플릿, template,
                의존관계, ID체계, REQ, FEAT, SCR, API, TC, FLOW, EDGE]
@@ -132,6 +141,11 @@ assets:
     title: PR 생성 스킬
     summary: 한국어 PR 본문 작성. AI 생성 문구를 넣지 않는다.
     keywords: [create-pr, PR, 풀리퀘스트]
+
+  - path: skills/work-setup/
+    title: Work 작업공간 세팅 스킬 + 뷰어
+    summary: SKILL.md(세팅 절차) + references/format.md(문서·INDEX 형식) + viewer/(Bun 서버·화면·install.sh).
+    keywords: [work-setup, 작업공간, 뷰어, viewer, install, bun]
 
   - path: skills/omc-learned/project-docs-gen/
     title: 개발 문서 템플릿 10종
