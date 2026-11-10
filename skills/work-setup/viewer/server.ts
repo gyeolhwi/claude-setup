@@ -11,7 +11,9 @@ const PUBLIC = join(import.meta.dir, "public");
 
 // 실시간 감시에서 빼는 경로 조각 (잡음이 많거나 볼 일이 없는 것)
 const NOISE = [/(^|\/)\.git(\/|$)/, /node_modules/, /__pycache__/, /(^|\/)\.omc(\/|$)/, /(^|\/)\.cache(\/|$)/,
-  /\.swp$/, /~$/, /\.DS_Store$/, /(^|\/)venvs\//, /\.tmp$/, /(^|\/)\.ovis\//,
+  // 빌드·개발 서버 캐시 (Next.js .next, Turborepo, Vite, Nuxt, Svelte, Parcel, 파이썬 도구 캐시)
+  /(^|\/)\.(next|turbo|nuxt|svelte-kit|parcel-cache|vite|pytest_cache|mypy_cache|ruff_cache)(\/|$)/,
+  /\.swp$/, /~$/, /\.DS_Store$/, /(^|\/)venvs\//, /\.tmp$/, /(^|\/)\.ovis(\/|$)/,
   /\.tmp\.\d+\.[0-9a-f]+$/, /(^|\/)sed[A-Za-z0-9]{6}$/, /\.sw[a-p]x?$/, /(^|\/)\.#/, /(^|\/)4913$/, /\.crswap$/];
 // 원자적 저장(임시 파일에 쓰고 이름 바꾸기)을 '수정'으로 보기 위한 기록
 const TMP_WRITE = /^(.*)\.tmp\.\d+\.[0-9a-f]+$/;
@@ -63,7 +65,7 @@ mkdirSync(STATE_DIR, { recursive: true });
 try {
   const cut = Date.now() - KEEP_DAYS * 86400000;
   const rows = readFileSync(LOG_FILE, "utf8").split("\n").filter(Boolean).map((l) => { try { return JSON.parse(l); } catch { return null; } })
-    .filter((a) => a && a.t >= cut);
+    .filter((a) => a && a.t >= cut && !NOISE.some((r) => r.test(a.path))); // 규칙이 늘면 지난 기록에서도 뺀다
   activity.push(...rows.reverse());
   writeFileSync(LOG_FILE, rows.slice().reverse().map((a) => JSON.stringify(a)).join("\n") + (rows.length ? "\n" : ""));
 } catch {}

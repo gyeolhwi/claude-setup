@@ -458,9 +458,25 @@ svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width:
 /* 작은 경로 표기는 본문 글꼴로 (고정폭은 코드에만) */
 .drow .p, .pin small { font-family: var(--sans); font-size: 13px; color: var(--ink-3); }
 
-/* 넓은 화면: 홈 프로젝트 묶음을 2열로 (본문 폭이 880px 넘을 때) */
+/* 넓은 화면(PC·아이패드 가로 이상): 홈을 조밀한 카드로. 폭에 맞춰 2~4단, 카드 안 여백과 글자를 한 단계 줄인다 */
 @media (min-width: 1160px) {
-  .main > .groups { max-width: 1320px; display: block; columns: 2 420px; column-gap: 24px; }
-  .main > .groups > * { break-inside: avoid; margin-bottom: 28px; }
-  .main > .head { max-width: 1320px; }
+  .main > .head, .main > .groups { max-width: none; }
+  .main > .groups { display: block; columns: 4 330px; column-gap: 16px; margin-top: 20px; }
+  .main > .groups > * { break-inside: avoid; margin: 0 0 16px; }
+  .main > .groups .pgroup > header { padding: 2px 2px 6px; }
+  .main > .groups .pgroup > header h2, .main > .groups .pg-others h3 { font-size: 17px; }
+  .main > .groups .pg-others h3 { padding: 2px 2px 6px; }
+  .main > .groups .pg-git { font-size: 13px; }
+  .main > .groups .agent { grid-template-columns: 8px minmax(0, 1fr) auto; gap: 1px 10px; padding: 9px 12px; }
+  .main > .groups .agent .state { width: 8px; height: 8px; }
+  .main > .groups .agent .what { font-size: 15px; }
+  .main > .groups .ag-side { font-size: 13px; }
+  .main > .groups .ag-line { font-size: 13px; }
+  .main > .groups :is(.agent + .agent, .agent + .pg-files, .pg-row + .pg-row)::before { left: 30px; }
+  .main > .groups .pg-files { grid-template-columns: 8px minmax(0, 1fr) auto; gap: 1px 10px; padding: 8px 12px; font-size: 13px; }
+  .main > .groups .pg-row { grid-template-columns: 8px minmax(0, 1fr) auto auto; gap: 10px; padding: 8px 12px; font-size: 15px; }
+  .main > .groups .pg-row .bar { width: 8px; height: 8px; }
+  .main > .groups .pg-row :is(.c, .ag-t) { font-size: 13px; }
+  .main > .groups .agent .ag-body { margin-top: 8px; }
+  .main > .groups .ag-row { grid-template-columns: 72px minmax(0, 1fr); font-size: 14px; }
 }
