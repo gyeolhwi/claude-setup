@@ -200,7 +200,7 @@ function agentLine(a) {
   const line = (k, v, cls = "") => `<div class="ag-line ${cls}"><span class="ag-k">${k}</span><span class="ag-v">${esc(v)}</span></div>`;
   if (s.question?.length) return line("질문", s.question[0].question, "ask");
   if (a.status === "blocked" && s.pending) return line("승인 대기", s.pending, "ask");
-  if (a.status === "working") return line("지금", (s.doing || "생각하는 중") + (s.todos ? ` · 할 일 ${s.todos.done}/${s.todos.total}` : ""));
+  if (a.status === "working") return line("지금", (s.doing || "생각하는 중") + (s.todos ? `, 할 일 ${s.todos.done}/${s.todos.total}` : ""));
   if (s.result) return line("결과", plain(s.result));
   if (s.prompt) return line("내 지시", s.prompt);
   return "";
@@ -216,8 +216,8 @@ function agentBody(a) {
   const html = [];
   if (s.prompt) html.push(`<div class="ag-row ag-prompt"><span class="ag-k">내 지시</span><div class="ag-v pre">${esc(s.prompt)}</div></div>`);
   if (a.status === "working") {
-    const todo = s.todos ? ` · 할 일 ${s.todos.done}/${s.todos.total}${s.todos.current ? ` (${esc(s.todos.current)})` : ""}` : "";
-    html.push(`<div class="ag-row ag-now"><span class="ag-k">지금</span><div class="ag-v">${esc(s.doing || "생각하는 중")}${todo}<span class="ag-t"> · ${ago(s.lastAt)}</span></div></div>`);
+    const todo = s.todos ? `, 할 일 ${s.todos.done}/${s.todos.total}${s.todos.current ? ` (${esc(s.todos.current)})` : ""}` : "";
+    html.push(`<div class="ag-row ag-now"><span class="ag-k">지금</span><div class="ag-v">${esc(s.doing || "생각하는 중")}${todo}<span class="ag-t">&ensp;${ago(s.lastAt)}</span></div></div>`);
   }
   if (s.question?.length) {
     html.push(`<div class="ag-ask">${s.question.map((q) => `<div class="ag-q">${esc(q.question)}</div>${q.options.length ? `<div class="ag-opts">${q.options.map((o) => `<span>${esc(o)}</span>`).join("")}</div>` : ""}`).join("")}<div class="ag-hint">답은 에이전트 창에서 해 주세요</div></div>`);
@@ -303,13 +303,16 @@ function agentCard(a, inGroup = false) {
   const st = statusText(a.status);
   const open = state.openAgent === a.id;
   const s = a.summary;
-  const proj = inGroup ? "" : a.project ? `<a href="#/p/${enc(a.project)}">${esc(a.project)}</a> · ` : `<span class="mono">~/Work${a.cwd ? "/" + esc(a.cwd) : ""}</span> · `;
-  const time = a.status === "working" && s?.promptAt ? (Date.now() - s.promptAt < 60_000 ? "방금 시작" : `${span(Date.now() - s.promptAt)}째`) : s?.lastAt ? ago(s.lastAt) : "";
+  const proj = inGroup ? "" : a.project ? `<a href="#/p/${enc(a.project)}">${esc(a.project)}</a>&emsp;` : "";
+  // 오른쪽: 작업 중이면 경과 시간, 아니면 상태 이름과 마지막 활동 (점 색만으로는 뜻이 안 보이니 글로도)
+  const time = a.status === "working"
+    ? (s?.promptAt ? (Date.now() - s.promptAt < 60_000 ? "방금 시작" : `${span(Date.now() - s.promptAt)}째`) : "작업 중")
+    : !s?.lastAt ? st : ago(s.lastAt) === "방금" ? `방금 ${st}` : `${st} ${ago(s.lastAt)}`;
   return `<div class="agent ${esc(a.status)}${open ? " open" : ""}" data-id="${esc(a.id)}">
     <div class="ag-head"><span class="state">${esc(st)}</span>
       <button type="button" class="what" aria-expanded="${open}">${esc(a.title || "제목 없는 작업")}</button>
       <span class="ag-side">${proj}${esc(time)}</span></div>
-    ${open ? `<div class="ag-body">${agentBody(a)}</div><div class="where">${esc(agentName(a))} · ${esc(a.id)}</div>` : agentLine(a)}
+    ${open ? `<div class="ag-body">${agentBody(a)}</div><div class="where">${esc(agentName(a))} 창 ${esc(a.id)}</div>` : agentLine(a)}
   </div>`;
 }
 // 카드를 누르면 펼치고 접는다 (안쪽 링크·글 선택 중일 때는 제외)
@@ -477,7 +480,7 @@ function homeGroups() {
 function groupHtml(g) {
   const p = state.projects.find((x) => x.name === g.key);
   const name = g.key ? `<a href="#/p/${enc(g.key)}">${esc(g.key)}</a>` : `<a href="#/f/">Work 공통</a>`;
-  const git = p?.git ? [esc(p.git.branch), p.git.dirty ? `<span class="warn">커밋 안 한 변경 ${p.git.dirty}</span>` : "", p.git.ahead ? `<span class="warn">푸시 안 함 ${p.git.ahead}</span>` : ""].filter(Boolean).join(" · ") : "";
+  const git = p?.git ? [esc(p.git.branch), p.git.dirty ? `<span class="warn">커밋 안 한 변경 ${p.git.dirty}</span>` : "", p.git.ahead ? `<span class="warn">푸시 안 함 ${p.git.ahead}</span>` : ""].filter(Boolean).join(", ") : "";
   const files = [...g.files.values()];
   let filesHtml = "";
   if (files.length) {
@@ -493,8 +496,7 @@ function groupHtml(g) {
   }
   return `<section class="pgroup ${esc(p?.kind || "common")}">
     <header><h2>${name}</h2>${git ? `<span class="pg-git">${git}</span>` : ""}</header>
-    ${g.agents.slice().sort(byStatus).map((a) => agentCard(a, true)).join("")}
-    ${filesHtml}</section>`;
+    <div class="pg-cells">${g.agents.slice().sort(byStatus).map((a) => agentCard(a, true)).join("")}${filesHtml}</div></section>`;
 }
 function renderGroups() {
   const el = $("#groups");
@@ -512,7 +514,7 @@ function renderGroups() {
       <span class="c">파일 ${g.files.size}개</span><span class="ag-t">${range}</span></a>`;
   }).join("");
   el.innerHTML = (big.map(groupHtml).join("") || '<p class="empty">지금 일하는 에이전트가 없습니다. herdr로 에이전트를 띄우면 프로젝트별로 여기에 나타납니다.</p>') +
-    (rows ? `<section class="pg-others"><h3>오늘 파일만 바뀐 프로젝트</h3>${rows}</section>` : "");
+    (rows ? `<section class="pg-others"><h3>파일만 바뀐 프로젝트</h3><div class="pg-cells">${rows}</div></section>` : "");
   el.onclick = onAgentClick;
 }
 async function viewHome() {
@@ -520,7 +522,7 @@ async function viewHome() {
   const today = new Date().toLocaleDateString("ko-KR", { month: "long", day: "numeric", weekday: "long" });
   const past = daysHtml(false, true);
   main.innerHTML = `
-    <div class="head"><h1>${today}</h1><p id="homeLine">${homeLine()}</p></div>
+    <div class="head"><h1 id="homeLine">${homeLine()}</h1><p>${today}</p></div>
     <div class="groups" id="groups"></div>
     ${past ? `<h2 class="past-title">지난 기록</h2><div class="days" id="days">${past}</div>` : ""}
     <p class="foot"><a href="#/activity">파일 하나하나 모두 보기</a></p>`;
