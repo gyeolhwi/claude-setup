@@ -74,7 +74,7 @@ docs:
     summary: >
       컴퓨터·서버의 작업 폴더를 Projects 중심 + README·INDEX·AGENTS·docs 구조로 세팅하는 work-setup 스킬 사용 순서와,
       폴더·문서·바뀐 파일·herdr 에이전트 상태를 아이패드에서 실시간으로 보는 Work 뷰어의 설치·원격 접속·운영 명령.
-    keywords: [work-setup, Work, 작업공간, workspace, 뷰어, viewer, 실시간, 모니터링, 아이패드, Projects, README, INDEX,
+    keywords: [work-setup, Work, 작업공간, workspace, 뷰어, viewer, 실시간, 모니터링, 아이패드, 프로젝트별, 에이전트 요약, Projects, README, INDEX,
                AGENTS, herdr, tailscale, bun, systemd, launchd, 새컴퓨터, 서버]
 
   - path: docs/reference/catalog.md

@@ -2,6 +2,7 @@
 import { watch, realpathSync, statSync, existsSync } from "node:fs";
 import { readdir, stat, realpath } from "node:fs/promises";
 import { join, resolve, relative, basename, extname, sep } from "node:path";
+import { agentSummary } from "./agent-summary.ts";
 
 const ROOT = realpathSync(resolve(process.env.WORK_ROOT ?? `${process.env.HOME}/Work`));
 const PORT = Number(process.env.PORT ?? 7320);
@@ -254,12 +255,13 @@ async function pollAgents() {
   try {
     const out = await sh(["herdr", "agent", "list"], ROOT);
     const list = JSON.parse(out)?.result?.agents ?? [];
-    const slim = list.map((a: any) => {
+    const slim = await Promise.all(list.map(async (a: any) => {
       const cwd = a.foreground_cwd ?? a.cwd ?? "";
       const rel = cwd.startsWith(ROOT) ? relOf(cwd) : cwd;
+      const summary = await agentSummary(a.pane_id, a.agent, sh, ROOT).catch(() => null);
       return { id: a.pane_id, agent: a.agent, status: a.agent_status, title: a.terminal_title_stripped || a.name,
-        cwd: rel, project: projectOf(rel), workspace: a.workspace_id, focused: a.focused };
-    });
+        cwd: rel, project: projectOf(rel), workspace: a.workspace_id, focused: a.focused, summary };
+    }));
     const j = JSON.stringify(slim);
     if (j !== agentsJson) { agentsJson = j; agents = slim; broadcast("agents", agents); }
   } catch { if (agentsJson !== "[]") { agentsJson = "[]"; agents = []; broadcast("agents", agents); } }

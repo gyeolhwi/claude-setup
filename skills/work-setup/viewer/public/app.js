@@ -37,12 +37,15 @@ const extOf = (n) => (n.includes(".") ? n.split(".").pop().toLowerCase() : "");
 const IMG = ["png", "jpg", "jpeg", "gif", "webp", "svg", "avif", "bmp", "ico"];
 const VID = ["mp4", "webm", "mov"];
 const DATE_RE = /^\d{4}-\d{2}-\d{2}/;
-function toast(msg) {
+// onTap이 있으면 누를 수 있는 알림 (조금 더 오래 보인다)
+function toast(msg, onTap) {
   const t = $("#toast");
   t.textContent = msg;
+  t.classList.toggle("link", !!onTap);
+  t.onclick = onTap ? () => { onTap(); t.classList.remove("on"); } : null;
   t.classList.add("on");
   clearTimeout(toast.h);
-  toast.h = setTimeout(() => t.classList.remove("on"), 3200);
+  toast.h = setTimeout(() => t.classList.remove("on"), onTap ? 6000 : 3200);
 }
 
 const I = {
@@ -109,11 +112,11 @@ function connect() {
     state.agents = JSON.parse(e.data);
     for (const a of first ? [] : state.agents) {
       const was = prev.get(a.id);
-      if (a.status === "blocked" && was !== "blocked") toast(`${agentName(a)}이(가) 확인을 기다립니다: ${a.title || ""}`);
-      else if (was === "working" && a.status === "idle") toast(`${agentName(a)} 작업을 마쳤습니다: ${a.title || ""}`);
+      if (a.status === "blocked" && was !== "blocked") toast(`${agentName(a)}이(가) 확인을 기다립니다: ${a.title || ""}`, () => showAgent(a.id));
+      else if (was === "working" && (a.status === "idle" || a.status === "done")) toast(`${agentName(a)} 작업을 마쳤습니다: ${a.title || ""}`, () => showAgent(a.id));
     }
     renderSide();
-    if (state.route?.name === "home") { renderBand($("#band"), state.agents); $("#homeLine").textContent = homeLine(); }
+    if (state.route?.name === "home") { renderGroups(); $("#homeLine").textContent = homeLine(); }
   });
   es.addEventListener("activity", (e) => {
     const a = JSON.parse(e.data);
@@ -137,7 +140,7 @@ function onActivity(a) {
   }
   if (state.route?.name === "home") {
     clearTimeout(homeTimer);
-    homeTimer = setTimeout(() => { const el = $("#days"); if (el) el.innerHTML = daysHtml(true); }, 700);
+    homeTimer = setTimeout(() => { renderGroups(); const el = $("#days"); if (el) el.innerHTML = daysHtml(true, true); }, 700);
   }
   if (a.project) {
     const p = state.projects.find((x) => x.name === a.project);
@@ -166,6 +169,67 @@ function onActivity(a) {
 // ---------- 사이드바 ----------
 const STATUS = { working: "작업 중", idle: "대기", blocked: "확인 필요", done: "완료", error: "오류" };
 const statusText = (st) => STATUS[st] ?? st;
+// ---------- 에이전트 카드 펼치기 ----------
+// 카드는 Claude 대화 기록 요약(내 지시 · 지금 하는 일 · 결과/질문)을 보여 주고, 누르면 줄였던 글을 다 펼친다
+state.openAgent = null;
+function rerenderBands() {
+  if (state.route?.name === "home") return renderGroups();
+  const el = $("#projBand");
+  if (el) renderBand(el, state.agents.filter((a) => a.project === state.route?.project));
+}
+function showAgent(id) {
+  state.openAgent = id;
+  if (state.route?.name !== "home") location.hash = "#/";
+  else rerenderBands();
+  setTimeout(() => document.querySelector(`.agent[data-id="${CSS.escape(id)}"]`)?.scrollIntoView({ block: "nearest", behavior: "smooth" }), 50);
+}
+function toggleAgent(id) {
+  state.openAgent = state.openAgent === id ? null : id;
+  rerenderBands();
+}
+// "n분 전" 같은 시간 표시가 멈춰 보이지 않게 30초마다 다시 그린다
+setInterval(() => { if (document.visibilityState === "visible") rerenderBands(); }, 30_000);
+function span(ms) {
+  const m = Math.floor(ms / 60000);
+  return m < 1 ? "1분 미만" : m < 60 ? `${m}분` : `${Math.floor(m / 60)}시간 ${m % 60}분`;
+}
+// 접힌 카드의 한 줄: 질문 > 승인 대기 > 지금 하는 일 > 결과 첫 줄
+function agentLine(a) {
+  const s = a.summary;
+  if (!s) return "";
+  const line = (k, v, cls = "") => `<div class="ag-line ${cls}"><span class="ag-k">${k}</span><span class="ag-v">${esc(v)}</span></div>`;
+  if (s.question?.length) return line("질문", s.question[0].question, "ask");
+  if (a.status === "blocked" && s.pending) return line("승인 대기", s.pending, "ask");
+  if (a.status === "working") return line("지금", (s.doing || "생각하는 중") + (s.todos ? ` · 할 일 ${s.todos.done}/${s.todos.total}` : ""));
+  if (s.result) return line("결과", plain(s.result));
+  if (s.prompt) return line("내 지시", s.prompt);
+  return "";
+}
+// Markdown 결과에서 첫 문장 정도를 맨글로
+function plain(md) {
+  const first = md.split(/\n\s*\n/).map((p) => p.trim()).find((p) => p && !/^(#|\||```|---)/.test(p)) ?? md;
+  return first.replace(/[*_`>#]/g, "").replace(/\[([^\]]*)\]\([^)]*\)/g, "$1").replace(/\s+/g, " ").trim();
+}
+function agentBody(a) {
+  const s = a.summary;
+  if (!s) return a.agent === "claude" ? "" : '<div class="ag-note">이 에이전트는 대화 기록 요약을 아직 지원하지 않습니다.</div>';
+  const html = [];
+  if (s.prompt) html.push(`<div class="ag-row ag-prompt"><span class="ag-k">내 지시</span><div class="ag-v pre">${esc(s.prompt)}</div></div>`);
+  if (a.status === "working") {
+    const todo = s.todos ? ` · 할 일 ${s.todos.done}/${s.todos.total}${s.todos.current ? ` (${esc(s.todos.current)})` : ""}` : "";
+    html.push(`<div class="ag-row ag-now"><span class="ag-k">지금</span><div class="ag-v">${esc(s.doing || "생각하는 중")}${todo}<span class="ag-t"> · ${ago(s.lastAt)}</span></div></div>`);
+  }
+  if (s.question?.length) {
+    html.push(`<div class="ag-ask">${s.question.map((q) => `<div class="ag-q">${esc(q.question)}</div>${q.options.length ? `<div class="ag-opts">${q.options.map((o) => `<span>${esc(o)}</span>`).join("")}</div>` : ""}`).join("")}<div class="ag-hint">답은 에이전트 창에서 해 주세요</div></div>`);
+  } else if (a.status === "blocked" && s.pending) {
+    html.push(`<div class="ag-ask"><div class="ag-q">실행 승인을 기다립니다: ${esc(s.pending)}</div><div class="ag-hint">에이전트 창에서 허용하거나 거절해 주세요</div></div>`);
+  }
+  if (s.result) {
+    const label = a.status === "working" ? "최근 메시지" : "결과";
+    html.push(`<div class="ag-row ag-result"><span class="ag-k">${label}</span><div class="ag-v md">${DOMPurify.sanitize(marked.parse(s.result, { gfm: true }))}</div></div>`);
+  }
+  return html.join("");
+}
 const agentName = (a) => (a.agent === "claude" ? "Claude" : a.agent === "codex" ? "Codex" : a.agent);
 function renderSide() {
   const r = state.route;
@@ -181,9 +245,10 @@ function renderSide() {
     }).join("")}</div></section>`;
   }).join("");
   const agentHtml = `<section class="side-group"><h3>에이전트</h3><div class="side-list">${state.agents.length
-    ? state.agents.map((a) => `<a href="#/" title="${esc(a.title)}"><span class="n">${esc(a.title || agentName(a))}</span>${a.status === "working" ? '<span class="busy"></span>' : a.status === "blocked" ? '<span class="busy warn"></span>' : ""}</a>`).join("")
+    ? state.agents.map((a) => `<a href="#/" data-agent="${esc(a.id)}" title="${esc(a.title)}"><span class="n">${esc(a.title || agentName(a))}</span>${a.status === "working" ? '<span class="busy"></span>' : a.status === "blocked" ? '<span class="busy warn"></span>' : ""}</a>`).join("")
     : '<div class="side-empty">실행 중인 에이전트가 없습니다</div>'}</div></section>`;
   $("#sideGroups").innerHTML = agentHtml + projHtml;
+  $("#sideGroups").onclick = (e) => { const l = e.target.closest("[data-agent]"); if (l) { e.preventDefault(); showAgent(l.dataset.agent); } };
 }
 
 // ---------- 라우팅 ----------
@@ -231,18 +296,33 @@ async function render(soft = false, changed = null) {
 function part(title, note = "", more = "") {
   return `<header><h2>${title}</h2>${note ? `<p>${note}</p>` : ""}${more}</header>`;
 }
+const STATUS_ORDER = { blocked: 0, working: 1, done: 2, idle: 2 };
+const byStatus = (a, b) => (STATUS_ORDER[a.status] ?? 2) - (STATUS_ORDER[b.status] ?? 2);
+// 에이전트 카드 한 장. inGroup이면 프로젝트 묶음 안이라 프로젝트 이름을 빼고 그린다
+function agentCard(a, inGroup = false) {
+  const st = statusText(a.status);
+  const open = state.openAgent === a.id;
+  const s = a.summary;
+  const proj = inGroup ? "" : a.project ? `<a href="#/p/${enc(a.project)}">${esc(a.project)}</a> · ` : `<span class="mono">~/Work${a.cwd ? "/" + esc(a.cwd) : ""}</span> · `;
+  const time = a.status === "working" && s?.promptAt ? `${span(Date.now() - s.promptAt)}째` : s?.lastAt ? ago(s.lastAt) : "";
+  return `<div class="agent ${esc(a.status)}${open ? " open" : ""}" data-id="${esc(a.id)}">
+    <div class="ag-head"><span class="state">${esc(st)}</span>
+      <button type="button" class="what" aria-expanded="${open}">${esc(a.title || "제목 없는 작업")}</button>
+      <span class="ag-side">${proj}${esc(time)}</span></div>
+    ${open ? `<div class="ag-body">${agentBody(a)}</div><div class="where">${esc(agentName(a))} · ${esc(a.id)}</div>` : agentLine(a)}
+  </div>`;
+}
+// 카드를 누르면 펼치고 접는다 (안쪽 링크·글 선택 중일 때는 제외)
+function onAgentClick(e) {
+  const card = e.target.closest(".agent");
+  if (!card || e.target.closest("a") || String(getSelection()).length) return;
+  toggleAgent(card.dataset.id);
+}
 function renderBand(el, agents) {
   if (!el) return;
   if (!agents.length) { el.innerHTML = '<p class="empty">herdr에서 실행 중인 에이전트가 없습니다. herdr로 에이전트를 띄우면 여기에 나타납니다.</p>'; return; }
-  const order = { blocked: 0, working: 1, idle: 2 };
-  el.innerHTML = agents.slice().sort((a, b) => (order[a.status] ?? 2) - (order[b.status] ?? 2)).map((a) => {
-    const st = statusText(a.status);
-    const where = a.project ? `<a href="#/p/${enc(a.project)}">${esc(a.project)}</a>` : `<span class="mono">~/Work${a.cwd ? "/" + esc(a.cwd) : ""}</span>`;
-    return `<div class="agent ${esc(a.status)}">
-      <div class="meta"><div class="state">${esc(st)}</div><div class="who">${esc(agentName(a))}, ${esc(a.id)}</div></div>
-      <div class="what">${esc(a.title || "제목 없는 작업")}</div>
-      <div class="where">작업 폴더 ${where}</div></div>`;
-  }).join("");
+  el.innerHTML = agents.slice().sort(byStatus).map((a) => agentCard(a)).join("");
+  el.onclick = onAgentClick;
 }
 function projDetail(p) {
   if (p.git) {
@@ -355,9 +435,10 @@ function sessionHtml(s, fresh) {
       ${said.length ? `<p class="said">파일 ${said.join(", ")}</p>` : ""}
       ${shown ? `<p class="names">${shown}${more}</p>` : ""}</div></article>`;
 }
-function daysHtml(fresh = false) {
-  const list = state.activity.filter((a) => Date.now() - a.t < 7 * 86400000);
-  if (!list.length) return '<p class="empty">최근 7일 동안 기록된 변경이 없습니다. 에이전트가 파일을 만들거나 고치면 바로 여기에 나타납니다.</p>';
+function daysHtml(fresh = false, pastOnly = false) {
+  const today = dayKey(Date.now());
+  const list = state.activity.filter((a) => Date.now() - a.t < 7 * 86400000 && !(pastOnly && dayKey(a.t) === today));
+  if (!list.length) return pastOnly ? "" : '<p class="empty">최근 7일 동안 기록된 변경이 없습니다. 에이전트가 파일을 만들거나 고치면 바로 여기에 나타납니다.</p>';
   const byDay = new Map();
   for (const s of sessions(list)) {
     const k = dayKey(s.end);
@@ -371,15 +452,79 @@ function daysHtml(fresh = false) {
       ${ss.map((x) => sessionHtml(x, fresh)).join("")}</section>`;
   }).join("");
 }
+// 프로젝트마다 한 덩어리: 그 프로젝트의 에이전트 + 오늘 바뀐 파일. 확인 필요·작업 중이 있는 묶음이 위로, 나머지는 최근 순
+function homeGroups() {
+  const today = dayKey(Date.now());
+  const groups = new Map();
+  const get = (key) => {
+    if (!groups.has(key)) groups.set(key, { key, agents: [], files: new Map(), last: 0 });
+    return groups.get(key);
+  };
+  for (const a of state.agents) {
+    const g = get(a.project || "");
+    g.agents.push(a);
+    g.last = Math.max(g.last, a.summary?.lastAt || 0);
+  }
+  for (const a of state.activity) { // 최신순
+    if (a.dir || dayKey(a.t) !== today) continue;
+    const g = get(a.project || "");
+    if (!g.files.has(a.path)) g.files.set(a.path, a);
+    g.last = Math.max(g.last, a.t);
+  }
+  const rank = (g) => Math.min(2, ...g.agents.map((a) => STATUS_ORDER[a.status] ?? 2));
+  return [...groups.values()].sort((x, y) => rank(x) - rank(y) || y.last - x.last);
+}
+function groupHtml(g) {
+  const p = state.projects.find((x) => x.name === g.key);
+  const name = g.key ? `<a href="#/p/${enc(g.key)}">${esc(g.key)}</a>` : `<a href="#/f/">Work 공통</a>`;
+  const git = p?.git ? [esc(p.git.branch), p.git.dirty ? `<span class="warn">커밋 안 한 변경 ${p.git.dirty}</span>` : "", p.git.ahead ? `<span class="warn">푸시 안 함 ${p.git.ahead}</span>` : ""].filter(Boolean).join(" · ") : "";
+  const files = [...g.files.values()];
+  let filesHtml = "";
+  if (files.length) {
+    const ts = files.map((a) => a.t);
+    const lo = Math.min(...ts), hi = Math.max(...ts);
+    const range = hm(lo) === hm(hi) ? hm(hi) : `${hm(lo)}–${hm(hi)}`;
+    const names = files.slice(0, 5).map((a) => {
+      const n = a.path.split("/").pop();
+      return a.kind === "deleted" ? `<s>${esc(n)}</s>` : `<a href="#/f/${enc(a.path)}">${esc(n)}</a>`;
+    }).join("");
+    const more = files.length > 5 ? (g.key ? `<a class="more" href="#/activity?p=${encodeURIComponent(g.key)}">외 ${files.length - 5}개</a>` : `<span class="more">외 ${files.length - 5}개</span>`) : "";
+    filesHtml = `<div class="pg-files"><div class="pg-ft"><span>파일 ${files.length}개</span><span>${range}</span></div><div class="names">${names}${more}</div></div>`;
+  }
+  return `<section class="pgroup ${esc(p?.kind || "common")}">
+    <header><h2>${name}</h2>${git ? `<span class="pg-git">${git}</span>` : ""}</header>
+    ${g.agents.slice().sort(byStatus).map((a) => agentCard(a, true)).join("")}
+    ${filesHtml}</section>`;
+}
+function renderGroups() {
+  const el = $("#groups");
+  if (!el) return;
+  const gs = homeGroups();
+  // 에이전트가 있는 프로젝트만 덩어리로, 파일만 바뀐 프로젝트는 아래에 한 줄씩
+  const big = gs.filter((g) => g.agents.length), small = gs.filter((g) => !g.agents.length);
+  const rows = small.map((g) => {
+    const p = state.projects.find((x) => x.name === g.key);
+    const ts = [...g.files.values()].map((a) => a.t);
+    const lo = Math.min(...ts), hi = Math.max(...ts);
+    const range = hm(lo) === hm(hi) ? hm(hi) : `${hm(lo)}–${hm(hi)}`;
+    const href = g.key ? `#/p/${enc(g.key)}` : "#/activity";
+    return `<a class="pg-row ${esc(p?.kind || "common")}" href="${href}"><span class="bar"></span><span class="n">${esc(g.key || "Work 공통")}</span>
+      <span class="c">파일 ${g.files.size}개</span><span class="ag-t">${range}</span></a>`;
+  }).join("");
+  el.innerHTML = (big.map(groupHtml).join("") || '<p class="empty">지금 일하는 에이전트가 없습니다. herdr로 에이전트를 띄우면 프로젝트별로 여기에 나타납니다.</p>') +
+    (rows ? `<section class="pg-others"><h3>오늘 파일만 바뀐 프로젝트</h3>${rows}</section>` : "");
+  el.onclick = onAgentClick;
+}
 async function viewHome() {
   if (!state.projects.length) await loadProjects();
   const today = new Date().toLocaleDateString("ko-KR", { month: "long", day: "numeric", weekday: "long" });
+  const past = daysHtml(false, true);
   main.innerHTML = `
     <div class="head"><h1>${today}</h1><p id="homeLine">${homeLine()}</p></div>
-    <div class="band" id="band"></div>
-    <div class="days" id="days">${daysHtml()}</div>
+    <div class="groups" id="groups"></div>
+    ${past ? `<h2 class="past-title">지난 기록</h2><div class="days" id="days">${past}</div>` : ""}
     <p class="foot"><a href="#/activity">파일 하나하나 모두 보기</a></p>`;
-  renderBand($("#band"), state.agents);
+  renderGroups();
 }
 async function viewProjects() {
   if (!state.projects.length) await loadProjects();
