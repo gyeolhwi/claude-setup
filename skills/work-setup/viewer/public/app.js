@@ -304,7 +304,7 @@ function agentCard(a, inGroup = false) {
   const open = state.openAgent === a.id;
   const s = a.summary;
   const proj = inGroup ? "" : a.project ? `<a href="#/p/${enc(a.project)}">${esc(a.project)}</a> · ` : `<span class="mono">~/Work${a.cwd ? "/" + esc(a.cwd) : ""}</span> · `;
-  const time = a.status === "working" && s?.promptAt ? `${span(Date.now() - s.promptAt)}째` : s?.lastAt ? ago(s.lastAt) : "";
+  const time = a.status === "working" && s?.promptAt ? (Date.now() - s.promptAt < 60_000 ? "방금 시작" : `${span(Date.now() - s.promptAt)}째`) : s?.lastAt ? ago(s.lastAt) : "";
   return `<div class="agent ${esc(a.status)}${open ? " open" : ""}" data-id="${esc(a.id)}">
     <div class="ag-head"><span class="state">${esc(st)}</span>
       <button type="button" class="what" aria-expanded="${open}">${esc(a.title || "제목 없는 작업")}</button>

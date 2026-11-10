@@ -161,9 +161,11 @@ svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width:
 /* ---------- 에이전트 띠 (이 화면의 강조점) ---------- */
 .band { display: flex; flex-direction: column; gap: 10px; }
 /* ---------- 홈: 프로젝트별 묶음 ---------- */
-.groups { display: flex; flex-direction: column; gap: 28px; margin-top: 24px; }
-.pgroup { display: flex; flex-direction: column; }
-.pgroup > header { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; padding-bottom: 8px; border-bottom: 1px solid var(--ink); }
+.groups { display: flex; flex-direction: column; gap: 14px; margin-top: 24px; }
+.pgroup { display: flex; flex-direction: column; padding: 14px 18px 14px; border-radius: 14px; background: var(--raised); border: 1px solid var(--rule); border-left: 4px solid var(--rule); }
+.pgroup.git { border-left-color: var(--dev); }
+.pgroup.site { border-left-color: var(--site); }
+.pgroup > header { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; padding-bottom: 8px; border-bottom: 1px solid var(--rule); }
 .pgroup > header h2 { margin: 0; font-size: 18px; font-weight: 700; letter-spacing: -.01em; }
 .pgroup > header h2 a { color: inherit; text-decoration: none; }
 .pg-git { margin-left: auto; font-size: 13px; color: var(--ink-3); }
