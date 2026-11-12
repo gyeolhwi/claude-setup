@@ -418,7 +418,7 @@ neither         문서·설정만 바뀜 — 캡처 대신 변경 근거를 글�
 ```bash
 node <skill>/scripts/issue-start.mjs guard
 git add -A -- ':!.issue'          # 증거는 이 커밋에 넣지 않는다
-git commit -m "<type>(<scope>): <요약>"
+git commit -F <메시지 파일>   # git-commit 스킬 형식, trailer 에 Refs: #<이슈번호>
 ```
 
 통과하면 **사용자에게 묻지 않고** 커밋한다. 실패하면(exit 3) 이유를 보고하고 AskUserQuestion 으로 확인을 받는다.

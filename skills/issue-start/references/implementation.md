@@ -64,13 +64,26 @@ issue-start 8단계(작업 트리 커밋)입니다. 안전장치를 통과해 �
 
 ```bash
 git add -A -- ':!.issue'
-git commit -m "<type>(<scope>): <한 줄 요약>
+git commit -F <메시지 파일>
+```
 
-Refs #{issue_number}"
+메시지는 `git-commit` 스킬 형식을 따르고 trailer 에 `Refs: #{issue_number}` 를 넣는다.
+
+```
+FIX(tabs): 새로고침하면 보던 탭이 초기화되던 문제 해결 - YYYY-MM-DD
+
+- 새로고침해도 마지막으로 보던 탭이 유지됨
+
+Why: 활성 탭 상태를 메모리에만 들고 있어 새로고침 때 초기화됨
+How:
+- components/Tabs.tsx: activeTab 을 URL 쿼리 ?tab= 과 동기화
+
+Refs: #{issue_number}
+Author: <git user.name>
 ```
 
 - **`':!.issue'` 를 반드시 붙인다.** 6단계에서 만든 before 증거는 `.gitignore` 예외라 `git add -A` 만 쓰면 그대로 스테이징된다. 구현 커밋과 증거 커밋이 섞이면 리뷰에서 diff 가 읽히지 않는다. 증거는 10단계에서 따로 커밋한다.
-- 커밋 메시지는 저장소의 기존 형식을 따른다. `git log --oneline -20` 으로 확인한다.
+- scope 단어는 저장소에서 쓰던 것을 따른다. `git log --oneline -20` 으로 확인한다.
 - 변경이 여러 관심사에 걸치면 커밋을 나눈다.
 
 커밋 후 확인한다. `.issue/` 경로가 하나라도 나오면 잘못 커밋한 것이다.

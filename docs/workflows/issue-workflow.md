@@ -10,7 +10,7 @@ related_files:
   - skills/issue-end/SKILL.md
   - skills/issue-merge/SKILL.md
   - skills/gh-setup/SKILL.md
-last_updated: 2026-08-27
+last_updated: 2026-11-12
 ---
 
 # 이슈 → 워크트리 → 증거 → PR 워크플로우
@@ -104,7 +104,7 @@ last_updated: 2026-08-27
 | 스킬 | 언제 |
 | --- | --- |
 | `/gh-setup` | `gh` 가 없거나 로그인이 안 됐을 때. OS 를 판별해 설치 경로를 정하고 `gh auth login` 까지 끌고 간다 |
-| `create-pr` | 이 파이프라인과 무관하게 PR 본문만 한국어로 쓰고 싶을 때. 독립적으로도 쓸 수 있다 |
+| `git-pr` | 이 파이프라인 밖에서 PR 을 만들 때. 파이프라인 안의 `/issue-end` 도 같은 형식을 쓴다 — [git-workflow.md](./git-workflow.md) |
 
 ## 서브에이전트 (선택)
 

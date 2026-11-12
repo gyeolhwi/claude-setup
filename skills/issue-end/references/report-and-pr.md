@@ -293,7 +293,7 @@ gh issue view 59 --json comments \
 ```bash
 BASE=$(node <skill>/scripts/issue-end.mjs context | python3 -c "import json,sys; print(json.load(sys.stdin)['baseBranch'])")
 gh pr create --base "$BASE" --head "$(git branch --show-current)" \
-  --title "<type>(<scope>): <한 줄 요약>" \
+  --title "<TYPE>(<scope>): <PM이 읽기 쉬운 결과 요약>" \
   --body-file .issue/59/evidence/pr-body.md
 ```
 
@@ -309,17 +309,37 @@ node <skill>/scripts/issue-end.mjs status 59 review
 
 이슈는 `issue-merge` 가 통합 테스트를 통과시킨 뒤 명시적으로 닫는다. 추적을 잃지 않도록 참조만 남긴다.
 
+PR 제목과 본문은 `git-pr` 스킬(`~/.claude/skills/git-pr/SKILL.md`)의 **PR 제목 규칙·본문 템플릿**을 따른다. 이 흐름에서만 다른 점은 둘이다.
+
+- `확인 방법` 다음에 `## 증거` 섹션을 넣어 전후 리포트 링크를 단다.
+- `관련`의 이슈 줄은 제목 링크 + `(통합 테스트 뒤 close)` 형태로 쓴다.
+
 ```markdown
-관련 이슈: [#59 탭 활성 상태가 새로고침 후 초기화됨](https://github.com/owner/repo/issues/59) (통합 테스트 뒤 close)
+## 요약
+새로고침해도 마지막으로 보던 탭이 그대로 유지됩니다.
 
-## 변경 내용
-- <파일 단위 요약>
+## 달라지는 점
+- 새로고침 후 첫 번째 탭으로 돌아가던 현상이 사라짐
 
-## 검증
-- <실행한 명령과 결과>
+## 왜
+활성 탭 상태를 메모리에만 들고 있어 새로고침 때 초기화됐습니다.
+
+## 구현
+- `components/Tabs.tsx`: `activeTab`을 URL 쿼리 `?tab=`과 동기화
+
+## 리뷰 포인트
+- 잘못된 `?tab=` 값이 들어오면 첫 번째 탭으로 돌아가는지
+
+## 확인 방법
+- [x] `pnpm test Tabs` 통과
+- [x] 각 탭에서 새로고침 후 유지 확인
 
 ## 증거
 [전후 리포트 보기](https://github.com/owner/repo/issues/59#issuecomment-123)
+
+## 관련
+- 이슈: [#59 탭 활성 상태가 새로고침 후 초기화됨](https://github.com/owner/repo/issues/59) (통합 테스트 뒤 close)
+- 커밋: a1b2c3d FIX(tabs): 새로고침하면 보던 탭이 초기화되던 문제 해결 - 2026-11-11
 ```
 
 이슈 참조는 `#59` 만 적어도 GitHub 이 알아서 링크로 만들지만, **제목까지 붙인 링크**로 쓰면 PR 목록에서 무엇을 고치는 PR 인지 바로 읽힌다.
