@@ -1,0 +1,18 @@
+# after — 75ee63e
+## install.sh SKILLS
+19:SKILLS=(git-commit git-pr git-release git-board gh-setup issue-create issue-start issue-end issue-merge)
+## skills/work-setup 파일 수
+0
+## grep skills/work-setup (저장소 전체)
+0
+## work-viewer 안내 위치
+docs/reference/catalog.md
+docs/workflows/work-workspace-workflow.md
+INDEX.md
+install.sh
+README.md
+## docs_index check
+OK: check; docs=11; index=11
+## install.sh
+syntax ok
+--check exit 0
