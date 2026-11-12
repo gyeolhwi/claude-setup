@@ -14,9 +14,10 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-CORE_COMMANDS=(git/commit-auto.md project/project-docs.md project/project-docs-gen.md project/project-workflow.md)
+CORE_COMMANDS=(project/project-docs.md project/project-docs-gen.md project/project-workflow.md)
 OBSIDIAN_COMMANDS=(obsidian-categories obsidian-format obsidian-index obsidian-init obsidian-move obsidian-organize obsidian-preview)
-SKILLS=(create-pr gh-setup issue-create issue-start issue-end issue-merge work-setup)
+SKILLS=(git-commit git-pr git-release git-board gh-setup issue-create issue-start issue-end issue-merge work-setup)
+LEGACY=(skills/create-pr commands/commit-auto.md)   # git-pr · git-commit 으로 대체됨
 NESTED_SKILLS=(omc-learned/project-docs-gen)
 
 MODE=link
@@ -72,6 +73,9 @@ else warn "gh 없음 — 이슈·PR 워크플로우에 필요합니다. /gh-setu
 if command -v cwebp >/dev/null 2>&1; then ok "cwebp — 증거 webp 변환 가능"
 elif command -v ffmpeg >/dev/null 2>&1; then ok "ffmpeg — 증거 webp 변환 가능"
 else warn "cwebp/ffmpeg 없음 — 프로젝트에 sharp 가 없으면 증거가 png 로 남습니다 (brew install webp)"; fi
+
+if command -v python3 >/dev/null 2>&1; then ok "python3 — git-convention 훅 실행 가능"
+else warn "python3 없음 — git-convention 훅(커밋·PR 형식 점검)을 건너뜁니다"; fi
 
 warn "playwright 는 이 저장소가 아니라 '작업할 프로젝트' 에 있어야 합니다:"
 say  "      npm i -D playwright && npx playwright install chromium"
@@ -175,6 +179,39 @@ for BASE in "${BASES[@]}"; do
     place "$src" "$BASE/skills/$s"
     ok "skills/$s"
   done
+
+  # 예전 이름으로 깔린 것 — 지우지 않고 알리기만 한다
+  for old in "${LEGACY[@]}"; do
+    [ -e "$BASE/$old" ] && warn "$old — git-commit · git-pr 로 대체됨. 확인 후 지워도 됩니다"
+  done
+
+  # git-convention 훅 (Claude Code 전용 — .codex 에는 넣지 않는다)
+  case "$BASE" in */.codex) continue ;; esac
+  if command -v python3 >/dev/null 2>&1; then
+    place "$ROOT/hooks/git-convention.py" "$BASE/hooks/git-convention.py"
+    if [ "$BASE" = "$HOME/.claude" ]; then HOOK_CMD='python3 "$HOME/.claude/hooks/git-convention.py" 2>/dev/null || true'
+    else HOOK_CMD='python3 "$CLAUDE_PROJECT_DIR/.claude/hooks/git-convention.py" 2>/dev/null || true'; fi
+    HOOK_CMD="$HOOK_CMD" python3 - "$BASE/settings.json" <<'PY'
+import json, os, sys
+path = sys.argv[1]
+cfg = json.load(open(path)) if os.path.exists(path) else {}
+post = cfg.setdefault("hooks", {}).setdefault("PostToolUse", [])
+if not any("git-convention.py" in json.dumps(h) for h in post):
+    post.append({"matcher": "Bash", "hooks": [{"type": "command", "command": os.environ["HOOK_CMD"], "timeout": 10}]})
+    with open(path, "w") as f:
+        json.dump(cfg, f, ensure_ascii=False, indent=2)
+        f.write("\n")
+PY
+    ok "hooks/git-convention.py (settings.json PostToolUse 등록)"
+  fi
+
+  # CLAUDE.md 에 커밋·PR 규칙 블록 — 이미 있으면 그대로 둔다
+  if grep -q '<git_convention>' "$BASE/CLAUDE.md" 2>/dev/null; then
+    ok "CLAUDE.md git_convention 블록 이미 있음"
+  else
+    { [ -s "$BASE/CLAUDE.md" ] && echo ""; cat "$ROOT/hooks/git-convention.CLAUDE.md"; } >> "$BASE/CLAUDE.md"
+    ok "CLAUDE.md 에 git_convention 블록 추가"
+  fi
 done
 
 # ---------------------------------------------------------------- Obsidian 템플릿
@@ -217,6 +254,11 @@ say "    /issue-create  \"고칠 내용\"         이슈부터 등록"
 say "    /issue-start   12                 착수 → 워크트리 → 구현 → 증거"
 say "    /issue-end                        증거 확인 → 이슈 코멘트 → PR"
 say "    /issue-merge                      워크트리 일괄 통합 → 이슈 close"
+say ""
+say "    \"커밋해\" / /git-commit            목적별로 나눠 커밋 (PM 제목 + 추적용 본문)"
+say "    \"PR 올려줘\" / /git-pr             고정 섹션 PR"
+say "    \"릴리스 노트\" / /git-release       지난 릴리스 이후 변경 정리"
+say "    /git-board                        연결된 GitHub Project 보드 요약"
 say ""
 [ "$OBSIDIAN" = yes ] && { say "    /obsidian-init                    볼트 초기 세팅"; say ""; }
 say "문서: INDEX.md (AI 진입점) · README.md (사람 진입점)"

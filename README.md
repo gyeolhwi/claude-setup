@@ -65,12 +65,18 @@ Claude Code 안에서 하고 싶으면 clone 한 폴더를 열고 **"내 컴퓨�
 /obsidian-preview     실행 전 미리보기 (읽기 전용)
 ```
 
-### 4. [Git 커밋·PR](./docs/workflows/git-workflow.md)
+### 4. [Git 커밋·PR·릴리스](./docs/workflows/git-workflow.md)
+
+제목은 PM 이 읽기 쉽게, 본문은 개발자·AI 가 추적할 수 있게. 세 스킬이 같은 `TYPE(scope)` 규칙을 쓴다.
 
 ```text
-/commit-auto     staged diff 를 기능별로 그룹화해 자동 커밋
-create-pr        한국어 PR 본문 생성 (자연어 트리거)
+"커밋해"   / /git-commit     변경을 목적별로 나눠 커밋 (push 는 요청할 때만)
+"PR 올려줘" / /git-pr         고정 섹션 PR — 달라지는 점이 릴리스 노트로 이어진다
+"릴리스 노트" / /git-release  지난 릴리스 이후 변경을 TYPE 별로 정리
+/git-board                   연결된 GitHub Project 보드 요약 (조회 전용)
 ```
+
+`git-convention` 훅이 Claude 가 만든 커밋·PR 형식을 점검하고, 배포를 감지하면 릴리스 노트를 제안한다.
 
 ### 5. [Work 작업공간 + 실시간 뷰어](./docs/workflows/work-workspace-workflow.md)
 
@@ -89,6 +95,7 @@ claude-setup/
 ├── INDEX.md                 AI 진입점 — 문서 라우팅 색인
 ├── README.md                사람 진입점 — 이 파일
 ├── install.sh               설치·점검 스크립트
+├── hooks/                   git-convention 훅 + CLAUDE.md 규칙 블록
 │
 ├── docs/
 │   ├── setup/
@@ -98,7 +105,7 @@ claude-setup/
 │   │   ├── project-docs-workflow.md docs/ 기반 협업
 │   │   ├── issue-workflow.md        이슈 → 워크트리 → PR
 │   │   ├── obsidian-workflow.md     볼트 관리
-│   │   ├── git-workflow.md          커밋·PR
+│   │   ├── git-workflow.md          커밋·PR·릴리스
 │   │   └── work-workspace-workflow.md  작업공간 세팅·뷰어
 │   └── reference/
 │       ├── catalog.md                   커맨드·스킬 전체 목록
@@ -106,13 +113,13 @@ claude-setup/
 │       └── doc-conventions.md           문서 프론트매터 규약
 │
 ├── commands/
-│   ├── git/         commit-auto
 │   ├── project/     project-docs · project-docs-gen · project-workflow
 │   └── obsidian/    obsidian-* 7종 + templates/ (→ 볼트)
 │
 └── skills/
     ├── issue-create/  issue-start/  issue-end/  issue-merge/
-    ├── gh-setup/      create-pr/
+    ├── git-commit/  git-pr/  git-release/  git-board/
+    ├── gh-setup/
     ├── work-setup/    작업공간 세팅 + viewer/ (Bun)
     └── omc-learned/project-docs-gen/   문서 템플릿 10종
 ```

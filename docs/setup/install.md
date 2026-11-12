@@ -7,7 +7,7 @@ keywords: [설치, install, install.sh, 세팅, 심볼릭링크, symlink, copy, 
 related_files:
   - install.sh
   - docs/setup/prerequisites.md
-last_updated: 2026-08-27
+last_updated: 2026-11-12
 ---
 
 # 설치와 세팅
@@ -54,13 +54,14 @@ Obsidian 커맨드는 볼트 경로를 치환해야 해서 **옵션과 무관하
 
 | 원본 | 설치 위치 | 비고 |
 | --- | --- | --- |
-| `commands/git/commit-auto.md` | `~/.claude/commands/` | |
 | `commands/project/project-docs.md` | `~/.claude/commands/` | |
 | `commands/project/project-docs-gen.md` | `~/.claude/commands/` | |
 | `commands/project/project-workflow.md` | `~/.claude/commands/` | |
 | `commands/obsidian/obsidian-*.md` | `~/.claude/commands/` | `{{OBSIDIAN_VAULT_PATH}}` 치환 |
 | `commands/obsidian/templates/` | `<볼트>/01_문서템플릿/` | **볼트 안이 정본** |
-| `skills/create-pr/` | `~/.claude/skills/create-pr/` | |
+| `skills/git-commit/` `git-pr/` `git-release/` `git-board/` | `~/.claude/skills/` | |
+| `hooks/git-convention.py` | `~/.claude/hooks/` | `settings.json` 의 `hooks.PostToolUse` 에 등록 (python3 필요) |
+| `hooks/git-convention.CLAUDE.md` | `~/.claude/CLAUDE.md` 끝에 덧붙임 | `<git_convention>` 블록이 이미 있으면 건너뜀 |
 | `skills/gh-setup/` | `~/.claude/skills/gh-setup/` | |
 | `skills/issue-create/` `issue-start/` `issue-end/` `issue-merge/` | `~/.claude/skills/` | |
 | `skills/omc-learned/project-docs-gen/` | `~/.claude/skills/omc-learned/project-docs-gen/` | 템플릿 10종 |
@@ -117,12 +118,26 @@ gh auth status
 
 ```bash
 mkdir -p ~/.claude/commands ~/.claude/skills
-cp commands/git/*.md commands/project/*.md ~/.claude/commands/
-for s in create-pr gh-setup issue-create issue-start issue-end issue-merge; do
+cp commands/project/*.md ~/.claude/commands/
+for s in git-commit git-pr git-release git-board gh-setup issue-create issue-start issue-end issue-merge; do
   cp -R skills/$s ~/.claude/skills/
 done
 mkdir -p ~/.claude/skills/omc-learned
 cp -R skills/omc-learned/project-docs-gen ~/.claude/skills/omc-learned/
+mkdir -p ~/.claude/hooks
+cp hooks/git-convention.py ~/.claude/hooks/
+cat hooks/git-convention.CLAUDE.md >> ~/.claude/CLAUDE.md
+```
+
+훅은 `~/.claude/settings.json` 에 직접 등록해야 동작한다.
+
+```json
+"hooks": {
+  "PostToolUse": [
+    { "matcher": "Bash",
+      "hooks": [{ "type": "command", "command": "python3 \"$HOME/.claude/hooks/git-convention.py\" 2>/dev/null || true", "timeout": 10 }] }
+  ]
+}
 ```
 
 ## 원본과 동기화
@@ -130,7 +145,7 @@ cp -R skills/omc-learned/project-docs-gen ~/.claude/skills/omc-learned/
 `--copy` 로 설치한 뒤 `~/.claude/` 쪽에서 고쳤다면 저장소로 되돌려 맞춘다.
 
 ```bash
-for s in create-pr gh-setup issue-create issue-start issue-end issue-merge; do
+for s in git-commit git-pr git-release git-board gh-setup issue-create issue-start issue-end issue-merge; do
   rsync -a --delete --exclude '.DS_Store' ~/.claude/skills/$s/ skills/$s/
 done
 ```

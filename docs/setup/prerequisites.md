@@ -2,12 +2,12 @@
 id: prerequisites
 title: 전제 조건
 category: setup
-summary: claude-setup 설치 전에 시스템에 있어야 하는 것(git·rsync·Node 18+·gh)과 작업할 프로젝트 쪽에 있어야 하는 것(Playwright·webp 변환기)을 구분해 정리한다. 무엇이 없으면 무엇이 막히는지까지 명시한다.
-keywords: [전제조건, prerequisites, git, node, gh, github cli, playwright, webp, cwebp, ffmpeg, sharp, 설치확인]
+summary: claude-setup 설치 전에 시스템에 있어야 하는 것(git·rsync·Node 18+·gh·python3)과 작업할 프로젝트 쪽에 있어야 하는 것(Playwright·webp 변환기)을 구분해 정리한다. 무엇이 없으면 무엇이 막히는지까지 명시한다.
+keywords: [전제조건, prerequisites, git, node, python3, gh, github cli, playwright, webp, cwebp, ffmpeg, sharp, 설치확인]
 related_files:
   - install.sh
   - skills/gh-setup/SKILL.md
-last_updated: 2026-08-27
+last_updated: 2026-11-12
 ---
 
 # 전제 조건
@@ -21,7 +21,8 @@ last_updated: 2026-08-27
 | git | ✓ | 설치 중단 |
 | rsync | ✓ | 설치 중단 (`--copy` 및 템플릿 배치에 쓴다) |
 | Node 18+ | ✓ | issue-* 스킬 스크립트가 안 돈다. 설치 중단 |
-| `gh` (로그인) | 이슈·PR 워크플로우에 필요 | 이슈 등록·PR 생성이 막힌다. `/gh-setup` 이 설치·로그인을 안내한다 |
+| python3 | git-convention 훅에 필요 | 커밋·PR 형식 점검 훅만 건너뛴다. 스킬은 그대로 동작 |
+| `gh` (로그인) | 이슈·PR·릴리스·보드에 필요 | 이슈 등록·PR 생성이 막힌다. `/gh-setup` 이 설치·로그인을 안내한다 |
 | bun | work-setup 뷰어에 필요 | 뷰어를 설치할 때만 필요. `curl -fsSL https://bun.sh/install \| bash` |
 | cwebp 또는 ffmpeg | 증거 캡처에 권장 | 프로젝트에 sharp 도 없으면 증거가 png 로 남는다 |
 

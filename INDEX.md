@@ -8,7 +8,7 @@
 ## 이 저장소는 무엇인가
 
 Claude Code 용 커스텀 커맨드·스킬 모음. `./install.sh` 한 번으로 새 환경에 세팅된다.
-워크플로우는 셋이다 — **docs/ 기반 프로젝트 협업**, **이슈→워크트리→PR**, **Obsidian 볼트 관리**.
+워크플로우는 다섯이다 — **docs/ 기반 프로젝트 협업**, **이슈→워크트리→PR**, **Obsidian 볼트 관리**, **Git 커밋·PR·릴리스**, **Work 작업공간**.
 
 ## 문서
 
@@ -60,13 +60,14 @@ docs:
                obsidian-organize, obsidian-preview, obsidian-categories, frontmatter, 인덱스, wikilink, 정렬, 이모지, 템플릿]
 
   - path: docs/workflows/git-workflow.md
-    title: Git 커밋·PR 워크플로우
+    title: Git 커밋·PR·릴리스 워크플로우
     category: workflows
     summary: >
-      staged diff 를 변경 목적별로 그룹화해 자동 커밋하는 /commit-auto 의 동작 방식과 커밋 타입 12종 컨벤션,
-      변경사항·커밋 히스토리를 요약해 한국어 PR 본문을 만드는 create-pr 스킬 사용법.
-    keywords: [commit-auto, 커밋, commit, 컨벤션, convention, FEAT, FIX, REFACTOR, CHORE,
-               create-pr, PR, 풀리퀘스트, staged, diff, 그룹화]
+      git-commit(커밋)·git-pr(PR)·git-release(릴리스 노트)가 같은 TYPE(scope) 규칙으로 이어지는 방식,
+      PM 용 제목과 Why·How·Refs 본문 형식, 커밋·PR 형식을 점검하고 배포 때 릴리스 노트를 제안하는 git-convention 훅,
+      GitHub Project 보드를 요약하는 git-board.
+    keywords: [git-commit, git-pr, git-release, git-board, git-convention, 커밋, commit, PR, 풀리퀘스트, 릴리스, release,
+               CHANGELOG, 컨벤션, convention, TYPE, scope, FEAT, UX, FIX, REFACTOR, CHORE, 훅, hook, 보드]
 
   - path: docs/workflows/work-workspace-workflow.md
     title: Work 작업공간 세팅과 실시간 뷰어
@@ -81,7 +82,7 @@ docs:
     title: 커맨드·스킬 카탈로그
     category: reference
     summary: >
-      이 저장소가 제공하는 슬래시 커맨드 11개와 스킬 8개의 전체 목록. 호출 방식(슬래시/자연어), 원본 파일 경로,
+      이 저장소가 제공하는 커맨드 10개와 스킬 11개, 훅 1개의 전체 목록. 호출 방식(슬래시/자연어), 원본 파일 경로,
       설치 위치, 관련 워크플로우 문서를 한 표에서 찾을 수 있다. project-docs-gen 템플릿 10종의 의존 관계 포함.
     keywords: [카탈로그, catalog, 목록, 커맨드, command, 스킬, skill, 슬래시, 템플릿, template,
                의존관계, ID체계, REQ, FEAT, SCR, API, TC, FLOW, EDGE]
@@ -114,13 +115,8 @@ docs:
 assets:
   - path: install.sh
     title: 설치 스크립트
-    summary: 전제 조건 점검 후 커맨드·스킬을 ~/.claude 또는 지정 저장소에 링크·복사한다. Obsidian 볼트 경로 치환과 템플릿 배치까지.
+    summary: 전제 조건 점검 후 커맨드·스킬·훅을 ~/.claude 또는 지정 저장소에 링크·복사한다. git-convention 훅 등록, CLAUDE.md 규칙 블록, Obsidian 볼트 경로 치환과 템플릿 배치까지.
     keywords: [install, 설치, check, copy, link, codex, project, obsidian]
-
-  - path: commands/git/
-    title: Git 커맨드 원본
-    summary: /commit-auto 정의.
-    keywords: [commit-auto, 커밋]
 
   - path: commands/project/
     title: 프로젝트 커맨드 원본
@@ -137,10 +133,15 @@ assets:
     summary: SKILL.md + references/(단계별 절차) + scripts/(Node 표준 모듈만 쓰는 .mjs).
     keywords: [issue, 워크트리, 증거, PR, gh, 스킬]
 
-  - path: skills/create-pr/
-    title: PR 생성 스킬
-    summary: 한국어 PR 본문 작성. AI 생성 문구를 넣지 않는다.
-    keywords: [create-pr, PR, 풀리퀘스트]
+  - path: skills/git-commit/ · git-pr/ · git-release/ · git-board/
+    title: Git 커밋·PR·릴리스·보드 스킬
+    summary: 같은 TYPE(scope) 규칙의 커밋·PR·릴리스 노트 작성과 GitHub Project 보드 조회. AI 생성 문구를 넣지 않는다.
+    keywords: [git-commit, git-pr, git-release, git-board, 커밋, PR, 릴리스, 보드]
+
+  - path: hooks/
+    title: git-convention 훅
+    summary: git-convention.py(PostToolUse 로 커밋·PR 형식 점검, 배포 감지 시 릴리스 노트 제안)와 CLAUDE.md 에 넣는 <git_convention> 규칙 블록.
+    keywords: [hook, 훅, git-convention, PostToolUse, CLAUDE.md, convention.check, convention.release]
 
   - path: skills/work-setup/
     title: Work 작업공간 세팅 스킬 + 뷰어
@@ -161,6 +162,7 @@ assets:
 | 뭐가 있는지 전체 목록 | `docs/reference/catalog.md` |
 | "개발 시작해줘" 같은 걸 어떻게 쓰는지 | `docs/workflows/project-docs-workflow.md` |
 | 이슈 만들고 PR 까지 어떻게 가는지 | `docs/workflows/issue-workflow.md` |
+| 커밋·PR·릴리스 노트 형식 | `docs/workflows/git-workflow.md` |
 | 워크트리·라벨·브랜치명 규칙 | `docs/reference/issue-workflow-internals.md` |
 | 뭔가 안 될 때 | `docs/reference/issue-workflow-internals.md#트러블슈팅` |
 | 문서를 새로 추가할 때 | `docs/reference/doc-conventions.md` |
