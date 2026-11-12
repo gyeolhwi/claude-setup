@@ -1,5 +1,5 @@
 ---
-id: project-docs-workflow
+id: workflows-project-docs-workflow
 title: docs/ 기반 프로젝트 협업 워크플로우
 category: workflows
 summary: /project-docs 로 docs/ 골격을 만들고, /project-docs-gen 으로 기획서를 개발 문서 10종으로 펼친 뒤, project-workflow 의 8개 서브모드(feedback·issues·dev·design·review·sync·status·classify)를 자연어로 불러 협업하는 전체 사용법. 새 프로젝트·기존 프로젝트·일상 협업 세 가지 진입 시나리오를 포함한다.

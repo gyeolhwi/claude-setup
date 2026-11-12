@@ -1,5 +1,5 @@
 ---
-id: prerequisites
+id: setup-prerequisites
 title: 전제 조건
 category: setup
 summary: claude-setup 설치 전에 시스템에 있어야 하는 것(git·rsync·Node 18+·gh·python3)과 작업할 프로젝트 쪽에 있어야 하는 것(Playwright·webp 변환기)을 구분해 정리한다. 무엇이 없으면 무엇이 막히는지까지 명시한다.

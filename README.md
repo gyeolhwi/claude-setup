@@ -87,6 +87,7 @@ Claude Code 안에서 하고 싶으면 clone 한 폴더를 열고 **"내 컴퓨�
 ```
 
 커맨드·스킬 전체 목록은 [docs/reference/catalog.md](./docs/reference/catalog.md) 에 있다.
+원본 파일 위치와 자주 묻는 질문별 문서는 [docs/reference/source-map.md](./docs/reference/source-map.md) 에 있다.
 
 ## 구조
 
@@ -110,7 +111,8 @@ claude-setup/
 │   └── reference/
 │       ├── catalog.md                   커맨드·스킬 전체 목록
 │       ├── issue-workflow-internals.md  상태·라벨·브랜치 규약, 트러블슈팅
-│       └── doc-conventions.md           문서 프론트매터 규약
+│       ├── doc-conventions.md           문서 프론트매터 규약
+│       └── source-map.md                원본 자산 지도·자주 묻는 질문
 │
 ├── commands/
 │   ├── project/     project-docs · project-docs-gen · project-workflow

@@ -1,5 +1,5 @@
 ---
-id: install
+id: setup-install
 title: 설치와 세팅
 category: setup
 summary: 새 컴퓨터나 다른 저장소에 커맨드·스킬을 세팅하는 방법. install.sh 의 옵션 전체, 무엇이 어디로 복사되는지의 매핑표, 링크와 복사의 차이, 설치 후 검증 명령, 원본 동기화 방법을 담는다.

@@ -1,5 +1,5 @@
 ---
-id: work-workspace-workflow
+id: workflows-work-workspace-workflow
 title: Work 작업공간 세팅과 실시간 뷰어
 category: workflows
 summary: 컴퓨터·서버의 작업 폴더를 Projects 중심 + README·INDEX·AGENTS·docs 구조로 세팅하는 work-setup 스킬 사용 순서와, 폴더·문서·바뀐 파일·herdr 에이전트 상태를 아이패드에서 실시간으로 보는 Work 뷰어의 설치·원격 접속(Tailscale·SSH 터널)·운영 명령.

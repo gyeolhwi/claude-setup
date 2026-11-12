@@ -1,12 +1,12 @@
 ---
-id: doc-conventions
+id: reference-doc-conventions
 title: 문서 작성 규약
 category: reference
 summary: 이 저장소의 docs/ 문서가 지켜야 하는 YAML 프론트매터 7개 필드의 의미와 작성 기준, 카테고리 3종의 경계, 새 문서를 추가할 때 INDEX.md 를 함께 갱신하는 절차, 그리고 AI 가 문서를 찾는 탐색 순서를 정의한다.
 keywords: [규약, convention, frontmatter, 프론트매터, YAML, id, title, category, summary, keywords, related_files, last_updated, INDEX, 문서추가, 라우팅]
 related_files:
   - INDEX.md
-last_updated: 2026-08-27
+last_updated: 2026-11-12
 ---
 
 # 문서 작성 규약
@@ -17,7 +17,7 @@ last_updated: 2026-08-27
 
 ```yaml
 ---
-id: issue-workflow
+id: workflows-issue-workflow
 title: 이슈 → 워크트리 → 증거 → PR 워크플로우
 category: workflows
 summary: 무엇을 하는 문서인지 한두 문장. 제목을 풀어 쓰지 말고 안에 실제로 뭐가 있는지 적는다.
@@ -30,7 +30,7 @@ last_updated: 2026-08-27
 
 | 필드 | 규칙 |
 | --- | --- |
-| `id` | 파일명(확장자 제외)과 같게. 저장소 안에서 유일해야 한다 |
+| `id` | `{category}-{파일명}`(확장자 제외). 예: `docs/reference/catalog.md` → `reference-catalog`. 저장소 안에서 유일해야 한다 |
 | `title` | 사람이 읽는 제목. 본문 `#` 과 같게 |
 | `category` | `setup` · `workflows` · `reference` 셋 중 하나. 폴더명과 일치한다 |
 | `summary` | **구체적 기능 요약.** "설치 문서" 같은 동어반복 금지. 이 문서에만 있는 것을 적는다 |
@@ -54,8 +54,9 @@ last_updated: 2026-08-27
 
 ## 새 문서를 추가할 때
 
-1. `docs/<category>/<id>.md` 로 만들고 프론트매터를 채운다.
-2. **[INDEX.md](../../INDEX.md) 의 `docs:` 블록에 항목을 추가한다.** 이걸 빠뜨리면 AI 가 문서를 못 찾는다.
+1. `docs/<category>/<파일명>.md` 로 만들고 프론트매터를 채운다. `id` 는 `<category>-<파일명>` 이다.
+2. **[INDEX.md](../../INDEX.md) 를 같은 커밋에서 다시 만든다.** 이걸 빠뜨리면 AI 가 문서를 못 찾는다.
+   INDEX 는 프론트매터에서 생성하므로 손으로 고치지 않는다. docs-tidy 스킬의 `docs_index.py build --root .` 로 만들고 `check --root .` 로 확인한다.
 3. 관련 문서에서 상대 경로로 링크를 건다.
 4. 소스 파일을 함께 고쳤으면 그 문서의 `related_files` 와 `last_updated` 도 갱신한다.
 
@@ -74,7 +75,7 @@ last_updated: 2026-08-27
 
 | 파일 | 대상 | 역할 |
 | --- | --- | --- |
-| `INDEX.md` | AI | 라우팅 전용. 모든 문서의 path·title·summary·keywords 를 YAML 블록으로 |
+| `INDEX.md` | AI | 라우팅 전용. 모든 문서의 path·title·summary·keywords 를 YAML 블록으로만 담는다. 값은 프론트매터 그대로이며 설명 문단을 넣지 않는다 |
 | `README.md` | 사람 | 설치 방법과 기능 개요. 상세는 `docs/` 로 넘긴다 |
 
 하위 폴더에는 `README.md` 를 두지 않는다. 내용이 `docs/` 와 갈라져 둘 다 낡기 때문이다.

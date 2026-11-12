@@ -1,5 +1,5 @@
 ---
-id: obsidian-workflow
+id: workflows-obsidian-workflow
 title: Obsidian 볼트 관리 워크플로우
 category: workflows
 summary: 볼트의 00_Sandbox 에 쌓인 노트를 frontmatter 정규화 → 내용 기반 폴더 이동 → 인덱스 갱신 순서로 정리하는 커맨드 7종 사용법. 인덱스 파일명에 왜 언더스코어를 붙이는지, 목록 섹션만 자동 갱신되는 이유 같은 함정도 담는다.

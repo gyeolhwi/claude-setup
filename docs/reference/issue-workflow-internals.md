@@ -1,5 +1,5 @@
 ---
-id: issue-workflow-internals
+id: reference-issue-workflow-internals
 title: 이슈 워크플로우 내부 규약
 category: reference
 summary: issue-* 스킬군의 상태 파일이 홈과 저장소 어디에 사는지, .gitignore 블록이 왜 증거만 뚫어 두는지, 워크트리 배치 두 가지, 브랜치 이름 규칙, 성격·진행 상태 라벨 두 축, 기본 브랜치 판별 순서, 그리고 증상별 트러블슈팅 표.

@@ -1,5 +1,5 @@
 ---
-id: catalog
+id: reference-catalog
 title: 커맨드·스킬 카탈로그
 category: reference
 summary: 이 저장소가 제공하는 커맨드 10개와 스킬 11개, 훅 1개의 전체 목록. 각 항목의 호출 방식(슬래시/자연어), 원본 파일 경로, 설치 위치, 관련 워크플로우 문서를 한 표에서 찾을 수 있다. project-docs-gen 템플릿 10종의 의존 관계도 포함한다.
