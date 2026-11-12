@@ -16,7 +16,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 CORE_COMMANDS=(project/project-docs.md project/project-docs-gen.md project/project-workflow.md)
 OBSIDIAN_COMMANDS=(obsidian-categories obsidian-format obsidian-index obsidian-init obsidian-move obsidian-organize obsidian-preview)
-SKILLS=(git-commit git-pr git-release git-board gh-setup issue-create issue-start issue-end issue-merge work-setup)
+SKILLS=(git-commit git-pr git-release git-board gh-setup issue-create issue-start issue-end issue-merge)
 LEGACY=(skills/create-pr commands/commit-auto.md)   # git-pr · git-commit 으로 대체됨
 NESTED_SKILLS=(omc-learned/project-docs-gen)
 
@@ -261,5 +261,7 @@ say "    \"릴리스 노트\" / /git-release       지난 릴리스 이후 변�
 say "    /git-board                        연결된 GitHub Project 보드 요약"
 say ""
 [ "$OBSIDIAN" = yes ] && { say "    /obsidian-init                    볼트 초기 세팅"; say ""; }
+say "Work 작업공간·뷰어(work-setup 스킬)는 gyeolhwi/work-viewer 저장소에서 따로 설치합니다."
+say ""
 say "문서: INDEX.md (AI 진입점) · README.md (사람 진입점)"
 say ""
