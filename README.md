@@ -81,10 +81,7 @@ Claude Code 안에서 하고 싶으면 clone 한 폴더를 열고 **"내 컴퓨�
 ### 5. [Work 작업공간 + 실시간 뷰어](./docs/workflows/work-workspace-workflow.md)
 
 컴퓨터의 일을 `~/Work` 하나로 모으고(모든 일 = `Projects/<이름>`), 폴더·문서·바뀐 파일·에이전트 상태를 아이패드에서 실시간으로 본다.
-
-```text
-"Work 세팅해줘" / /work-setup    조사 → 계획 승인 → README·INDEX·AGENTS·docs 생성 → 뷰어 설치
-```
+`work-setup` 스킬과 뷰어는 [gyeolhwi/work-viewer](https://github.com/gyeolhwi/work-viewer) 저장소에서 관리하고 설치한다.
 
 커맨드·스킬 전체 목록은 [docs/reference/catalog.md](./docs/reference/catalog.md) 에 있다.
 원본 파일 위치와 자주 묻는 질문별 문서는 [docs/reference/source-map.md](./docs/reference/source-map.md) 에 있다.
@@ -107,7 +104,7 @@ claude-setup/
 │   │   ├── issue-workflow.md        이슈 → 워크트리 → PR
 │   │   ├── obsidian-workflow.md     볼트 관리
 │   │   ├── git-workflow.md          커밋·PR·릴리스
-│   │   └── work-workspace-workflow.md  작업공간 세팅·뷰어
+│   │   └── work-workspace-workflow.md  작업공간·뷰어 안내 (→ work-viewer)
 │   └── reference/
 │       ├── catalog.md                   커맨드·스킬 전체 목록
 │       ├── issue-workflow-internals.md  상태·라벨·브랜치 규약, 트러블슈팅
@@ -122,7 +119,6 @@ claude-setup/
     ├── issue-create/  issue-start/  issue-end/  issue-merge/
     ├── git-commit/  git-pr/  git-release/  git-board/
     ├── gh-setup/
-    ├── work-setup/    작업공간 세팅 + viewer/ (Bun)
     └── omc-learned/project-docs-gen/   문서 템플릿 10종
 ```
 

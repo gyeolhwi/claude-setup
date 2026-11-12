@@ -6,7 +6,7 @@
 docs:
 - path: docs/reference/catalog.md
   title: 커맨드·스킬 카탈로그
-  summary: 이 저장소가 제공하는 커맨드 10개와 스킬 11개, 훅 1개의 전체 목록. 각 항목의 호출 방식(슬래시/자연어), 원본 파일 경로, 설치 위치, 관련 워크플로우 문서를 한 표에서 찾을 수 있다. project-docs-gen
+  summary: 이 저장소가 제공하는 커맨드 10개와 스킬 10개, 훅 1개의 전체 목록. 각 항목의 호출 방식(슬래시/자연어), 원본 파일 경로, 설치 위치, 관련 워크플로우 문서를 한 표에서 찾을 수 있다. project-docs-gen
     템플릿 10종의 의존 관계도 포함한다.
   keywords:
   - 카탈로그
@@ -243,9 +243,9 @@ docs:
   - CHANGELOG
   - docs구조
 - path: docs/workflows/work-workspace-workflow.md
-  title: Work 작업공간 세팅과 실시간 뷰어
-  summary: 컴퓨터·서버의 작업 폴더를 Projects 중심 + README·INDEX·AGENTS·docs 구조로 세팅하는 work-setup 스킬 사용 순서와, 폴더·문서·바뀐 파일·herdr 에이전트 상태를
-    아이패드에서 실시간으로 보는 Work 뷰어의 설치·원격 접속(Tailscale·SSH 터널)·운영 명령.
+  title: Work 작업공간 세팅과 실시간 뷰어 (work-viewer 저장소 안내)
+  summary: 작업 폴더를 Projects 중심 + README·INDEX·AGENTS·docs 구조로 세팅하는 work-setup 스킬과 Work 뷰어는 이 저장소가 아니라 gyeolhwi/work-viewer
+    에서 관리한다. clone·설치 명령, 스킬 갱신 방법, 상세 문서 위치를 안내한다.
   keywords:
   - work-setup
   - Work
@@ -253,21 +253,14 @@ docs:
   - workspace
   - 뷰어
   - viewer
+  - work-viewer
   - 실시간
-  - 모니터링
   - 아이패드
-  - 프로젝트별
-  - 에이전트 요약
   - Projects
-  - README
-  - INDEX
-  - AGENTS
-  - herdr
-  - ovis
-  - tailscale
+  - docs-tidy
+  - 설치
+  - install.sh --skills
   - bun
-  - systemd
-  - launchd
   - 새컴퓨터
   - 서버
 ```

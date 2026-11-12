@@ -50,11 +50,6 @@ assets:
     summary: git-convention.py(PostToolUse 로 커밋·PR 형식 점검, 배포 감지 시 릴리스 노트 제안)와 CLAUDE.md 에 넣는 <git_convention> 규칙 블록.
     keywords: [hook, 훅, git-convention, PostToolUse, CLAUDE.md, convention.check, convention.release]
 
-  - path: skills/work-setup/
-    title: Work 작업공간 세팅 스킬 + 뷰어
-    summary: SKILL.md(세팅 절차) + references/format.md(문서·INDEX 형식) + viewer/(Bun 서버·화면·install.sh).
-    keywords: [work-setup, 작업공간, 뷰어, viewer, install, bun]
-
   - path: skills/omc-learned/project-docs-gen/
     title: 개발 문서 템플릿 10종
     summary: /project-docs-gen 이 읽는 요구사항·기술스택·역할·정보구조·기능명세·ERD·API·플로우차트·와이어프레임·시나리오 템플릿.
