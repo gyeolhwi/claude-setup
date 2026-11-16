@@ -8,3 +8,6 @@
 !.issue/*/evidence/**
 .issue/**/.auth.json
 .issue/**/storage-state.json
+
+# deck 스킬 의존성 — link 설치면 저장소 안에 생긴다
+skills/deck/scripts/node_modules/

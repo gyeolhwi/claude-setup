@@ -6,7 +6,7 @@
 docs:
 - path: docs/reference/catalog.md
   title: 커맨드·스킬 카탈로그
-  summary: 이 저장소가 제공하는 커맨드 10개와 스킬 10개, 훅 1개의 전체 목록. 각 항목의 호출 방식(슬래시/자연어), 원본 파일 경로, 설치 위치, 관련 워크플로우 문서를 한 표에서 찾을 수 있다. project-docs-gen
+  summary: 이 저장소가 제공하는 커맨드 10개와 스킬 11개, 훅 1개의 전체 목록. 각 항목의 호출 방식(슬래시/자연어), 원본 파일 경로, 설치 위치, 관련 워크플로우 문서를 한 표에서 찾을 수 있다. project-docs-gen
     템플릿 10종의 의존 관계도 포함한다.
   keywords:
   - 카탈로그
@@ -22,6 +22,9 @@ docs:
   - git-pr
   - git-release
   - git-board
+  - deck
+  - 발표자료
+  - PPT
   - 슬래시
   - 템플릿
   - template
@@ -131,6 +134,9 @@ docs:
   - ffmpeg
   - sharp
   - 설치확인
+  - npm
+  - libreoffice
+  - deck
 - path: docs/workflows/git-workflow.md
   title: Git 커밋·PR·릴리스 워크플로우
   summary: 커밋은 git-commit, PR 은 git-pr, 배포 릴리스 노트는 git-release 스킬이 같은 TYPE(scope) 규칙으로 만든다. 제목은 PM 이 읽고 본문(Why·How·Refs·Related·Author)은

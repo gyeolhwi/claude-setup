@@ -45,6 +45,11 @@ assets:
     summary: 같은 TYPE(scope) 규칙의 커밋·PR·릴리스 노트 작성과 GitHub Project 보드 조회. AI 생성 문구를 넣지 않는다.
     keywords: [git-commit, git-pr, git-release, git-board, 커밋, PR, 릴리스, 보드]
 
+  - path: skills/deck/
+    title: 발표자료 스킬 (deck)
+    summary: 기획안(plan.md) 고정 형식·형태 17종 카탈로그·문구 규칙과 check·build·render 를 하는 deck.js. 예시의 고객사 이름은 익명화했다. npm 의존성은 설치 때 받는다.
+    keywords: [deck, 발표자료, PPT, pptx, 기획안, plan.md, pptxgenjs, libreoffice]
+
   - path: hooks/
     title: git-convention 훅
     summary: git-convention.py(PostToolUse 로 커밋·PR 형식 점검, 배포 감지 시 릴리스 노트 제안)와 CLAUDE.md 에 넣는 <git_convention> 규칙 블록.

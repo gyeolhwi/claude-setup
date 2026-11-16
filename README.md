@@ -78,7 +78,17 @@ Claude Code 안에서 하고 싶으면 clone 한 폴더를 열고 **"내 컴퓨�
 
 `git-convention` 훅이 Claude 가 만든 커밋·PR 형식을 점검하고, 배포를 감지하면 릴리스 노트를 제안한다.
 
-### 5. [Work 작업공간 + 실시간 뷰어](./docs/workflows/work-workspace-workflow.md)
+### 5. 발표자료 (deck)
+
+주제·목적·대상이나 원본 문서(md)를 주면 고정 형식의 기획안을 먼저 만들고, 승인하면 항상 같은 디자인의 PPT 를 만든다.
+
+```text
+"발표자료 만들어줘" / /deck   기획안(plan.md) → 검토·승인 → PPT(pptx) + 미리보기
+```
+
+의존성(`npm install`)은 `install.sh` 가 받는다. 미리보기 이미지(`render`)는 LibreOffice 가 있어야 한다.
+
+### 6. [Work 작업공간 + 실시간 뷰어](./docs/workflows/work-workspace-workflow.md)
 
 컴퓨터의 일을 `~/Work` 하나로 모으고(모든 일 = `Projects/<이름>`), 폴더·문서·바뀐 파일·에이전트 상태를 아이패드에서 실시간으로 본다.
 `work-setup` 스킬과 뷰어는 [gyeolhwi/work-viewer](https://github.com/gyeolhwi/work-viewer) 저장소에서 관리하고 설치한다.
@@ -119,6 +129,7 @@ claude-setup/
     ├── issue-create/  issue-start/  issue-end/  issue-merge/
     ├── git-commit/  git-pr/  git-release/  git-board/
     ├── gh-setup/
+    ├── deck/          발표 기획안 → PPT (npm 의존성)
     └── omc-learned/project-docs-gen/   문서 템플릿 10종
 ```
 
