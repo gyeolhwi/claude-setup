@@ -1,5 +1,26 @@
 # Changelog
 
+## v0.2.0 — 2026-11-16
+
+발표자료 스킬(deck)이 추가되어 `install.sh` 한 번으로 어느 컴퓨터에서나 기획안 → PPT 작업을 할 수 있습니다. Work 작업공간 스킬은 work-viewer 저장소로 옮겨, claude-setup 설치가 그쪽 스킬을 덮어쓰지 않습니다.
+
+### 업데이트 전 확인할 것
+- work-setup 스킬은 더 이상 claude-setup 이 설치하지 않음. Work 작업공간·뷰어를 쓰려면 gyeolhwi/work-viewer 를 clone 해 설치 (#3)
+- deck 을 쓰려면 npm 이 있어야 하고, 미리보기 이미지(render)는 LibreOffice 가 필요함 (#5)
+
+### 새 기능
+- `install.sh` 실행 시 deck 스킬이 함께 깔리고 의존성(npm install)까지 받아져 바로 `/deck` 을 쓸 수 있음 (#5)
+
+<details>
+<summary>내부 작업 3건 (사용 변화 없음)</summary>
+
+- CHORE(work-setup): Work 작업공간 스킬을 work-viewer 저장소로 넘김 (#3)
+- docs(issue-2): 증거 자료 main 반영 (29dc83f)
+- docs(issue-4): 증거 자료 main 반영 (55e4efb)
+</details>
+
+**전체 변경**: https://github.com/gyeolhwi/claude-setup/compare/v0.1.0...v0.2.0
+
 ## v0.1.0 — 2026-11-12
 
 Claude Code 커맨드·스킬 모음의 첫 릴리스입니다. `./install.sh` 한 번으로 이슈→PR 흐름, 커밋·PR·릴리스 규칙, Obsidian 볼트 정리, Work 작업공간 뷰어까지 세팅됩니다.
