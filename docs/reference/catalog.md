@@ -2,13 +2,13 @@
 id: reference-catalog
 title: 커맨드·스킬 카탈로그
 category: reference
-summary: 이 저장소가 제공하는 커맨드 10개와 스킬 10개, 훅 1개의 전체 목록. 각 항목의 호출 방식(슬래시/자연어), 원본 파일 경로, 설치 위치, 관련 워크플로우 문서를 한 표에서 찾을 수 있다. project-docs-gen 템플릿 10종의 의존 관계도 포함한다.
-keywords: [카탈로그, catalog, 목록, 커맨드, command, 스킬, skill, 훅, hook, git-commit, git-pr, git-release, git-board, 슬래시, 템플릿, template, 의존관계, ID체계, REQ, FEAT, SCR, API, TC, FLOW, EDGE]
+summary: 이 저장소가 제공하는 커맨드 10개와 스킬 11개, 훅 1개의 전체 목록. 각 항목의 호출 방식(슬래시/자연어), 원본 파일 경로, 설치 위치, 관련 워크플로우 문서를 한 표에서 찾을 수 있다. project-docs-gen 템플릿 10종의 의존 관계도 포함한다.
+keywords: [카탈로그, catalog, 목록, 커맨드, command, 스킬, skill, 훅, hook, git-commit, git-pr, git-release, git-board, deck, 발표자료, PPT, 슬래시, 템플릿, template, 의존관계, ID체계, REQ, FEAT, SCR, API, TC, FLOW, EDGE]
 related_files:
   - commands/
   - skills/
   - hooks/
-last_updated: 2026-11-12
+last_updated: 2026-11-16
 ---
 
 # 커맨드·스킬 카탈로그
@@ -44,11 +44,13 @@ last_updated: 2026-11-12
 | `git-pr` | `skills/git-pr/` | `/git-pr` · 자연어 · 자동 | 고정 섹션 PR 생성 | [git](../workflows/git-workflow.md) |
 | `git-release` | `skills/git-release/` | `/git-release` · 자연어 · 훅 제안 | 릴리스 노트 → GitHub Release · CHANGELOG | [git](../workflows/git-workflow.md) |
 | `git-board` | `skills/git-board/` | `/git-board` · 자연어 | GitHub Project 보드 요약 (조회 전용) | [git](../workflows/git-workflow.md) |
+| `deck` | `skills/deck/` | `/deck` · 자연어 | 발표 기획안(plan.md) → 승인 → PPT 생성 | [SKILL](../../skills/deck/SKILL.md) |
 | `project-docs-gen` 템플릿 | `skills/omc-learned/project-docs-gen/` | — | `/project-docs-gen` 이 읽는 템플릿 10종 | 아래 |
 
 각 스킬은 `SKILL.md` + `references/` + `scripts/` 로 구성된다.
 `work-setup`(Work 작업공간·뷰어)은 이 저장소가 아니라 [gyeolhwi/work-viewer](https://github.com/gyeolhwi/work-viewer) 에서 관리한다. [work](../workflows/work-workspace-workflow.md) 참고.
 `references/` 는 단계별 상세 절차, `scripts/` 는 Node 표준 모듈만 쓰는 `.mjs` 다.
+예외로 `deck` 은 `scripts/package.json` 의 npm 의존성(pptxgenjs·sharp 등)을 쓰고, `install.sh` 가 설치한 자리에서 `npm install` 을 돌린다.
 
 ## 훅
 

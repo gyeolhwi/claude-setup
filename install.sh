@@ -16,9 +16,10 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 CORE_COMMANDS=(project/project-docs.md project/project-docs-gen.md project/project-workflow.md)
 OBSIDIAN_COMMANDS=(obsidian-categories obsidian-format obsidian-index obsidian-init obsidian-move obsidian-organize obsidian-preview)
-SKILLS=(git-commit git-pr git-release git-board gh-setup issue-create issue-start issue-end issue-merge)
+SKILLS=(git-commit git-pr git-release git-board gh-setup issue-create issue-start issue-end issue-merge deck)
 LEGACY=(skills/create-pr commands/commit-auto.md)   # git-pr · git-commit 으로 대체됨
 NESTED_SKILLS=(omc-learned/project-docs-gen)
+NPM_SKILLS=(deck/scripts)                         # 설치 뒤 npm install 이 필요한 스킬 폴더
 
 MODE=link
 CODEX=0
@@ -173,6 +174,16 @@ for BASE in "${BASES[@]}"; do
     ok "skills/$s"
   done
 
+  # 스킬별 npm 의존성 — node_modules 는 저장소에 없으므로 설치한 자리에서 받는다
+  for s in "${NPM_SKILLS[@]}"; do
+    dir="$BASE/skills/$s"
+    [ -f "$dir/package.json" ] || continue
+    if command -v npm >/dev/null 2>&1; then
+      if (cd "$dir" && npm install --silent --no-audit --no-fund >/dev/null 2>&1); then ok "skills/$s 의존성 (npm install)"
+      else warn "skills/$s 의존성 설치 실패 — 직접: cd \"$dir\" && npm install"; fi
+    else warn "npm 없음 — skills/$s 를 쓰려면 직접: cd \"$dir\" && npm install"; fi
+  done
+
   for s in "${NESTED_SKILLS[@]}"; do
     src="$ROOT/skills/$s"
     [ -d "$src" ] || { bad "skills/$s — 원본이 없습니다"; continue; }
@@ -259,6 +270,8 @@ say "    \"커밋해\" / /git-commit            목적별로 나눠 커밋 (PM �
 say "    \"PR 올려줘\" / /git-pr             고정 섹션 PR"
 say "    \"릴리스 노트\" / /git-release       지난 릴리스 이후 변경 정리"
 say "    /git-board                        연결된 GitHub Project 보드 요약"
+say ""
+say "    \"발표자료 만들어줘\" / /deck        기획안(plan.md) → 승인 → PPT"
 say ""
 [ "$OBSIDIAN" = yes ] && { say "    /obsidian-init                    볼트 초기 세팅"; say ""; }
 say "Work 작업공간·뷰어(work-setup 스킬)는 gyeolhwi/work-viewer 저장소에서 따로 설치합니다."

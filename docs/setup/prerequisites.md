@@ -3,11 +3,11 @@ id: setup-prerequisites
 title: 전제 조건
 category: setup
 summary: claude-setup 설치 전에 시스템에 있어야 하는 것(git·rsync·Node 18+·gh·python3)과 작업할 프로젝트 쪽에 있어야 하는 것(Playwright·webp 변환기)을 구분해 정리한다. 무엇이 없으면 무엇이 막히는지까지 명시한다.
-keywords: [전제조건, prerequisites, git, node, python3, gh, github cli, playwright, webp, cwebp, ffmpeg, sharp, 설치확인]
+keywords: [전제조건, prerequisites, git, node, python3, gh, github cli, playwright, webp, cwebp, ffmpeg, sharp, 설치확인, npm, libreoffice, deck]
 related_files:
   - install.sh
   - skills/gh-setup/SKILL.md
-last_updated: 2026-11-12
+last_updated: 2026-11-16
 ---
 
 # 전제 조건
@@ -24,8 +24,10 @@ last_updated: 2026-11-12
 | python3 | git-convention 훅에 필요 | 커밋·PR 형식 점검 훅만 건너뛴다. 스킬은 그대로 동작 |
 | `gh` (로그인) | 이슈·PR·릴리스·보드에 필요 | 이슈 등록·PR 생성이 막힌다. `/gh-setup` 이 설치·로그인을 안내한다 |
 | cwebp 또는 ffmpeg | 증거 캡처에 권장 | 프로젝트에 sharp 도 없으면 증거가 png 로 남는다 |
+| npm | `deck` 스킬에 필요 | `install.sh` 가 `skills/deck/scripts` 의존성을 못 받는다. 경고만 하고 설치는 계속 |
+| LibreOffice | `deck` 미리보기(`render`)에만 | 기획안 검사·PPT 생성은 되고, 미리보기 이미지만 못 만든다 (`brew install --cask libreoffice`) |
 
-issue-* 스킬 스크립트는 **Node 표준 모듈만** 쓴다. npm 의존성이 없다.
+issue-* 스킬 스크립트는 **Node 표준 모듈만** 쓴다. npm 의존성이 없다. 예외는 `deck` 하나다.
 
 Jira 를 provider 로 쓰더라도 **`gh` 로그인은 여전히 필요하다.** Jira 에는 PR 개념이 없어서
 PR 을 만들고 merge 하는 것은 언제나 `gh` 다.
