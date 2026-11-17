@@ -16,7 +16,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 CORE_COMMANDS=(project/project-docs.md project/project-docs-gen.md project/project-workflow.md)
 OBSIDIAN_COMMANDS=(obsidian-categories obsidian-format obsidian-index obsidian-init obsidian-move obsidian-organize obsidian-preview)
-SKILLS=(git-commit git-pr git-release git-board gh-setup issue-create issue-start issue-end issue-merge deck)
+SKILLS=(git-commit git-pr git-release git-board gh-setup issue-create issue-start issue-end issue-merge repo-init deck)
 LEGACY=(skills/create-pr commands/commit-auto.md)   # git-pr · git-commit 으로 대체됨
 NESTED_SKILLS=(omc-learned/project-docs-gen)
 NPM_SKILLS=(deck/scripts)                         # 설치 뒤 npm install 이 필요한 스킬 폴더

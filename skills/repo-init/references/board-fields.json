@@ -1,0 +1,15 @@
+{
+  "_comment": "repo-init board 가 만드는 GitHub Project 필드. Status(Todo/In Progress/Done)는 GitHub 기본 필드라 여기 없다. 이름을 바꾸면 issue-tracker.mjs 의 BOARD_STATUS_MAP(검수상태)도 맞춘다.",
+  "fields": [
+    { "name": "카테고리", "type": "SINGLE_SELECT", "options": ["프론트엔드", "백엔드", "인프라/배포", "수동작업(콘솔)", "디자인", "문서"] },
+    { "name": "작업유형", "type": "SINGLE_SELECT", "options": ["신규개발", "버그수정", "리팩토링", "설정/연동", "문서화"] },
+    { "name": "강조포인트", "type": "TEXT" },
+    { "name": "검수상태", "type": "SINGLE_SELECT", "options": ["개발중", "검수요청", "수정필요", "검수완료"] }
+  ],
+  "labels": [
+    { "name": "bug", "color": "d73a4a", "description": "동작이 잘못됨" },
+    { "name": "enhancement", "color": "a2eeef", "description": "기능 추가·개선" },
+    { "name": "documentation", "color": "0075ca", "description": "문서" },
+    { "name": "chore", "color": "c5def5", "description": "정리·설정·의존성" }
+  ]
+}

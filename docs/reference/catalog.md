@@ -39,6 +39,7 @@ last_updated: 2026-11-16
 | `issue-start` | `skills/issue-start/` | `/issue-start <번호>` | 착수 · 워크트리 · 구현 · 증거 | [issue](../workflows/issue-workflow.md) |
 | `issue-end` | `skills/issue-end/` | `/issue-end` | 증거 재확인 · 이슈 코멘트 · PR | [issue](../workflows/issue-workflow.md) |
 | `issue-merge` | `skills/issue-merge/` | `/issue-merge` | 여러 워크트리 통합 · 이슈 close | [issue](../workflows/issue-workflow.md) |
+| `repo-init` | `skills/repo-init/` | `/repo-init` · 자연어 | 새 프로젝트 1회 세팅: GitHub Project 보드·필드·라벨·docs·work-format·에이전트 규칙 | [issue](../workflows/issue-workflow.md) |
 | `gh-setup` | `skills/gh-setup/` | `/gh-setup` · 자동 | `gh` 설치·로그인 안내 | [issue](../workflows/issue-workflow.md) |
 | `git-commit` | `skills/git-commit/` | `/git-commit` · 자연어 · 자동 | 목적별로 나눠 커밋 (PM 제목 + Why·How 본문) | [git](../workflows/git-workflow.md) |
 | `git-pr` | `skills/git-pr/` | `/git-pr` · 자연어 · 자동 | 고정 섹션 PR 생성 | [git](../workflows/git-workflow.md) |

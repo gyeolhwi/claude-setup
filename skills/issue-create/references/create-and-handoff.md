@@ -28,6 +28,23 @@ node <skill>/scripts/issue-create.mjs create \
 `--no-label` 이라는 탈출구가 있지만, 규칙을 의도적으로 벗어날 때만 쓰고 그 사유를 보고에 남긴다. 모델이 라벨을 고르기 귀찮아서 쓰는 용도가 아니다.
 등록 직후 `unlabeled` 로 기존 이슈의 라벨도 점검한다.
 
+## 보드가 연결된 저장소
+
+먼저 `node <skill>/scripts/issue-create.mjs board` 로 보드가 있는지 본다. `BOARD=none` 이면 이 절은 건너뛴다.
+
+보드가 있으면 등록할 때 담당자와 보드 필드를 같이 넘긴다. 값은 `board` 출력에 있는 옵션 이름만 쓴다.
+
+```bash
+node <skill>/scripts/issue-create.mjs create --title "..." --body-file /tmp/issue-draft.md \
+  --label enhancement --assignee @me \
+  --field 카테고리=프론트엔드 --field 작업유형=신규개발 --field "강조포인트=캐시 무효화 주의 / 모바일 확인"
+```
+
+- 이슈는 등록 직후 보드에 들어가고 Status 는 Todo 가 된다. 이후 Status·검수상태는 진행 라벨을 따라 자동으로 옮겨진다.
+- 필드 값은 초안 승인 때 같이 보여 준다. 고칠 때는 `board-set <번호> --field 이름=값`.
+- 보드 반영이 실패해도 이슈는 이미 만들어졌다. 경고를 보고에 남기고 `board-set` 으로 다시 시도한다.
+- 저장소 프로젝트 문서(`docs/ops/work-format.md` 등)에 필드 규칙이 있으면 그쪽을 따른다.
+
 ## 여러 건 등록
 
 `create` 는 이슈 하나만 만든다. **항목마다 따로 호출한다.**

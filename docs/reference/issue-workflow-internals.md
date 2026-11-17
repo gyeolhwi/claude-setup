@@ -125,6 +125,24 @@ slug 는 영문 kebab-case 로 **직접 지어서** 넘긴다. 한글 제목을 
 node ~/.claude/skills/issue-create/scripts/issue-create.mjs status 59 in-process
 ```
 
+## 보드 연동 (GitHub Project)
+
+`issue-tracker.mjs` 의 `setTrackerStatus` 가 진행 라벨을 바꾼 직후 `boardSyncStatus` 를 부른다.
+
+| 라벨 | 보드 Status | 검수상태 (필드가 있을 때) |
+| --- | --- | --- |
+| `status:open` | Todo | — |
+| `status:plan` · `status:in-process` | In Progress | 개발중 |
+| `status:review` | In Review (없으면 In Progress) | 검수요청 |
+| `status:close` | Done | — (검수완료는 담당자가 직접) |
+
+- 보드는 번호를 고정하지 않는다. 저장소에 연결된(linked) 열린 보드가 하나면 그것, 여러 개면 제목에 저장소 이름이 든 것을 쓰고, 그래도 여럿이면 고르지 않고 경고한다 (`issue-create.mjs board --pick <번호>`).
+- 찾은 보드와 필드·옵션 id 는 `<repo>/.issue/settings.json` 의 `board` 에 캐시한다. 옵션이 캐시에 없으면 한 번 다시 조회한다. 강제 갱신은 `board --refresh`.
+- 보드가 없거나 API 가 실패해도 라벨 전환은 성공으로 끝난다. 경고만 남긴다.
+- 끄기: `ISSUE_BOARD=0` 또는 `.issue/settings.json` 에 `"board": false`.
+- 필드 직접 지정: `issue-create.mjs create ... --field 카테고리=프론트엔드`, `issue-create.mjs board-set <번호> --field 이름=값`.
+- 보드·필드 생성은 `repo-init` 스킬(`repo-init.mjs board`)이 한다. gh 토큰에 `project` 권한이 필요하다.
+
 ## 기본 브랜치 판별
 
 `detectBase` 가 이 순서를 내장하고 있어 네 스킬 어디서 들어와도 같은 값이 나온다.
