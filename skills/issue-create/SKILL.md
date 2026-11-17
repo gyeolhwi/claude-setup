@@ -234,6 +234,7 @@ both            사용자 플로우 전체를 다루거나 API 계약 변경이 
 
 항목마다 `create` 를 따로 호출한다. 실패한 항목은 **건너뛰고 계속** 하고, 성공·실패를 모아 마지막에 한 번 보고한다.
 `status:open` 은 등록 성공 직후 스크립트가 자동으로 붙인다. `--label` 로 직접 넘기지 않는다.
+저장소에 GitHub Project 보드가 연결돼 있으면(`issue-create.mjs board`) `--assignee @me` 와 `--field 이름=값` 으로 보드 필드도 함께 채운다. 절차는 `references/create-and-handoff.md` 의 "보드가 연결된 저장소".
 
 ## 7단계 — 기존 이슈 라벨 점검
 

@@ -11,6 +11,8 @@
  *   5) unlabeled : 라벨이 하나도 없는 기존 이슈를 찾는다.
  *   6) label     : 기존 이슈에 라벨을 붙인다.
  *   7) ensure-label : 표준 라벨이 없을 때 만든다 (사용자 승인 후에만 호출).
+ *   8) board     : 저장소에 연결된 GitHub Project 보드와 필드를 보여준다.
+ *   9) board-set : 이슈를 보드에 넣고 필드 값(카테고리·작업유형 등)을 지정한다.
  *
  * 사용:
  *   node issue-create.mjs gate
@@ -20,6 +22,8 @@
  *   node issue-create.mjs unlabeled --state open
  *   node issue-create.mjs label 59 --label bug
  *   node issue-create.mjs ensure-label enhancement
+ *   node issue-create.mjs board
+ *   node issue-create.mjs board-set 59 --field 카테고리=프론트엔드 --field "강조포인트=캐시 무효화 주의"
  *
  * 이슈 백엔드는 ~/.issue/settings.json 의 provider 설정이 정한다 (github 기본 | jira).
  * 트래커 호출은 전부 issue-tracker.mjs 를 거친다. 이 파일은 gh 를 직접 부르지 않는다.
@@ -33,7 +37,9 @@ import process from 'node:process';
 import {
   repoRoot, issueDir, ensureIgnoreBlock, parseIssueNumber, WORKSPACE_DIR, STATUS_ORDER, typeLabels, isStatusLabel,
 } from './issue-common.mjs';
-import { createTracker, gitHost, setTrackerStatus } from './issue-tracker.mjs';
+import {
+  createTracker, gitHost, setTrackerStatus, findBoard, boardApply,
+} from './issue-tracker.mjs';
 
 export { parseIssueNumber };
 
@@ -72,6 +78,8 @@ function usage(exitCode = 1) {
   node issue-create.mjs label <issue-number> --label <name> [--label <name>...]
   node issue-create.mjs ensure-label <name> [--color <hex>] [--desc <설명>]
   node issue-create.mjs status <issue-number> <${STATUS_ORDER.map((s) => s.slice(7)).join('|')}>
+  node issue-create.mjs board [--refresh] [--pick <보드번호>]
+  node issue-create.mjs board-set <issue-number> --field <이름=값> [--field ...]
 
 gate:
   커밋 수·원격·이슈 이력·빌드 설정·소스 규모를 확인해
@@ -84,8 +92,13 @@ create options:
   --no-label           라벨 없이 만든다. 의도적으로 규칙을 벗어날 때만 쓴다
   --no-status          생성 후 status:open 자동 부착을 생략한다
   --assignee <login>   담당자 (@me 가능)
+  --field <이름=값>     보드 필드 값 (여러 번 지정 가능). 보드가 연결된 저장소에서만 쓴다
   --request-file <f>   원본 요청 기록. 생략 시 --body-file 을 복사
   --repo <o/n>         대상 저장소 (기본: 현재 디렉터리의 origin, github 트래커 전용)
+
+board:
+  저장소에 연결된 열린 GitHub Project 를 찾아 ${WORKSPACE_DIR}/settings.json 의 board 에 캐시한다.
+  진행 상태(status:*)가 바뀌면 보드 Status·검수상태도 자동으로 옮긴다. 끄려면 ISSUE_BOARD=0.
 
 request.md 는 ${WORKSPACE_DIR}/<번호>/ 에 남고, ${WORKSPACE_DIR} 는 .gitignore 에 자동 등록된다.
   --dry-run            트래커를 호출하지 않고 실행 계획만 출력
@@ -346,9 +359,16 @@ function cmdCreate(root, opts, tracker) {
 
   // 경고만 하지 않고 직접 등록한다. 사용자가 손댈 일을 남기지 않는다.
   if (ensureIgnoreBlock(root)) console.log(`  .gitignore 에 ${WORKSPACE_DIR} 블록을 추가했다.`);
+  let board = null;
   if (!opts.noStatus) {
     const status = setTrackerStatus(tracker, number, 'open', { quiet: true });
     if (!status.ok) console.warn(`  ! status:open 전환을 건너뜁니다: ${status.err ?? '알 수 없는 오류'}`);
+    board = status.board ?? null;
+  }
+  if (tracker.provider === 'github' && Object.keys(opts.fields).length) {
+    board = boardApply(root, number, opts.fields, { repo: opts.repo });
+    for (const err of board.errors ?? []) console.warn(`  ! 보드 필드 지정 실패: ${err}`);
+    if (!board.board && board.reason) console.warn(`  ! 보드 필드를 지정하지 못했습니다: ${board.reason}`);
   }
 
   console.log(`✓ 이슈 생성 완료 — ${display} ${opts.title}`);
@@ -356,7 +376,70 @@ function cmdCreate(root, opts, tracker) {
   console.log('');
   console.log(`ISSUE_NUMBER=${number}`);
   console.log(`ISSUE_URL=${url}`);
+  if (board?.board) {
+    console.log(`BOARD_NUMBER=${board.board.number}`);
+    console.log(`BOARD_URL=${board.board.url}`);
+  }
   console.log(`NEXT=/issue-start #${number}`);
+}
+
+/* ------------------------------------------------------------------ board */
+
+function parseFields(list) {
+  const out = {};
+  for (const raw of list) {
+    const i = raw.indexOf('=');
+    if (i <= 0) {
+      console.error(`✗ --field 는 이름=값 형식이어야 한다: ${raw}`);
+      process.exit(1);
+    }
+    out[raw.slice(0, i).trim()] = raw.slice(i + 1).trim();
+  }
+  return out;
+}
+
+function cmdBoard(root, opts) {
+  const found = findBoard(root, { repo: opts.repo, refresh: opts.refresh, number: opts.pick });
+  if (!found.ok) {
+    if (found.reason === 'none') console.log('BOARD=none  (저장소에 연결된 열린 GitHub Project 가 없다. repo-init 스킬로 만든다)');
+    else if (found.reason === 'disabled') console.log('BOARD=disabled  (ISSUE_BOARD=0 또는 settings.board=false)');
+    else {
+      console.log(`BOARD=error  ${found.reason}`);
+      if (found.candidates) console.log(`  후보: ${found.candidates.join(', ')}  → --pick <번호>`);
+    }
+    return;
+  }
+  const { board } = found;
+  console.log(`BOARD_NUMBER=${board.number}`);
+  console.log(`BOARD_TITLE=${board.title}`);
+  console.log(`BOARD_URL=${board.url}`);
+  console.log(`BOARD_CACHED=${found.cached ? 1 : 0}`);
+  console.log('');
+  for (const [name, f] of Object.entries(board.fields ?? {})) {
+    if (!['SINGLE_SELECT', 'TEXT', 'NUMBER', 'DATE'].includes(f.type)) continue;
+    const opts2 = f.options ? `  ${Object.keys(f.options).join(' · ')}` : '';
+    console.log(`  ${name.padEnd(10)} ${f.type}${opts2}`);
+  }
+}
+
+function cmdBoardSet(root, number, opts) {
+  if (!number) {
+    console.error('✗ 이슈 번호가 필요하다.');
+    usage();
+  }
+  if (!Object.keys(opts.fields).length) {
+    console.error('✗ --field 이름=값 이 하나 이상 필요하다.');
+    usage();
+  }
+  const r = boardApply(root, number, opts.fields, { repo: opts.repo });
+  if (!r.board) {
+    console.error(`✗ 보드 반영 실패: ${r.reason}`);
+    if (r.candidates) console.error(`  후보: ${r.candidates.join(', ')}  → board --pick <번호>`);
+    process.exit(3);
+  }
+  for (const err of r.errors) console.error(`✗ ${err}`);
+  if (r.applied.length) console.log(`✓ #${number} 보드 #${r.board.number}: ${r.applied.join(', ')}`);
+  if (r.errors.length) process.exit(2);
 }
 
 /* ------------------------------------------------------------------- main */
@@ -366,12 +449,12 @@ function main() {
   if (!argv.length || argv.includes('-h') || argv.includes('--help')) usage(argv.length ? 0 : 1);
 
   const mode = argv[0];
-  if (!['gate', 'search', 'labels', 'create', 'unlabeled', 'label', 'ensure-label', 'status'].includes(mode)) {
+  if (!['gate', 'search', 'labels', 'create', 'unlabeled', 'label', 'ensure-label', 'status', 'board', 'board-set'].includes(mode)) {
     console.error(`✗ 알 수 없는 모드: ${mode}`);
     usage();
   }
 
-  const opts = { dryRun: false, labels: [], removeLabels: [] };
+  const opts = { dryRun: false, labels: [], removeLabels: [], fieldList: [] };
   const positionals = [];
   for (let i = 1; i < argv.length; i += 1) {
     const arg = argv[i];
@@ -389,6 +472,9 @@ function main() {
     else if (arg === '--color') opts.color = argv[++i];
     else if (arg === '--desc') opts.desc = argv[++i];
     else if (arg === '--repo') opts.repo = argv[++i];
+    else if (arg === '--field') opts.fieldList.push(argv[++i]);
+    else if (arg === '--refresh') opts.refresh = true;
+    else if (arg === '--pick') opts.pick = argv[++i];
     else if (arg.startsWith('-')) {
       console.error(`✗ 알 수 없는 옵션: ${arg}`);
       usage();
@@ -396,6 +482,7 @@ function main() {
   }
 
   const positional = positionals[0] ?? null;
+  opts.fields = parseFields(opts.fieldList);
 
   const root = repoRoot();
   const tracker = createTracker(root, { repo: opts.repo });
@@ -417,6 +504,8 @@ function main() {
   else if (mode === 'unlabeled') cmdUnlabeled(opts, tracker);
   else if (mode === 'label') cmdLabel(parseIssueNumber(positional), opts, tracker);
   else if (mode === 'ensure-label') cmdEnsureLabel(positional, opts, tracker);
+  else if (mode === 'board') cmdBoard(root, opts);
+  else if (mode === 'board-set') cmdBoardSet(root, parseIssueNumber(positional), opts);
   else if (mode === 'status') {
     const result = setTrackerStatus(tracker, positional, positionals[1], { dryRun: opts.dryRun });
     if (!result.status) { console.error(`✗ 상태 전환 실패: ${result.err}`); process.exit(2); }

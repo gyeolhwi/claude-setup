@@ -31,7 +31,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import process from 'node:process';
 import {
   run, fail, detectBase, listEvidence, evidenceRel, repoSlugFromRemote, readIssueSettings,
-  isStatusLabel, resolveStatus, STATUS_LABELS,
+  isStatusLabel, resolveStatus, STATUS_LABELS, readProjectSettings, writeProjectSettings, mainCheckout,
 } from './issue-common.mjs';
 
 export const PROVIDERS = ['github', 'jira'];
@@ -124,6 +124,8 @@ function githubTracker(root, cfg) {
 
   return {
     provider: 'github',
+    root,
+    repo: cfg.repo ?? null,
 
     auth() {
       const r = run('gh', ['auth', 'status']);
@@ -576,7 +578,263 @@ export function setTrackerStatus(tracker, number, status, { dryRun = false, quie
     }
   }
   if (!quiet) console.log(`✓ ${tracker.displayKey(number)} ${previous ?? '(없음)'} → ${target}`);
-  return { ok: true, changed: true, status: target, previous };
+  const board = tracker.provider === 'github'
+    ? boardSyncStatus(tracker.root, number, target, { repo: tracker.repo, quiet })
+    : null;
+  return { ok: true, changed: true, status: target, previous, board };
+}
+
+/* ------------------------------------------------- 보드 (GitHub Project) */
+
+/**
+ * 진행 상태 라벨이 바뀌면 저장소에 연결된 GitHub Project 보드도 따라 옮긴다.
+ *
+ * - 보드는 번호를 고정하지 않고 저장소에 연결된(linked) 열린 보드에서 찾는다.
+ *   찾은 결과는 `<repo>/.issue/settings.json` 의 `board` 에 캐시한다.
+ * - `board: false` 또는 환경변수 `ISSUE_BOARD=0` 이면 끈다.
+ * - 보드가 없거나 호출이 실패해도 라벨 전환은 이미 끝났으므로 경고만 하고 막지 않는다.
+ * - 필드·옵션은 이름으로 찾는다. 보드에 없는 필드(예: 검수상태)는 조용히 건너뛴다.
+ *
+ * 각 값은 후보 목록이고, 보드에 있는 첫 옵션을 쓴다.
+ */
+export const BOARD_STATUS_MAP = {
+  'status:open': { Status: ['Todo'] },
+  'status:plan': { Status: ['In Progress'], 검수상태: ['개발중'] },
+  'status:in-process': { Status: ['In Progress'], 검수상태: ['개발중'] },
+  'status:review': { Status: ['In Review', 'In Progress'], 검수상태: ['검수요청'] },
+  'status:close': { Status: ['Done'] },
+};
+
+const BOARD_QUERY = `query($o:String!,$n:String!){repository(owner:$o,name:$n){projectsV2(first:20){nodes{
+  id number title closed url owner{... on User{login} ... on Organization{login}}
+  fields(first:50){nodes{
+    ... on ProjectV2FieldCommon{id name dataType}
+    ... on ProjectV2SingleSelectField{options{id name}}
+  }}
+}}}}`;
+
+function ghGraphql(query, vars = {}, opts = {}) {
+  const args = ['api', 'graphql', '-f', `query=${query}`];
+  for (const [k, v] of Object.entries(vars)) {
+    args.push(typeof v === 'number' ? '-F' : '-f', `${k}=${v}`);
+  }
+  const r = run('gh', args, opts);
+  if (r.code !== 0) return { ok: false, err: r.err || r.out };
+  try {
+    const json = JSON.parse(r.out);
+    if (json.errors?.length) return { ok: false, err: json.errors.map((e) => e.message).join('; ') };
+    return { ok: true, data: json.data };
+  } catch {
+    return { ok: false, err: `graphql 응답 파싱 실패: ${r.out.slice(0, 200)}` };
+  }
+}
+
+/** 보드 캐시는 메인 체크아웃 하나에 둔다. 워크트리마다 따로 두면 --pick·board:false 가 워크트리에서 무시된다. */
+function settingsRoot(root) {
+  return (root && mainCheckout(root)) || root;
+}
+
+function readBoardCache(root) {
+  return readProjectSettings(settingsRoot(root)).board;
+}
+
+function writeBoardCache(root, board) {
+  // 상태 전환 중에 작업 브랜치의 .gitignore 를 고치지 않는다. 무시되지 않으면 캐시만 건너뛴다.
+  writeProjectSettings(settingsRoot(root), { board }, { ensureIgnored: false });
+}
+
+function boardDisabled(root) {
+  return process.env.ISSUE_BOARD === '0' || readBoardCache(root) === false;
+}
+
+function repoSlug(root, repo) {
+  if (repo) return repo;
+  return gitHost.repoInfo(root)?.nameWithOwner ?? null;
+}
+
+/** 보드 노드를 캐시용 모양으로. fields 는 이름 → { id, type, options: { 이름: id } } */
+function compactBoard(node) {
+  const fields = {};
+  for (const f of node.fields?.nodes ?? []) {
+    if (!f?.id || !f.name) continue;
+    fields[f.name] = {
+      id: f.id,
+      type: f.dataType,
+      ...(f.options ? { options: Object.fromEntries(f.options.map((o) => [o.name, o.id])) } : {}),
+    };
+  }
+  return {
+    id: node.id, number: node.number, title: node.title, url: node.url, owner: node.owner?.login ?? null, fields,
+  };
+}
+
+/**
+ * 저장소에 연결된 보드를 찾는다. 캐시가 있으면 그대로 쓰고, refresh 면 다시 조회한다.
+ * 반환: { ok: true, board } | { ok: false, reason, candidates? }
+ */
+export function findBoard(root, { repo, refresh = false, number, persist = true } = {}) {
+  if (boardDisabled(root)) return { ok: false, reason: 'disabled' };
+  const cached = readBoardCache(root);
+  if (!refresh && !number && cached?.id && cached?.fields) return { ok: true, board: cached, cached: true };
+
+  const slug = repoSlug(root, repo);
+  if (!slug) return { ok: false, reason: '저장소를 식별하지 못했습니다' };
+  const [o, n] = slug.split('/');
+  const r = ghGraphql(BOARD_QUERY, { o, n }, { cwd: root });
+  if (!r.ok) return { ok: false, reason: `보드 조회 실패: ${r.err}` };
+  const open = (r.data?.repository?.projectsV2?.nodes ?? []).filter((p) => p && !p.closed);
+  if (!open.length) return { ok: false, reason: 'none' };
+
+  if (number) {
+    const chosen = open.find((p) => p.number === Number(number));
+    if (!chosen) return { ok: false, reason: `저장소에 연결된 열린 보드 중 #${number} 가 없습니다`, candidates: open.map((p) => `#${p.number} ${p.title}`) };
+    const board = compactBoard(chosen);
+    if (persist) writeBoardCache(root, board);
+    return { ok: true, board, cached: false };
+  }
+  let pick = open.length === 1 ? open[0] : null;
+  if (!pick) {
+    // 여러 개면 저장소 이름이 제목에 들어간 보드를 고른다. 그래도 여럿이면 고르지 않는다.
+    const named = open.filter((p) => p.title.toLowerCase().includes(n.toLowerCase()));
+    if (named.length === 1) [pick] = named;
+  }
+  if (!pick && cached?.number) pick = open.find((p) => p.number === cached.number) ?? null;
+  if (!pick) {
+    return { ok: false, reason: 'ambiguous', candidates: open.map((p) => `#${p.number} ${p.title}`) };
+  }
+  const board = compactBoard(pick);
+  if (persist) writeBoardCache(root, board);
+  return { ok: true, board, cached: false };
+}
+
+function issueNodeId(root, number, repo) {
+  const args = ['issue', 'view', String(number), '--json', 'id', '-q', '.id'];
+  if (repo) args.push('--repo', repo);
+  const r = run('gh', args, { cwd: root });
+  return r.code === 0 && r.out ? r.out : null;
+}
+
+/** 이슈를 보드에 넣고 item id 를 돌려준다. 이미 있으면 GitHub 가 기존 item 을 돌려준다(멱등). */
+export function boardAddIssue(root, board, number, { repo } = {}) {
+  const contentId = issueNodeId(root, number, repo);
+  if (!contentId) return { ok: false, err: `#${number} 이슈 id 조회 실패` };
+  const r = ghGraphql(
+    'mutation($p:ID!,$c:ID!){addProjectV2ItemById(input:{projectId:$p,contentId:$c}){item{id}}}',
+    { p: board.id, c: contentId },
+    { cwd: root },
+  );
+  if (!r.ok) return { ok: false, err: r.err };
+  return { ok: true, itemId: r.data.addProjectV2ItemById.item.id };
+}
+
+/**
+ * 필드 값을 지정한다. 단일 선택은 옵션 이름, 텍스트는 문자열, 숫자는 숫자, 날짜는 YYYY-MM-DD.
+ * 빈 문자열이면 값을 지운다.
+ */
+export function boardSetField(root, board, itemId, fieldName, value) {
+  const field = board.fields?.[fieldName];
+  if (!field) return { ok: false, skipped: true, err: `보드에 "${fieldName}" 필드가 없습니다` };
+  if (value === '' || value == null) {
+    const r = ghGraphql(
+      'mutation($p:ID!,$i:ID!,$f:ID!){clearProjectV2ItemFieldValue(input:{projectId:$p,itemId:$i,fieldId:$f}){projectV2Item{id}}}',
+      { p: board.id, i: itemId, f: field.id },
+      { cwd: root },
+    );
+    return { ok: r.ok, err: r.err };
+  }
+  let literal;
+  if (field.type === 'SINGLE_SELECT') {
+    const optionId = field.options?.[value];
+    if (!optionId) {
+      return { ok: false, err: `"${fieldName}" 에 "${value}" 옵션이 없습니다 (있는 값: ${Object.keys(field.options ?? {}).join(', ')})` };
+    }
+    literal = `{singleSelectOptionId:${JSON.stringify(optionId)}}`;
+  } else if (field.type === 'NUMBER') {
+    if (!Number.isFinite(Number(value))) return { ok: false, err: `"${fieldName}" 는 숫자 필드다: ${value}` };
+    literal = `{number:${Number(value)}}`;
+  }
+  else if (field.type === 'DATE') literal = `{date:${JSON.stringify(String(value))}}`;
+  else if (field.type === 'TEXT') literal = `{text:${JSON.stringify(String(value))}}`;
+  else return { ok: false, err: `"${fieldName}" (${field.type}) 필드는 스크립트로 지정하지 않습니다` };
+  const r = ghGraphql(
+    `mutation($p:ID!,$i:ID!,$f:ID!){updateProjectV2ItemFieldValue(input:{projectId:$p,itemId:$i,fieldId:$f,value:${literal}}){projectV2Item{id}}}`,
+    { p: board.id, i: itemId, f: field.id },
+    { cwd: root },
+  );
+  return { ok: r.ok, err: r.err };
+}
+
+/** 후보 중 보드에 있는 첫 옵션 이름. 캐시에 없으면 null. */
+function firstOption(board, fieldName, candidates) {
+  const options = board.fields?.[fieldName]?.options;
+  if (!options) return null;
+  return candidates.find((c) => options[c]) ?? null;
+}
+
+/**
+ * 이슈를 보드에 넣고 여러 필드를 한 번에 지정한다. 옵션이 캐시에 없으면 한 번만 다시 조회한다.
+ * values: { 필드이름: 값 }. 반환: { ok, board, itemId, applied: [...], errors: [...] }
+ */
+export function boardApply(root, number, values, { repo } = {}) {
+  let found = findBoard(root, { repo });
+  if (!found.ok) return { ok: false, reason: found.reason, candidates: found.candidates, applied: [], errors: [] };
+  const missing = Object.entries(values).some(([f, v]) => {
+    const field = found.board.fields?.[f];
+    return !field || (field.type === 'SINGLE_SELECT' && v && !field.options?.[v]);
+  });
+  if (missing && found.cached) {
+    const fresh = findBoard(root, { repo, refresh: true });
+    if (fresh.ok) found = fresh;
+  }
+  let { board } = found;
+  let added = boardAddIssue(root, board, number, { repo });
+  if (!added.ok && found.cached) {
+    // 캐시된 보드가 닫히거나 연결이 풀렸을 수 있다. 한 번만 다시 찾아 재시도한다.
+    const fresh = findBoard(root, { repo, refresh: true });
+    if (!fresh.ok) return { ok: false, reason: `보드 추가 실패: ${added.err} (다시 찾기: ${fresh.reason})`, applied: [], errors: [] };
+    ({ board } = fresh);
+    added = boardAddIssue(root, board, number, { repo });
+  }
+  if (!added.ok) return { ok: false, reason: `보드 추가 실패: ${added.err}`, board, applied: [], errors: [] };
+  const applied = [];
+  const errors = [];
+  for (const [fieldName, value] of Object.entries(values)) {
+    const r = boardSetField(root, board, added.itemId, fieldName, value);
+    if (r.ok) applied.push(`${fieldName}=${value === '' ? '(비움)' : value}`);
+    else if (!r.skipped) errors.push(r.err);
+  }
+  return { ok: errors.length === 0, board, itemId: added.itemId, applied, errors };
+}
+
+/** 진행 상태 라벨에 맞춰 보드 Status·검수상태를 옮긴다. 실패는 경고만 한다. */
+export function boardSyncStatus(root, number, status, { repo, quiet = false } = {}) {
+  const map = BOARD_STATUS_MAP[status];
+  if (!map || boardDisabled(root)) return null;
+  const found = findBoard(root, { repo });
+  if (!found.ok) {
+    if (found.reason === 'ambiguous') {
+      console.error(`! 저장소에 연결된 보드가 여러 개라 고르지 않았습니다: ${found.candidates.join(', ')}`);
+      console.error('  .issue/settings.json 의 board.number 를 정하거나 issue-create.mjs board --pick <번호> 로 고르세요.');
+    } else if (found.reason !== 'none' && found.reason !== 'disabled') {
+      console.error(`! ${found.reason}`);
+    }
+    return null;
+  }
+  const values = {};
+  for (const [fieldName, candidates] of Object.entries(map)) {
+    const option = firstOption(found.board, fieldName, candidates);
+    if (option) values[fieldName] = option;
+  }
+  const result = boardApply(root, number, values, { repo });
+  if (!result.board) {
+    console.error(`! 보드 반영 실패: ${result.reason}`);
+    return result;
+  }
+  for (const err of result.errors) console.error(`! 보드 반영 실패: ${err}`);
+  if (!quiet && result.applied.length) {
+    console.log(`  보드 #${result.board.number}: ${result.applied.join(', ')}`);
+  }
+  return result;
 }
 
 /* --------------------------------------------------------- 증거 URL */
