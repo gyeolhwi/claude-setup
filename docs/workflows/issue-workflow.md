@@ -23,6 +23,10 @@ last_updated: 2026-11-12
    이슈 등록        워크트리·구현·증거    코멘트·PR       통합·close
 ```
 
+새 프로젝트라면 먼저 `/repo-init` 을 한 번 돌린다. GitHub Project 보드를 만들어 저장소에 연결하고
+필드(Status·카테고리·작업유형·강조포인트·검수상태)·라벨·docs·`docs/ops/work-format.md`·CLAUDE.md 규칙을 채운다.
+보드가 연결된 저장소에서는 진행 라벨이 바뀔 때 보드도 따라 옮겨진다 (등록 Todo → 착수 In Progress → merge Done).
+
 상태 파일 위치·라벨 체계·브랜치 규칙·트러블슈팅은
 [reference/issue-workflow-internals.md](../reference/issue-workflow-internals.md) 에 따로 있다.
 
@@ -99,10 +103,11 @@ last_updated: 2026-11-12
 
 ---
 
-## 곁다리 스킬 둘
+## 곁다리 스킬
 
 | 스킬 | 언제 |
 | --- | --- |
+| `/repo-init` | 새 프로젝트를 시작할 때 1회. 다시 돌리면 빠진 것만 채운다 |
 | `/gh-setup` | `gh` 가 없거나 로그인이 안 됐을 때. OS 를 판별해 설치 경로를 정하고 `gh auth login` 까지 끌고 간다 |
 | `git-pr` | 이 파이프라인 밖에서 PR 을 만들 때. 파이프라인 안의 `/issue-end` 도 같은 형식을 쓴다 — [git-workflow.md](./git-workflow.md) |
 

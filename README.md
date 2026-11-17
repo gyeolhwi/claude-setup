@@ -48,13 +48,15 @@ Claude Code 안에서 하고 싶으면 clone 한 폴더를 열고 **"내 컴퓨�
 **이슈 하나 = 워크트리 하나 = PR 하나.** 증거(before/after webp)가 없으면 PR 이 안 만들어진다.
 
 ```text
+/repo-init                    새 프로젝트 1회: 보드·필드·라벨·docs·작업 규칙 세팅
 /issue-create  "고칠 내용"    이슈부터 등록 (승인 2회: 분할안 → 초안)
 /issue-start   12             착수 → 워크트리 → 구현 → 증거 → 이슈 코멘트
 /issue-end                    증거 재확인 → 기본 브랜치 커밋 → 이슈 코멘트 → PR
 /issue-merge                  여러 워크트리 일괄 통합 → 통합 테스트 → 이슈 close
 ```
 
-내부 규약(워크트리 배치·라벨·브랜치명·트러블슈팅)은
+저장소에 GitHub Project 보드가 연결돼 있으면 진행 라벨이 바뀔 때 보드 Status·검수상태도 따라 옮겨진다.
+내부 규약(워크트리 배치·라벨·브랜치명·보드 연동·트러블슈팅)은
 [docs/reference/issue-workflow-internals.md](./docs/reference/issue-workflow-internals.md).
 
 ### 3. [Obsidian 볼트 관리](./docs/workflows/obsidian-workflow.md)
@@ -129,6 +131,7 @@ claude-setup/
     ├── issue-create/  issue-start/  issue-end/  issue-merge/
     ├── git-commit/  git-pr/  git-release/  git-board/
     ├── gh-setup/
+    ├── repo-init/     새 프로젝트 보드·라벨·docs·작업 규칙 세팅
     ├── deck/          발표 기획안 → PPT (npm 의존성)
     └── omc-learned/project-docs-gen/   문서 템플릿 10종
 ```
