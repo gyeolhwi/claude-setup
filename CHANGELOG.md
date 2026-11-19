@@ -1,5 +1,30 @@
 # Changelog
 
+## v0.3.0 — 2026-11-19
+
+새 프로젝트를 시작할 때 `/repo-init` 한 번으로 GitHub 보드·라벨·작업 규칙이 갖춰지고, 이슈를 진행하면 보드 카드가 알아서 옮겨집니다. 발표자료(deck) 슬라이드에는 출처를 한 줄 달 수 있습니다.
+
+### 업데이트 전 확인할 것
+- 보드 연동을 쓰려면 gh 토큰에 project 권한이 있어야 함: `gh auth refresh -s project`. 없으면 이슈 흐름은 그대로 돌고 경고만 나옴 (#7)
+- 보드가 연결되지 않은 저장소는 지금과 같음. 끄려면 `ISSUE_BOARD=0` 또는 `.issue/settings.json` 에 `"board": false` (#7)
+
+### 새 기능
+- `/repo-init`: 새 프로젝트의 GitHub 보드(필드 5종)·라벨·작업 형식 문서·작업 규칙을 한 번에 세팅하고, 다시 돌리면 빠진 것만 채움 (#7)
+- 이슈 진행 상태가 바뀌면 보드도 따라감: 등록 Todo → 착수 In Progress/개발중 → PR 검수요청 → merge Done (#7)
+- 발표자료 기획안에 `source` 한 줄을 쓰면 슬라이드 맨 아래에 작은 글씨로 출처가 나옴 (#9)
+
+### 버그 수정
+- 이미 문서가 있는 저장소에서 `/repo-init` 이 문서 구조를 섞던 문제 해결. 기존 구조는 그대로 두고 작업 형식 문서만 그 안에 넣음 (#9)
+
+<details>
+<summary>내부 작업 2건 (사용 변화 없음)</summary>
+
+- DOCS(docs): 새 프로젝트 세팅과 보드 연동 사용법 문서화 (#7)
+- DOCS(docs): 기존 저장소에서 repo-init 을 쓸 때 문서 구조 안내 (#9)
+</details>
+
+**전체 변경**: https://github.com/gyeolhwi/claude-setup/compare/v0.2.0...v0.3.0
+
 ## v0.2.0 — 2026-11-16
 
 발표자료 스킬(deck)이 추가되어 `install.sh` 한 번으로 어느 컴퓨터에서나 기획안 → PPT 작업을 할 수 있습니다. Work 작업공간 스킬은 work-viewer 저장소로 옮겨, claude-setup 설치가 그쪽 스킬을 덮어쓰지 않습니다.
