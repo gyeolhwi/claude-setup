@@ -1,12 +1,12 @@
 ---
-id: reference-doc-conventions
+id: spec-doc-conventions
 title: 문서 작성 규약
-category: reference
-summary: 이 저장소의 docs/ 문서가 지켜야 하는 YAML 프론트매터 7개 필드의 의미와 작성 기준, 카테고리 3종의 경계, 새 문서를 추가할 때 INDEX.md 를 함께 갱신하는 절차, 그리고 AI 가 문서를 찾는 탐색 순서를 정의한다.
+category: spec
+summary: 이 저장소의 docs/ 문서가 지켜야 하는 YAML 프론트매터 7개 필드의 의미와 작성 기준, 카테고리 2종(guide·spec)의 경계, 새 문서를 추가할 때 INDEX.md 를 함께 갱신하는 절차, 그리고 AI 가 문서를 찾는 탐색 순서를 정의한다.
 keywords: [규약, convention, frontmatter, 프론트매터, YAML, id, title, category, summary, keywords, related_files, last_updated, INDEX, 문서추가, 라우팅]
 related_files:
   - INDEX.md
-last_updated: 2026-11-12
+last_updated: 2026-11-19
 ---
 
 # 문서 작성 규약
@@ -17,9 +17,9 @@ last_updated: 2026-11-12
 
 ```yaml
 ---
-id: workflows-issue-workflow
+id: guide-issue-workflow
 title: 이슈 → 워크트리 → 증거 → PR 워크플로우
-category: workflows
+category: guide
 summary: 무엇을 하는 문서인지 한두 문장. 제목을 풀어 쓰지 말고 안에 실제로 뭐가 있는지 적는다.
 keywords: [issue-create, 워크트리, 증거, PR, merge]
 related_files:
@@ -30,9 +30,9 @@ last_updated: 2026-08-27
 
 | 필드 | 규칙 |
 | --- | --- |
-| `id` | `{category}-{파일명}`(확장자 제외). 예: `docs/reference/catalog.md` → `reference-catalog`. 저장소 안에서 유일해야 한다 |
+| `id` | `{category}-{파일명}`(확장자 제외). 예: `docs/spec/catalog.md` → `spec-catalog`. 저장소 안에서 유일해야 한다 |
 | `title` | 사람이 읽는 제목. 본문 `#` 과 같게 |
-| `category` | `setup` · `workflows` · `reference` 셋 중 하나. 폴더명과 일치한다 |
+| `category` | `guide` · `spec` 중 하나(docs-tidy 기본형 `guide / spec / ops` 에서 쓰는 것만). 폴더명과 일치하고 `id` 접두사와도 같다 |
 | `summary` | **구체적 기능 요약.** "설치 문서" 같은 동어반복 금지. 이 문서에만 있는 것을 적는다 |
 | `keywords` | 검색어 배열. 한국어·영어·커맨드명을 섞어서 넣는다. 사용자가 실제로 칠 법한 말 기준 |
 | `related_files` | 이 문서가 설명하는 실제 코드·설정 파일의 저장소 상대 경로 |
@@ -45,12 +45,12 @@ last_updated: 2026-08-27
 
 | 카테고리 | 담는 것 | 담지 않는 것 |
 | --- | --- | --- |
-| `setup` | 설치·전제 조건·환경 세팅 | 설치 후의 사용법 |
-| `workflows` | **어떻게 쓰는가.** 순서·호출 예시·시나리오 | 내부 구현 세부, 전체 목록 |
-| `reference` | **무엇이 있는가 / 왜 이런가.** 목록·규약·내부 규칙·트러블슈팅 | 단계별 사용 절차 |
+| `guide` | **어떻게 설치하고 쓰는가.** 전제 조건·설치·순서·호출 예시·시나리오 | 내부 구현 세부, 전체 목록 |
+| `spec` | **무엇이 있는가 / 왜 이런가.** 목록·규약·내부 규칙·트러블슈팅 | 단계별 사용 절차 |
+| `ops` | 배포·운영 절차. 지금은 해당 문서가 없어 폴더를 만들지 않았다 | |
 
 같은 주제라도 사용법과 내부 규약은 나눈다.
-(예: `workflows/issue-workflow.md` ↔ `reference/issue-workflow-internals.md`)
+(예: `guide/issue-workflow.md` ↔ `spec/issue-workflow-internals.md`)
 
 ## 새 문서를 추가할 때
 
@@ -71,11 +71,12 @@ last_updated: 2026-08-27
 문서를 전부 읽지 않는 것이 이 구조의 목적이다. 1단계에서 후보가 안 좁혀지면
 그 문서의 `summary` 나 `keywords` 가 부실한 것이므로 고친다.
 
-## 저장소 루트 두 파일
+## 저장소 루트 파일
 
 | 파일 | 대상 | 역할 |
 | --- | --- | --- |
 | `INDEX.md` | AI | 라우팅 전용. 모든 문서의 path·title·summary·keywords 를 YAML 블록으로만 담는다. 값은 프론트매터 그대로이며 설명 문단을 넣지 않는다 |
-| `README.md` | 사람 | 설치 방법과 기능 개요. 상세는 `docs/` 로 넘긴다 |
+| `README.md` | 사람 | 목적 → 기능 → 설치 → 핵심 문서 링크 → INDEX 링크. 상세는 `docs/` 로 넘긴다 |
+| `CLAUDE.md` | AI | INDEX 부터 읽기, 문서 변경 시 같은 커밋에서 INDEX 갱신 |
 
 하위 폴더에는 `README.md` 를 두지 않는다. 내용이 `docs/` 와 갈라져 둘 다 낡기 때문이다.

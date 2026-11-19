@@ -1,7 +1,7 @@
 ---
-id: workflows-git-workflow
+id: guide-git-workflow
 title: Git 커밋·PR·릴리스 워크플로우
-category: workflows
+category: guide
 summary: 커밋은 git-commit, PR 은 git-pr, 배포 릴리스 노트는 git-release 스킬이 같은 TYPE(scope) 규칙으로 만든다. 제목은 PM 이 읽고 본문(Why·How·Refs·Related·Author)은 개발자·AI 가 추적한다. git-convention 훅이 Claude 가 만든 커밋·PR 형식을 점검하고 배포를 감지하면 릴리스 노트를 제안한다. git-board 는 저장소에 연결된 GitHub Project 보드를 요약한다.
 keywords: [git-commit, git-pr, git-release, git-board, git-convention, 커밋, commit, PR, 풀리퀘스트, 릴리스, release, 릴리스노트, CHANGELOG, 컨벤션, convention, TYPE, scope, FEAT, UX, FIX, PERF, CONTENT, DOCS, REFACTOR, TEST, CHORE, REVERT, Why, How, Refs, 훅, hook, 보드, project]
 related_files:

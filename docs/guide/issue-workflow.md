@@ -1,7 +1,7 @@
 ---
-id: workflows-issue-workflow
+id: guide-issue-workflow
 title: 이슈 → 워크트리 → 증거 → PR 워크플로우
-category: workflows
+category: guide
 summary: GitHub 이슈를 먼저 등록하고, 이슈당 워크트리 하나에서 구현하고, before/after 증거를 webp 로 남겨 이슈에 코멘트하고, PR 을 만들고, 여러 워크트리를 순서대로 누적 검증하며 통합하는 4단계 파이프라인의 사용법. 각 스킬이 무엇을 자동으로 하고 어디서 승인을 받는지 정리한다.
 keywords: [issue-create, issue-start, issue-end, issue-merge, 이슈, 워크트리, worktree, 증거, evidence, PR, 풀리퀘스트, gh, 통합, merge, before after, webp, 캡처]
 related_files:
@@ -29,7 +29,7 @@ last_updated: 2026-11-12
 보드가 연결된 저장소에서는 진행 라벨이 바뀔 때 보드도 따라 옮겨진다 (등록 Todo → 착수 In Progress → merge Done).
 
 상태 파일 위치·라벨 체계·브랜치 규칙·트러블슈팅은
-[reference/issue-workflow-internals.md](../reference/issue-workflow-internals.md) 에 따로 있다.
+[spec/issue-workflow-internals.md](../spec/issue-workflow-internals.md) 에 따로 있다.
 
 ---
 

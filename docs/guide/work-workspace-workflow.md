@@ -1,7 +1,7 @@
 ---
-id: workflows-work-workspace-workflow
+id: guide-work-workspace-workflow
 title: Work 작업공간 세팅과 실시간 뷰어 (work-viewer 저장소 안내)
-category: workflows
+category: guide
 summary: 작업 폴더를 Projects 중심 + README·INDEX·AGENTS·docs 구조로 세팅하는 work-setup 스킬과 Work 뷰어는 이 저장소가 아니라 gyeolhwi/work-viewer 에서 관리한다. clone·설치 명령, 스킬 갱신 방법, 상세 문서 위치를 안내한다.
 keywords: [work-setup, Work, 작업공간, workspace, 뷰어, viewer, work-viewer, 실시간, 아이패드, Projects, docs-tidy, 설치, install.sh --skills, bun, 새컴퓨터, 서버]
 related_files: []

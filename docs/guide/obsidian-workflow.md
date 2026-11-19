@@ -1,7 +1,7 @@
 ---
-id: workflows-obsidian-workflow
+id: guide-obsidian-workflow
 title: Obsidian 볼트 관리 워크플로우
-category: workflows
+category: guide
 summary: 볼트의 00_Sandbox 에 쌓인 노트를 frontmatter 정규화 → 내용 기반 폴더 이동 → 인덱스 갱신 순서로 정리하는 커맨드 7종 사용법. 인덱스 파일명에 왜 언더스코어를 붙이는지, 목록 섹션만 자동 갱신되는 이유 같은 함정도 담는다.
 keywords: [obsidian, 볼트, vault, obsidian-init, obsidian-format, obsidian-move, obsidian-index, obsidian-organize, obsidian-preview, obsidian-categories, frontmatter, 인덱스, wikilink, 정렬, 이모지, 템플릿]
 related_files:
@@ -12,7 +12,7 @@ last_updated: 2026-08-27
 
 # Obsidian 볼트 관리 워크플로우
 
-볼트 경로는 설치 시 `{{OBSIDIAN_VAULT_PATH}}` 가 치환된다. [setup/install.md](../setup/install.md) 참고.
+볼트 경로는 설치 시 `{{OBSIDIAN_VAULT_PATH}}` 가 치환된다. [guide/install.md](../guide/install.md) 참고.
 
 ## 사용 흐름
 

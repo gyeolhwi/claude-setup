@@ -1,7 +1,7 @@
 ---
-id: workflows-project-docs-workflow
+id: guide-project-docs-workflow
 title: docs/ 기반 프로젝트 협업 워크플로우
-category: workflows
+category: guide
 summary: /project-docs 로 docs/ 골격을 만들고, /project-docs-gen 으로 기획서를 개발 문서 10종으로 펼친 뒤, project-workflow 의 8개 서브모드(feedback·issues·dev·design·review·sync·status·classify)를 자연어로 불러 협업하는 전체 사용법. 새 프로젝트·기존 프로젝트·일상 협업 세 가지 진입 시나리오를 포함한다.
 keywords: [project-docs, project-docs-gen, project-workflow, 피드백, feedback, 이슈, issues, 개발, dev, 디자인, design, 리뷰, review, 동기화, sync, 상태, status, 분류, classify, inbox, CONVENTIONS, CHANGELOG, docs구조]
 related_files:
@@ -97,7 +97,7 @@ docs/
 | `/project-docs-gen api` | API 명세서 |
 | 그 외 | tech-stack · roles · sitemap · flowchart · wireframe · scenarios |
 
-템플릿 10종과 문서 간 의존 관계는 [reference/catalog.md](../reference/catalog.md#project-docs-gen-템플릿-10종) 에 있다.
+템플릿 10종과 문서 간 의존 관계는 [spec/catalog.md](../spec/catalog.md#project-docs-gen-템플릿-10종) 에 있다.
 
 ---
 

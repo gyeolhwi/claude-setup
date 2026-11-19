@@ -1,7 +1,7 @@
 ---
-id: reference-source-map
+id: spec-source-map
 title: 원본 자산 지도와 자주 묻는 질문
-category: reference
+category: spec
 summary: 실제로 설치되는 원본(install.sh·commands·skills·hooks)이 어느 경로에 있고 무엇을 담는지 정리한 목록과, 자주 묻는 질문별로 열어야 할 docs 문서를 짝지은 표.
 keywords: [원본, 자산, assets, 소스, 경로, install.sh, commands, skills, hooks, git-convention, 템플릿, 어디서 고치나, 자주 묻는 질문, FAQ, 바로가기]
 related_files:
@@ -65,11 +65,11 @@ assets:
 
 | 질문 | 문서 |
 | --- | --- |
-| 새 컴퓨터에 어떻게 깔지 | `docs/setup/install.md` |
-| 뭐가 있는지 전체 목록 | `docs/reference/catalog.md` |
-| "개발 시작해줘" 같은 걸 어떻게 쓰는지 | `docs/workflows/project-docs-workflow.md` |
-| 이슈 만들고 PR 까지 어떻게 가는지 | `docs/workflows/issue-workflow.md` |
-| 커밋·PR·릴리스 노트 형식 | `docs/workflows/git-workflow.md` |
-| 워크트리·라벨·브랜치명 규칙 | `docs/reference/issue-workflow-internals.md` |
-| 뭔가 안 될 때 | `docs/reference/issue-workflow-internals.md#트러블슈팅` |
-| 문서를 새로 추가할 때 | `docs/reference/doc-conventions.md` |
+| 새 컴퓨터에 어떻게 깔지 | `docs/guide/install.md` |
+| 뭐가 있는지 전체 목록 | `docs/spec/catalog.md` |
+| "개발 시작해줘" 같은 걸 어떻게 쓰는지 | `docs/guide/project-docs-workflow.md` |
+| 이슈 만들고 PR 까지 어떻게 가는지 | `docs/guide/issue-workflow.md` |
+| 커밋·PR·릴리스 노트 형식 | `docs/guide/git-workflow.md` |
+| 워크트리·라벨·브랜치명 규칙 | `docs/spec/issue-workflow-internals.md` |
+| 뭔가 안 될 때 | `docs/spec/issue-workflow-internals.md#트러블슈팅` |
+| 문서를 새로 추가할 때 | `docs/spec/doc-conventions.md` |

@@ -1,12 +1,12 @@
 ---
-id: setup-install
+id: guide-install
 title: 설치와 세팅
-category: setup
+category: guide
 summary: 새 컴퓨터나 다른 저장소에 커맨드·스킬을 세팅하는 방법. install.sh 의 옵션 전체, 무엇이 어디로 복사되는지의 매핑표, 링크와 복사의 차이, 설치 후 검증 명령, 원본 동기화 방법을 담는다.
 keywords: [설치, install, install.sh, 세팅, 심볼릭링크, symlink, copy, codex, 볼트, obsidian, 설치확인, 동기화, rsync, 새컴퓨터]
 related_files:
   - install.sh
-  - docs/setup/prerequisites.md
+  - docs/guide/prerequisites.md
 last_updated: 2026-11-12
 ---
 
@@ -112,7 +112,7 @@ gh auth status
 2. **기본 브랜치** — 저장소에서 판별이 실패할 때만 (`main` / `master`)
 
 저장소 실제 상태가 사용자 습관보다 우선이다. 평소 `main` 을 쓰더라도 그 저장소가 `master` 면 `master` 를 쓴다.
-자세한 결정 순서는 [issue-workflow-internals.md](../reference/issue-workflow-internals.md#기본-브랜치-판별) 에 있다.
+자세한 결정 순서는 [issue-workflow-internals.md](../spec/issue-workflow-internals.md#기본-브랜치-판별) 에 있다.
 
 ## 손으로 설치하기
 

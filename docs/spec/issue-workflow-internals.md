@@ -1,19 +1,19 @@
 ---
-id: reference-issue-workflow-internals
+id: spec-issue-workflow-internals
 title: 이슈 워크플로우 내부 규약
-category: reference
+category: spec
 summary: issue-* 스킬군의 상태 파일이 홈과 저장소 어디에 사는지, .gitignore 블록이 왜 증거만 뚫어 두는지, 워크트리 배치 두 가지, 브랜치 이름 규칙, 성격·진행 상태 라벨 두 축, 기본 브랜치 판별 순서, 그리고 증상별 트러블슈팅 표.
 keywords: [settings.json, .issue, 워크트리, worktree, sibling, children, gitignore, 브랜치명, slug, prefix, 라벨, label, status, detectBase, 기본브랜치, 트러블슈팅, exit4]
 related_files:
   - skills/issue-create/scripts/issue-common.mjs
   - skills/issue-start/references/worktree.md
-  - docs/workflows/issue-workflow.md
+  - docs/guide/issue-workflow.md
 last_updated: 2026-08-27
 ---
 
 # 이슈 워크플로우 내부 규약
 
-사용법은 [workflows/issue-workflow.md](../workflows/issue-workflow.md) 에 있다. 여기는 "왜 이렇게 되어 있나" 쪽이다.
+사용법은 [guide/issue-workflow.md](../guide/issue-workflow.md) 에 있다. 여기는 "왜 이렇게 되어 있나" 쪽이다.
 
 ## 상태와 데이터가 어디에 사는가
 
