@@ -133,6 +133,7 @@ claude-setup/
     ├── gh-setup/
     ├── repo-init/     새 프로젝트 보드·라벨·docs·작업 규칙 세팅
     ├── deck/          발표 기획안 → PPT (npm 의존성)
+    ├── docs-tidy/     docs 머리말 정리 · INDEX.md 목차 생성
     └── omc-learned/project-docs-gen/   문서 템플릿 10종
 ```
 

@@ -22,7 +22,7 @@ git clone https://github.com/gyeolhwi/work-viewer.git
 work-viewer/scripts/install.sh --root ~/Work --port 7320 --skills
 ```
 
-`--skills` 는 `work-setup`·`docs-tidy` 스킬을 `~/.claude/skills` 에 링크한다. 설치한 뒤 Claude Code 에서 "Work 세팅해줘" 라고 하면 된다.
+`--skills` 는 `work-setup` 스킬을 `~/.claude/skills` 에 링크한다. `docs-tidy` 는 claude-setup `install.sh` 가 설치한다(이미 있으면 work-viewer 는 건너뛴다). 설치한 뒤 Claude Code 에서 "Work 세팅해줘" 라고 하면 된다.
 
 ## 갱신
 
