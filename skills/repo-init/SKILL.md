@@ -1,6 +1,6 @@
 ---
 name: repo-init
-description: 새 프로젝트를 시작할 때 GitHub 작업 환경을 한 번에 세팅한다. 저장소 연결, GitHub Project 보드 생성·저장소 연결·필드(Status·카테고리·작업유형·강조포인트·검수상태), 진행·성격 라벨, docs-tidy 형식 README·INDEX·docs, docs/ops/work-format.md, CLAUDE.md·AGENTS.md 작업 규칙, .gitignore, 첫 커밋까지 한다. 다시 실행하면 빠진 것만 채운다. "프로젝트 초기 세팅", "repo-init", "/repo-init", "새 프로젝트 깃허브 세팅", "보드 만들어줘", "GitHub Project 만들어", "이슈 환경 구성" 요청에 사용한다. 이미 세팅된 저장소에서 보드 조회만 원하면 git-board, 이슈 등록은 issue-create 를 쓴다.
+description: 새 프로젝트를 시작할 때 GitHub 작업 환경을 한 번에 세팅한다. 저장소 연결, GitHub Project 보드 생성·저장소 연결·필드(Status·카테고리·작업유형·강조포인트·검수상태), 진행·성격 라벨, docs-tidy 형식 README·INDEX·docs(기존 docs 구조는 유지), work-format.md 작업 형식 문서, CLAUDE.md·AGENTS.md 작업 규칙, .gitignore, 첫 커밋까지 한다. 다시 실행하면 빠진 것만 채운다. "프로젝트 초기 세팅", "repo-init", "/repo-init", "새 프로젝트 깃허브 세팅", "보드 만들어줘", "GitHub Project 만들어", "이슈 환경 구성" 요청에 사용한다. 이미 세팅된 저장소에서 보드 조회만 원하면 git-board, 이슈 등록은 issue-create 를 쓴다.
 argument-hint: "[보드 제목]"
 ---
 
@@ -60,9 +60,12 @@ node $ISSUE board                           # 필드·옵션 확인
 
 ## 5. 문서와 규칙
 
-1. **docs 구조**: `docs-tidy` 스킬 절차로 `docs/{guide,spec,ops}`, README(소개·링크), INDEX 를 만든다. 소스가 거의 없으면 README 는 1~3문장 소개와 실행 방법만 쓴다.
-2. **작업 형식**: `references/work-format.template.md` 를 `docs/ops/work-format.md` 로 복사하고 `{{TODAY}}` · `{{BOARD_NUMBER}}` · `{{BOARD_URL}}` 을 채운다. `{{TAG_FORMAT}}` 은 `첫 릴리스 때 git-release 가 정한다` 로 둔다.
-3. **에이전트 규칙**: `references/agent-rules.template.md` 블록을 CLAUDE.md 에 넣는다 (없으면 만든다). 이미 `repo-init:rules:start` 블록이 있으면 그 블록만 교체한다. AGENTS.md 만 쓰는 저장소면 AGENTS.md 에 넣는다.
+1. **docs 구조**: `docs/` 에 문서가 없으면 `docs-tidy` 스킬 절차로 `docs/{guide,spec,ops}`, README(소개·링크), INDEX 를 만든다. 소스가 거의 없으면 README 는 1~3문장 소개와 실행 방법만 쓴다.
+   이미 다른 구조(예: `docs/01-API명세/` 같은 번호 폴더)가 있으면 그 구조를 그대로 두고 `guide`·`spec`·`ops` 폴더를 새로 만들지 않는다.
+2. **작업 형식**: `references/work-format.template.md` 를 복사하고 `{{TODAY}}` · `{{BOARD_NUMBER}}` · `{{BOARD_URL}}` 을 채운다. `{{TAG_FORMAT}}` 은 `첫 릴리스 때 git-release 가 정한다` 로 둔다.
+   - 위치: 새 구조면 `docs/ops/work-format.md`. 기존 구조면 그 안의 운영·작업 규칙 폴더에 `work-format.md` 로 두고, 맞는 폴더가 없으면 사용자에게 위치를 묻는다. 파일 이름은 `work-format.md` 로 고정한다 (`check` 가 이 이름으로 찾는다).
+   - 머리말의 `category` 는 그 저장소 INDEX 의 분류에 맞춘다.
+3. **에이전트 규칙**: `references/agent-rules.template.md` 블록을 CLAUDE.md 에 넣는다 (없으면 만든다). `{{WORK_FORMAT_PATH}}` 는 2번에서 둔 실제 경로로 채운다. 이미 `repo-init:rules:start` 블록이 있으면 그 블록만 교체한다. AGENTS.md 만 쓰는 저장소면 AGENTS.md 에 넣는다.
 4. **.gitignore**: `.issue/` 와 `.omc/` 가 없으면 추가한다.
 5. INDEX 갱신:
 
@@ -82,7 +85,7 @@ uv run ~/.claude/skills/docs-tidy/scripts/docs_index.py check --root .
 ```text
 보드     #<번호> <URL>  필드: Status·카테고리·작업유형·강조포인트·검수상태
 라벨     만든 것 / 이미 있던 것
-문서     README · INDEX · docs/ops/work-format.md · CLAUDE.md 규칙
+문서     README · INDEX · <work-format 경로> · CLAUDE.md 규칙
 커밋     <해시> <제목>
 다음     /issue-create "첫 작업"  →  /issue-start <번호>
 ```
