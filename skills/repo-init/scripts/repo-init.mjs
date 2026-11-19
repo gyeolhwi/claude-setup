@@ -12,7 +12,7 @@
  * 요구사항: git, Node 18+, gh (project 권한: gh auth refresh -s project)
  */
 import { spawnSync } from 'node:child_process';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
@@ -66,6 +66,22 @@ function fileHas(root, rel, re) {
   return re ? re.test(readFileSync(p, 'utf8')) : true;
 }
 
+/** docs/ 아래에서 work-format.md 를 찾는다. 번호 폴더(docs/04-운영/) 같은 기존 구조도 받아준다. */
+function findWorkFormat(root) {
+  const base = path.join(root, 'docs');
+  if (!existsSync(base)) return null;
+  const stack = [base];
+  while (stack.length) {
+    const dir = stack.pop();
+    for (const e of readdirSync(dir, { withFileTypes: true })) {
+      const p = path.join(dir, e.name);
+      if (e.isDirectory()) stack.push(p);
+      else if (e.name === 'work-format.md') return path.relative(root, p);
+    }
+  }
+  return null;
+}
+
 function cmdCheck() {
   const rows = [];
   const add = (item, ok, detail, next) => rows.push({ item, ok, detail, next });
@@ -99,11 +115,14 @@ function cmdCheck() {
 
   add('README.md', fileHas(root, 'README.md'), '', 'docs-tidy 형식으로 작성');
   add('INDEX.md', fileHas(root, 'INDEX.md'), '', 'docs-tidy 의 docs_index.py build');
-  add('docs/ops/work-format.md', fileHas(root, 'docs/ops/work-format.md'), '', 'references/work-format.template.md 로 작성');
+  const workFormat = findWorkFormat(root);
+  add('work-format 문서', !!workFormat, workFormat ?? 'docs/ 아래에 없음', 'references/work-format.template.md 로 작성 (기존 docs 구조가 있으면 그 안에)');
   const rulesFile = ['CLAUDE.md', 'AGENTS.md'].find((f) => fileHas(root, f, /repo-init:rules:start/));
   add('에이전트 규칙 블록', !!rulesFile, rulesFile ?? 'CLAUDE.md·AGENTS.md 에 없음', 'references/agent-rules.template.md 삽입');
-  const ignore = run('git', ['check-ignore', '-q', '.issue/x'], { cwd: root });
-  add('.gitignore 에 .issue/', ignore.code === 0, '', '.gitignore 에 추가');
+  for (const dir of ['.issue', '.omc']) {
+    const ignore = run('git', ['check-ignore', '-q', `${dir}/x`], { cwd: root });
+    add(`.gitignore 에 ${dir}/`, ignore.code === 0, '', '.gitignore 에 추가');
+  }
   const tag = run('git', ['describe', '--tags', '--abbrev=0'], { cwd: root });
   add('릴리스 태그', true, tag.code === 0 ? `최근 ${tag.out}` : '아직 없음 (첫 배포 때 git-release 가 형식을 묻는다)', '');
   print(rows);
@@ -188,6 +207,7 @@ function cmdBoard(opts) {
 
 function cmdLabels() {
   const root = repoRoot();
+  if (!root) { console.error('✗ git 저장소가 아니다.'); process.exit(1); }
   const have = (ghJson(['label', 'list', '--limit', '200', '--json', 'name'], { cwd: root }) ?? []).map((l) => l.name);
   const want = [
     ...Object.entries(STATUS_LABELS).map(([name, v]) => ({ name, color: v.color, description: v.description })),

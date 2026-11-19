@@ -566,7 +566,7 @@ const LAYOUTS = {
 };
 
 // ─── 스키마 검사 ─────────────────────────────────────────────────────────────
-const COMMON = { layout: 'str', section: 'str', title: 'str', message: 'str', notes: 'str' };
+const COMMON = { layout: 'str', section: 'str', title: 'str', message: 'str', notes: 'str', source: 'str?' };
 function validate(val, spec, p, errs) {
   if (typeof spec === 'string') {
     const opt = spec.endsWith('?'), t = spec.replace('?', '');
@@ -664,7 +664,10 @@ async function render(planFile, { write, out, force }) {
       d._base = path.dirname(path.resolve(planFile));
       const slide = pres.addSlide();
       slide.background = { color: C.white };
-      await LAYOUTS[d.layout].render(new Ctx(pres, slide, d, report), d);
+      const ctx = new Ctx(pres, slide, d, report);
+      await LAYOUTS[d.layout].render(ctx, d);
+      // 출처·근거 (선택): 하단에 작게, 눈에 덜 띄게
+      if (d.source) ctx.text('source', d.source, { x: L, y: 1032, w: CW, h: 26, size: 12, color: d.layout === 'closing' ? C.tint : 'A3A5AB', maxLines: 1, mult: 1 });
       slide.addNotes(String(d.notes).trim());
     }
     if (write && (report.errors.length === 0 || force)) await pres.writeFile({ fileName: out });
