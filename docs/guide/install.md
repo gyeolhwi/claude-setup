@@ -7,7 +7,7 @@ keywords: [설치, install, install.sh, 세팅, 심볼릭링크, symlink, copy, 
 related_files:
   - install.sh
   - docs/guide/prerequisites.md
-last_updated: 2026-11-12
+last_updated: 2026-11-22
 ---
 
 # 설치와 세팅
@@ -61,7 +61,7 @@ Obsidian 커맨드는 볼트 경로를 치환해야 해서 **옵션과 무관하
 | `commands/obsidian/templates/` | `<볼트>/01_문서템플릿/` | **볼트 안이 정본** |
 | `skills/git-commit/` `git-pr/` `git-release/` `git-board/` | `~/.claude/skills/` | |
 | `hooks/git-convention.py` | `~/.claude/hooks/` | `settings.json` 의 `hooks.PostToolUse` 에 등록 (python3 필요) |
-| `hooks/git-convention.CLAUDE.md` | `~/.claude/CLAUDE.md` 끝에 덧붙임 | `<git_convention>` 블록이 이미 있으면 건너뜀 |
+| `hooks/git-convention.CLAUDE.md` | `~/.claude/CLAUDE.md` 끝에 덧붙임 | `<git_convention>` 블록이 이미 있으면 그 블록만 저장소 원본으로 교체 |
 | `skills/gh-setup/` | `~/.claude/skills/gh-setup/` | |
 | `skills/issue-create/` `issue-start/` `issue-end/` `issue-merge/` | `~/.claude/skills/` | |
 | `skills/repo-init/` | `~/.claude/skills/repo-init/` | `issue-create` 와 같은 폴더에 있어야 한다 (스크립트를 가져다 쓴다) |

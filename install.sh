@@ -216,13 +216,29 @@ PY
     ok "hooks/git-convention.py (settings.json PostToolUse 등록)"
   fi
 
-  # CLAUDE.md 에 커밋·PR 규칙 블록 — 이미 있으면 그대로 둔다
-  if grep -q '<git_convention>' "$BASE/CLAUDE.md" 2>/dev/null; then
-    ok "CLAUDE.md git_convention 블록 이미 있음"
-  else
-    { [ -s "$BASE/CLAUDE.md" ] && echo ""; cat "$ROOT/hooks/git-convention.CLAUDE.md"; } >> "$BASE/CLAUDE.md"
-    ok "CLAUDE.md 에 git_convention 블록 추가"
-  fi
+  # CLAUDE.md 의 커밋·PR 규칙 블록 — 있으면 그 블록만 저장소 원본으로 교체, 없으면 덧붙임
+  # 마커 없는 예전 설치본의 <git_convention> 블록도 찾아 바꾼다. 블록 밖 내용은 건드리지 않는다.
+  rc=0
+  python3 - "$BASE/CLAUDE.md" "$ROOT/hooks/git-convention.CLAUDE.md" <<'PY' || rc=$?
+import os, re, sys
+path, block = sys.argv[1], open(sys.argv[2], encoding="utf-8").read().strip()
+text = open(path, encoding="utf-8").read() if os.path.exists(path) else ""
+pat = re.compile(r"<!-- claude-setup:git-convention:start[^>]*-->.*?<!-- claude-setup:git-convention:end -->"
+                 r"|<git_convention>.*?</git_convention>", re.S)
+new, n = pat.subn(lambda m: block, text, count=1)
+if not n:
+    new = (text.rstrip() + "\n\n" if text.strip() else "") + block + "\n"
+if new == text:
+    sys.exit(0)
+open(path, "w", encoding="utf-8").write(new)
+sys.exit(10 if n else 11)
+PY
+  case "$rc" in
+    0)  ok "CLAUDE.md git_convention 블록 최신" ;;
+    10) ok "CLAUDE.md git_convention 블록을 저장소 원본으로 교체" ;;
+    11) ok "CLAUDE.md 에 git_convention 블록 추가" ;;
+    *)  warn "CLAUDE.md git_convention 블록 갱신 실패 — python3 확인" ;;
+  esac
 done
 
 # ---------------------------------------------------------------- Obsidian 템플릿
