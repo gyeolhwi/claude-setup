@@ -6,7 +6,7 @@ summary: 이 저장소의 docs/ 문서가 지켜야 하는 YAML 프론트매터 
 keywords: [규약, convention, frontmatter, 프론트매터, YAML, id, title, category, summary, keywords, related_files, last_updated, INDEX, 문서추가, 라우팅]
 related_files:
   - INDEX.md
-last_updated: 2026-11-19
+last_updated: "2026-11-23"
 ---
 
 # 문서 작성 규약
@@ -24,7 +24,7 @@ summary: 무엇을 하는 문서인지 한두 문장. 제목을 풀어 쓰지 �
 keywords: [issue-create, 워크트리, 증거, PR, merge]
 related_files:
   - skills/issue-create/SKILL.md
-last_updated: 2026-08-27
+last_updated: "2026-11-23"
 ---
 ```
 
@@ -76,7 +76,7 @@ last_updated: 2026-08-27
 | 파일 | 대상 | 역할 |
 | --- | --- | --- |
 | `INDEX.md` | AI | 라우팅 전용. 모든 문서의 path·title·summary·keywords 를 YAML 블록으로만 담는다. 값은 프론트매터 그대로이며 설명 문단을 넣지 않는다 |
-| `README.md` | 사람 | 목적 → 기능 → 설치 → 핵심 문서 링크 → INDEX 링크. 상세는 `docs/` 로 넘긴다 |
+| `README.md` | 사람 | 소개 → 현재 상태 → 주요 기능 → 기술 스택 → 폴더 구조 → 시작하기 → 문서 순서, 약 80줄 안. 근거 없는 섹션은 빼고 상세는 `docs/` 로 넘긴다 (docs-tidy 형식 가이드 §3) |
 | `CLAUDE.md` | AI | INDEX 부터 읽기, 문서 변경 시 같은 커밋에서 INDEX 갱신 |
 
 하위 폴더에는 `README.md` 를 두지 않는다. 내용이 `docs/` 와 갈라져 둘 다 낡기 때문이다.
