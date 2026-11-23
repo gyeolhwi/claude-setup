@@ -1,15 +1,6 @@
 ---
 name: docs-tidy
 description: "프로젝트 docs 문서에 YAML 머리말을 붙이고 INDEX.md 목차를 만들어 정리한다."
-version: 0.1.0
-author: gyeolhwi
-license: MIT
-platforms: [linux, macos, windows]
-user-invocable: true
-metadata:
-  hermes:
-    tags: [documentation, frontmatter, index, project]
-    related_skills: []
 ---
 
 # AI 탐색형 프로젝트 문서 정리
@@ -21,7 +12,7 @@ metadata:
 ## When to Use
 
 - 프로젝트 문서 구조를 통일하거나 YAML 프론트매터·루트 INDEX를 도입할 때.
-- 기존 문서를 원문 보존하며 분류하거나, README를 소개·링크 중심으로 정리할 때.
+- 기존 문서를 원문 보존하며 분류하거나, README를 근거 기반 프로젝트 개요로 정리할 때.
 - 문서를 추가·수정·이동한 뒤 색인 정합성을 확인할 때.
 - 검토만 요청받았으면 읽기와 계획까지만 한다. 사용자 승인 없이 문서 재구성·커밋·푸시하지 않는다.
 
@@ -48,7 +39,7 @@ metadata:
 
 ```text
 프로젝트/
-├── README.md             # 사람용 소개·시작 방법·문서 링크
+├── README.md             # 사람용 프로젝트 개요·문서 링크
 ├── INDEX.md              # AI용 중앙 라우팅 색인
 ├── AGENTS.md / CLAUDE.md  # 사용하는 지침 파일만 유지·보완
 └── docs/
@@ -77,7 +68,8 @@ metadata:
 
 ### 4. README·지침·INDEX 연결하기
 
-- README는 **프로젝트명·목적 1~3문장 → 확인된 핵심 기능/현재 상태 → 실제 시작 방법(있을 때) → 카테고리별 핵심 문서 링크 → INDEX 링크** 순서로 짧게 쓴다.
+- README는 사람이 이 파일 하나로 프로젝트 전체를 파악하는 진입점이다. [형식 가이드 §3](references/format.md#3-readme-구성)의 7개 섹션 순서로 쓰되, **근거 파일에서 확인되지 않은 섹션은 통째로 뺀다.**
+- 명령·기술 스택·폴더는 근거 파일(`package.json` scripts, `Makefile`, `pyproject.toml`, 실제 디렉터리 등)에 있는 것만 쓴다. 흔한 명령(`npm run dev` 등)을 추측해 넣지 않는다.
 - 상세 명세를 README에 복제하지 않는다. 링크가 많아지면 핵심 진입 문서만 남기고 전체 목록은 INDEX에 맡긴다.
 - 기존 AGENTS.md 또는 CLAUDE.md에 “질문을 받으면 INDEX.md부터 읽고 맞는 문서만 연다”와 “문서 변경 시 같은 커밋에서 INDEX 갱신”을 추가한다. 다른 지침을 덮어쓰거나 두 파일을 무조건 새로 만들지 않는다.
 - INDEX는 `docs:` 아래 **path·title·summary·keywords만** 담은 YAML 코드블록이다. 프론트매터가 정본이며 본문을 옮기지 않는다.
@@ -87,7 +79,7 @@ metadata:
 
 ## How to Run
 
-대상 프로젝트 루트에서 파일 도구로 이 패키지의 스크립트를 `scripts/docs_index.py`에 복사한 경우, `terminal` 도구로 실행한다:
+대상 프로젝트 루트에서 이 패키지의 스크립트를 `scripts/docs_index.py`에 복사한 경우 Bash로 실행한다:
 
 ```sh
 uv run scripts/docs_index.py build --root .
@@ -102,7 +94,7 @@ git diff --check
 
 ## Pitfalls
 
-- 이 스킬을 **보관하는 저장소**와 **적용할 프로젝트**를 혼동하지 않는다. 사내 볼트의 `docs/06-skills/`는 승인된 패키지 보관 위치이며, 직원용 안내는 사내 문서 규격을 따르고 내부 스킬 파일은 명시된 번들 예외를 따른다. 동봉 기본형 검사기를 볼트 전체에 적용하거나 Obsidian 규칙을 자동 교체하지 않는다.
+- 이 스킬을 **보관하는 저장소**(claude-setup의 `skills/docs-tidy/`)와 **적용할 프로젝트**를 혼동하지 않는다. Obsidian 볼트처럼 자체 문서 규칙이 있는 곳에 동봉 검사기를 적용하거나 그 규칙을 자동 교체하지 않는다.
 - `SKILL.md`는 스킬 패키지 메타데이터를 사용한다. `docs/**/*.md`의 프로젝트 문서 7필드와 다른 계약이다.
 - 기본형은 모든 docs Markdown을 포함한다. 원본 번들 예외가 필요하면 먼저 docs 밖 유지 등을 합의하며, 검사에 숨은 제외 목록을 추가하지 않는다.
 - 도구는 형식·메타데이터·경로·색인 정합성만 검사한다. summary의 사실성·검색어 품질·원문 보존·본문 링크·README 간결성은 별도 검수한다.
@@ -114,11 +106,11 @@ git diff --check
 1. `check` 통과: 7필드·타입·날짜·category·고유 ID·related_files 경로와 INDEX 경로/순서/메타데이터 일치.
 2. **docs Markdown 파일 수 = INDEX 고유 항목 수**, 누락·추가·중복 경로 없음. 개수만 같다고 통과시키지 않는다.
 3. 원문은 이동 전후 본문 대조로 보존을 확인한다. 승인된 링크 수정은 예외로 명시하고 실제 내부 링크·첨부도 확인한다.
-4. README와 기존 지침의 링크·역할 분리를 검수하고 `git diff --check`를 통과한다.
+4. README의 명령·기술 스택·폴더 구조·기능을 하나씩 근거 파일과 대조하고, 근거 없는 섹션·상용구가 없는지 확인한다. 기존 지침과의 링크·역할 분리를 검수하고 `git diff --check`를 통과한다.
 5. 완료 보고에 신규/이동/유지 문서, 문서 수·색인 수, 기계 검사·수동 검수 결과, 미해결 항목을 적는다. 푸시했다면 정확한 원격 커밋·파일을 다시 읽어 확인한다.
 
-패키지 도구 회귀 테스트는 저장소 루트에서 `terminal` 도구로 실행한다:
+패키지 도구 회귀 테스트는 claude-setup 저장소 루트에서 실행한다:
 
 ```sh
-uv run --with pyyaml python -m unittest discover -s docs/06-skills/docs-tidy/tests -v
+uv run --with pyyaml python -m unittest discover -s skills/docs-tidy/tests -v
 ```
