@@ -60,7 +60,7 @@ node $ISSUE board                           # 필드·옵션 확인
 
 ## 5. 문서와 규칙
 
-1. **docs 구조**: `docs/` 에 문서가 없으면 `docs-tidy` 스킬 절차로 `docs/{guide,spec,ops}`, README, INDEX 를 만든다. README 는 docs-tidy 형식 가이드 §3 의 소개 블록 중 근거가 있는 것만 쓴다. 소스가 거의 없으면 한 문장 소개·왜 필요한가·더 보기만 쓰고, 실행 명령은 근거 파일에 정의된 게 없으면 넣지 않는다.
+1. **docs 구조**: `docs/` 에 문서가 없으면 `docs-tidy` 스킬 절차로 `docs/{guide,spec,ops}`, README, INDEX 를 만든다. README 는 docs-tidy 형식 가이드 §3 의 소개 블록 중 근거가 있는 것만 쓴다. 소스가 거의 없으면 이름·한 줄 소개·현재 상태·주요 기능(예정)·문서 안내만 쓰고, 실행 명령은 근거 파일에 정의된 게 없으면 넣지 않는다.
    이미 다른 구조(예: `docs/01-API명세/` 같은 번호 폴더)가 있으면 그 구조를 그대로 두고 `guide`·`spec`·`ops` 폴더를 새로 만들지 않는다.
 2. **작업 형식**: `references/work-format.template.md` 를 복사하고 `{{TODAY}}` · `{{BOARD_NUMBER}}` · `{{BOARD_URL}}` 을 채운다. `{{TAG_FORMAT}}` 은 `첫 릴리스 때 git-release 가 정한다` 로 둔다.
    - 위치: 새 구조면 `docs/ops/work-format.md`. 기존 구조면 그 안의 운영·작업 규칙 폴더에 `work-format.md` 로 두고, 맞는 폴더가 없으면 사용자에게 위치를 묻는다. 파일 이름은 `work-format.md` 로 고정한다 (`check` 가 이 이름으로 찾는다).
