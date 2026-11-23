@@ -2,7 +2,7 @@
 
 > Claude Code를 내 작업 방식대로 움직이게 만드는 스킬·커맨드·훅 설정 모음
 
-현재 [v0.3.0](./CHANGELOG.md)
+현재 [v0.4.0](./CHANGELOG.md)
 
 ## 주요 기능
 

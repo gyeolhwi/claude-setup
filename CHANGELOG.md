@@ -1,5 +1,36 @@
 # Changelog
 
+## v0.4.0 — 2026-11-23
+
+문서 정리 스킬(docs-tidy)이 함께 설치되고, docs-tidy·repo-init 이 만드는 README 가 사람과 AI 모두 한 번에 프로젝트를 파악할 수 있는 정해진 형식으로 바뀌었습니다. 근거 없는 실행 명령(`npm run dev` 등)을 지어 넣던 문제도 고쳤습니다.
+
+### 업데이트 전 확인할 것
+- 다른 컴퓨터는 `git pull` 후 `./install.sh --copy --no-obsidian` 으로 다시 설치해야 반영됨
+
+### 새 기능
+- `/docs-tidy`: 문서 정리 스킬이 `install.sh` 로 함께 설치됨 (3950397)
+
+### 개선
+- README 가 8개 블록 형식으로 바뀜: 이름·한 줄 소개 → 현재 상태 → 주요 기능 → 핵심 개념 → 동작 방식 → 프로젝트 구조 → 시작하기 → 문서 안내 (a30eeff, f04b653)
+- README 는 명사형 소개 문체로 약 80줄 안에서 끝나고, 넘치는 내용은 docs 로 보냄 (afd0a00, 3db2f99)
+
+### 버그 수정
+- 정의되지 않은 실행 명령(`npm run dev` 등)을 README 에 추측으로 넣던 문제 해결 (b99e010)
+- clone 이 실제 설치 방법인 저장소에서 README 의 clone 안내가 빠지던 문제 해결 (7a5b9df)
+- 다시 설치해도 커밋 규칙 안내가 예전 버전으로 남던 문제 해결 (aecf575)
+
+<details>
+<summary>내부 작업 5건 (사용 변화 없음)</summary>
+
+- DOCS(docs): 저장소 문서를 docs-tidy 형식(guide·spec)으로 정리 (029cc80)
+- DOCS(docs): README를 한눈에 프로젝트를 파악할 수 있는 개요로 정리 (51a824a)
+- DOCS(docs): README를 명령어 없이 읽히는 프로젝트 소개로 다시 작성 (0184946)
+- DOCS(docs): README를 첫 화면에서 무엇인지 보이는 짧은 소개로 다시 작성 (0a84224)
+- DOCS(docs): README에 핵심 개념·동작 그림·프로젝트 구조 추가 (b001f6d)
+</details>
+
+**전체 변경**: https://github.com/gyeolhwi/claude-setup/compare/v0.3.0...v0.4.0
+
 ## v0.3.0 — 2026-11-19
 
 새 프로젝트를 시작할 때 `/repo-init` 한 번으로 GitHub 보드·라벨·작업 규칙이 갖춰지고, 이슈를 진행하면 보드 카드가 알아서 옮겨집니다. 발표자료(deck) 슬라이드에는 출처를 한 줄 달 수 있습니다.
