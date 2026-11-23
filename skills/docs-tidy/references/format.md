@@ -79,7 +79,7 @@ README는 사람이 프로젝트 전체를 파악하는 진입점이다. 넓은 
 **쓰지 않는 것**
 
 - 근거 파일에 없는 명령(`npm run dev`, `npm install` 등을 추측해 넣기), 추측한 기술 스택, 존재하지 않는 폴더.
-- `git clone` 절차, 배지, Contributing 섹션, LICENSE 파일이 없는 License 섹션.
+- `git clone` 절차(clone 이 실제 설치 방법인 도구·설정 배포용 저장소는 예외), 배지, Contributing 섹션, LICENSE 파일이 없는 License 섹션.
 - "추후 추가", "TBD" 같은 자리 채우기 문구와 빈 섹션.
 
 카테고리 README·하위 INDEX를 의무적으로 추가하지 않는다.
