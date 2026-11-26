@@ -1,0 +1,151 @@
+# ~/.ai-subscription — AI 구독 계정 목록과 ai-switch 명령
+#   ai-switch                        번호로 골라 바꾸기
+#   ai-switch <이름>                 바로 바꾸기
+#   ai-switch list                   목록 (← 다음 실행 = 새로 켤 때 쓸 계정, ← 지금 실행 중 = 이 프로그램이 쓰는 계정)
+#   ai-switch add <claude|codex> <이름>     계정 추가
+#   ai-switch current                이 프로그램이 쓰는 claude 계정 한 줄 (Claude Code 상태줄용)
+# 주석 규칙: "#L " = 꺼 둔 Linux 코드, "#W " = 꺼 둔 Windows 코드
+
+# ===== Linux · Mac · WSL (bash/zsh) =====
+AI_ACCOUNTS=(
+)
+
+ai-switch() {
+  local e pick line mark new names=()
+  if [ "$1" = add ]; then
+    echo "계정 추가 (\$ ai-switch $*)"
+    local tool="$2" name="$3" tok
+    [ $# -eq 3 ] && { [ "$tool" = claude ] || [ "$tool" = codex ]; } || { echo "사용법 (\$ ai-switch add <claude|codex> <이름>), 이름에 공백 불가"; return 1; }
+    case "$name" in ""|*[!A-Za-z0-9_-]*) echo "이름은 영문·숫자·_·- 만 됩니다 (\$ ai-switch add $tool <이름>)"; return 1;; esac
+    case "$name" in add|list|current) echo "add·list·current 는 명령이라 이름으로 쓸 수 없습니다."; return 1;; esac
+    if [ "$tool" = claude ]; then
+      [ -t 0 ] || { echo "토큰은 터미널에서 입력해야 합니다 (\$ ai-switch add claude $name)"; return 1; }
+      printf '토큰을 붙여넣고 Enter (화면에 안 보임): ' >&2; read -rs tok; echo >&2  # read -p 는 zsh 에서 다른 뜻
+      echo "입력 받음: ${#tok}자" >&2
+      case "$tok" in sk-ant-oat01-*) ;; *) echo "토큰 형식이 아닙니다. 다시 실행해 주세요."; return 1;; esac
+      [ ${#tok} -ge 100 ] || { echo "토큰이 잘린 것 같습니다 (${#tok}자, 보통 108자). 줄바꿈된 뒷부분까지 복사해 주세요."; return 1; }
+      line="$name|CLAUDE_CODE_OAUTH_TOKEN=$tok|claude"
+    else
+      line="$name|CODEX_HOME=$HOME/.codex-$name|codex"
+      echo "로그인은 이 계정으로 바꾼 뒤 합니다 (\$ ai-switch $name → \$ codex login)"
+    fi
+    # 같은 이름이 있으면 덮어쓴다. 지금 쓰는 계정이었다면 새 값으로 바로 바뀐다
+    local old= done=추가 keep=()
+    for e in "${AI_ACCOUNTS[@]}"; do
+      if [ "${e%%|*}" = "$name" ]; then old="${e#*|}"; old="${old%%|*}"; done=덮어쓰기; else keep+=("$e"); fi
+    done
+    sed -i.tmp -e "/^  \"$name|/d" -e "/^AI_ACCOUNTS=(\$/a\\
+  \"$line\"
+" ~/.ai-subscription && rm -f ~/.ai-subscription.tmp
+    AI_ACCOUNTS=("$line" "${keep[@]}")
+    if [ -n "$old" ] && grep -qxF "$old" ~/.ai-current 2>/dev/null; then
+      new="${line#*|}"; new="${new%%|*}"
+      { grep -vxF "$old" ~/.ai-current; echo "$new"; } > ~/.ai-current.tmp && mv ~/.ai-current.tmp ~/.ai-current && chmod 600 ~/.ai-current
+    fi
+    echo "$name 을 저장했습니다 ($done). 바꾸려면 (\$ ai-switch $name)"
+    return 0
+  fi
+  if [ "$1" = current ]; then
+    # Claude Code 는 상태줄 같은 하위 프로세스에 토큰을 넘기지 않아, 없으면 저장값(새로 켤 때 쓰는 값)을 본다
+    local cur="${CLAUDE_CODE_OAUTH_TOKEN:+CLAUDE_CODE_OAUTH_TOKEN=$CLAUDE_CODE_OAUTH_TOKEN}"
+    [ -n "$cur" ] || cur=$(grep '^CLAUDE_CODE_OAUTH_TOKEN=' ~/.ai-current 2>/dev/null)
+    for e in "${AI_ACCOUNTS[@]}"; do
+      line="${e#*|}"; line="${line%%|*}"
+      [ -n "$cur" ] && [ "$line" = "$cur" ] && { echo "acct: ${e%%|*}"; return 0; }
+    done
+    if [ -n "$cur" ]; then echo "acct: unknown token"; else echo "acct: /login"; fi
+    return 0
+  fi
+  if [ "$1" = list ]; then
+    echo "계정 목록 (\$ ai-switch list)"
+    for e in "${AI_ACCOUNTS[@]}"; do
+      line="${e#*|}"; line="${line%%|*}"
+      mark=
+      grep -qxF "$line" ~/.ai-current 2>/dev/null && mark='다음 실행'
+      [ "$(printenv "${line%%=*}")" = "${line#*=}" ] && mark="${mark:+$mark · }지금 실행 중"
+      printf '  %-14s %-8s %s\n' "${e%%|*}" "${e##*|}" "${mark:+← $mark}"
+    done
+    [ ${#AI_ACCOUNTS[@]} -gt 0 ] || { echo "등록된 계정이 없습니다. 추가하려면 (\$ ai-switch add <claude|codex> <이름>)"; return 0; }
+    echo "다음 실행 = 새로 켜는 claude·codex 가 쓸 계정 / 지금 실행 중 = 이 명령을 부른 프로그램(Claude Code 안이면 그 세션)이 쓰는 계정"
+    [ -z "$CLAUDE_CODE_OAUTH_TOKEN" ] && printf '%s\n' "${AI_ACCOUNTS[@]}" | grep -q '|claude$' && echo "지금 실행 중인 claude 는 토큰 없이 로그인 계정(/login)을 씁니다."
+    return 0
+  fi
+  echo "계정 바꾸기 (\$ ai-switch${1:+ $1})"
+  for e in "${AI_ACCOUNTS[@]}"; do names+=("${e%%|*}"); done
+  pick="$1"
+  [ -n "$pick" ] || select pick in "${names[@]}"; do break; done
+  for e in "${AI_ACCOUNTS[@]}"; do
+    [ "${e%%|*}" = "$pick" ] || continue
+    line="${e#*|}"; line="${line%%|*}"
+    { grep -v "^${line%%=*}=" ~/.ai-current 2>/dev/null; echo "$line"; } > ~/.ai-current.tmp
+    mv ~/.ai-current.tmp ~/.ai-current; chmod 600 ~/.ai-current
+    echo "$pick 로 바꿨습니다. 이미 켜진 claude·codex·앱은 다시 켜야 적용됩니다. 지금 계정은 Claude Code 하단 상태줄이나 (\$ ai-switch list) 로 확인하세요."
+    return 0
+  done
+  echo "없는 이름입니다: $pick  (있는 이름: ${names[*]})"; return 1
+}
+
+claude() { env $(cat ~/.ai-current 2>/dev/null) claude "$@"; }
+codex()  { env $(cat ~/.ai-current 2>/dev/null) codex "$@"; }
+
+# ===== Windows (PowerShell) =====
+#W $AI_ACCOUNTS = @(
+#W )
+#W function ai-switch($cmd, $tool, $name) {
+#W   $line = "(`$ ai-switch $((@($cmd, $tool, $name) -ne $null) -join ' '))"
+#W   if ($cmd -eq 'add') {
+#W     "계정 추가 $line"
+#W     if ($args.Count -gt 0 -or $tool -notin 'claude', 'codex') { "사용법 (`$ ai-switch add <claude|codex> <이름>), 이름에 공백 불가"; return }
+#W     if ($name -notmatch '^[A-Za-z0-9_-]+$') { "이름은 영문·숫자·_·- 만 됩니다 (`$ ai-switch add $tool <이름>)"; return }
+#W     if ($name -in 'add', 'list', 'current') { "add·list·current 는 명령이라 이름으로 쓸 수 없습니다."; return }
+#W     if ($tool -eq 'claude') {
+#W       if ([Console]::IsInputRedirected) { "토큰은 터미널에서 입력해야 합니다 (`$ ai-switch add claude $name)"; return }
+#W       $s = Read-Host '토큰을 붙여넣고 Enter (화면에 안 보임)' -AsSecureString
+#W       $tok = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($s))
+#W       if ($tok -notlike 'sk-ant-oat01-*') { "토큰 형식이 아닙니다. 다시 실행해 주세요."; return }
+#W       if ($tok.Length -lt 100) { "토큰이 잘린 것 같습니다 ($($tok.Length)자, 보통 108자). 줄바꿈된 뒷부분까지 복사해 주세요."; return }
+#W       $a = @{ name = $name; var = 'CLAUDE_CODE_OAUTH_TOKEN'; value = $tok; memo = 'claude' }
+#W     } else {
+#W       $a = @{ name = $name; var = 'CODEX_HOME'; value = "$HOME/.codex-$name"; memo = 'codex' }
+#W     }
+#W     $f = "$HOME/.ai-subscription"
+#W     $row = "  @{ name='$($a.name)'; var='$($a.var)'; value=`"$($a.value)`"; memo='$($a.memo)' }"
+#W     $done = if ($AI_ACCOUNTS | Where-Object { $_.name -eq $name }) { '덮어쓰기' } else { '추가' }
+#W     # Get-Content·Set-Content 는 5.1 에서 CP949 로 읽고 써 한글이 깨진다 → BOM 없는 UTF-8·LF 유지
+#W     $lines = [IO.File]::ReadAllLines($f) | Where-Object { $_ -notlike "  @{ name='$name';*" } | ForEach-Object { $_; if ($_ -eq '$AI_ACCOUNTS = @(') { $row } }
+#W     [IO.File]::WriteAllText($f, (($lines -join "`n") + "`n"))
+#W     $global:AI_ACCOUNTS = @($a) + @($AI_ACCOUNTS | Where-Object { $_.name -ne $name })
+#W     "$name 을 저장했습니다 ($done). 바꾸려면 (`$ ai-switch $name)"; return
+#W   }
+#W   if ($cmd -eq 'current') {
+#W     # Claude Code 는 상태줄 같은 하위 프로세스에 토큰을 넘기지 않아, 없으면 User 값(새로 켤 때 쓰는 값)을 본다
+#W     $t = $env:CLAUDE_CODE_OAUTH_TOKEN; if (-not $t) { $t = [Environment]::GetEnvironmentVariable('CLAUDE_CODE_OAUTH_TOKEN', 'User') }
+#W     $a = $AI_ACCOUNTS | Where-Object { $_.var -eq 'CLAUDE_CODE_OAUTH_TOKEN' -and $t -and $_.value -eq $t } | Select-Object -First 1
+#W     if ($a) { "acct: $($a.name)" } elseif ($t) { 'acct: unknown token' } else { 'acct: /login' }
+#W     return
+#W   }
+#W   if ($cmd -eq 'list') {
+#W     "계정 목록 $line"
+#W     foreach ($a in $AI_ACCOUNTS) {
+#W       $mark = @()
+#W       if ([Environment]::GetEnvironmentVariable($a.var, 'User') -eq $a.value) { $mark += '다음 실행' }
+#W       if ([Environment]::GetEnvironmentVariable($a.var, 'Process') -eq $a.value) { $mark += '지금 실행 중' }
+#W       "  {0,-14} {1,-8} {2}" -f $a.name, $a.memo, $(if ($mark) { '← ' + ($mark -join ' · ') } else { '' })
+#W     }
+#W     if (-not $AI_ACCOUNTS) { "등록된 계정이 없습니다. 추가하려면 (`$ ai-switch add <claude|codex> <이름>)"; return }
+#W     "다음 실행 = 새로 켜는 claude·codex 가 쓸 계정 / 지금 실행 중 = 이 명령을 부른 프로그램(Claude Code 안이면 그 세션)이 쓰는 계정"
+#W     if (-not $env:CLAUDE_CODE_OAUTH_TOKEN -and ($AI_ACCOUNTS | Where-Object { $_.memo -eq 'claude' })) { "지금 실행 중인 claude 는 토큰 없이 로그인 계정(/login)을 씁니다." }
+#W     return
+#W   }
+#W   "계정 바꾸기 $line"
+#W   $pick = $cmd
+#W   if (-not $pick) {
+#W     for ($i = 0; $i -lt $AI_ACCOUNTS.Count; $i++) { "{0}) {1}" -f ($i + 1), $AI_ACCOUNTS[$i].name }
+#W     $pick = $AI_ACCOUNTS[[int](Read-Host '번호') - 1].name
+#W   }
+#W   $a = $AI_ACCOUNTS | Where-Object { $_.name -eq $pick }
+#W   if (-not $a) { "없는 이름입니다: $pick"; return }
+#W   [Environment]::SetEnvironmentVariable($a.var, $a.value, 'User')
+#W   Set-Item "env:$($a.var)" $a.value
+#W   "$pick 로 바꿨습니다. 이미 켜진 claude·codex·앱은 다시 켜야 적용됩니다. 지금 계정은 Claude Code 하단 상태줄이나 (`$ ai-switch list) 로 확인하세요."
+#W }

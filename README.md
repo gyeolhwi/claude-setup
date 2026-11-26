@@ -44,6 +44,7 @@ claude-setup/
 │   ├── git-*        커밋·PR·릴리스·보드
 │   ├── repo-init    새 프로젝트 세팅
 │   ├── docs-tidy    문서 정리·INDEX
+│   ├── ai-switch    AI 구독 계정 전환
 │   └── deck         발표자료
 ├── commands/        슬래시 명령
 │   ├── project/     docs 협업

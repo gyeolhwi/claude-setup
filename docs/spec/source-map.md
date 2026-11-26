@@ -9,7 +9,7 @@ related_files:
   - commands/
   - skills/
   - hooks/
-last_updated: "2026-11-12"
+last_updated: "2026-11-26"
 ---
 
 # 원본 자산 지도와 자주 묻는 질문
@@ -49,6 +49,11 @@ assets:
     title: 발표자료 스킬 (deck)
     summary: 기획안(plan.md) 고정 형식·형태 17종 카탈로그·문구 규칙과 check·build·render 를 하는 deck.js. 예시의 고객사 이름은 익명화했다. npm 의존성은 설치 때 받는다.
     keywords: [deck, 발표자료, PPT, pptx, 기획안, plan.md, pptxgenjs, libreoffice]
+
+  - path: skills/ai-switch/
+    title: AI 구독 계정 전환 스킬 (ai-switch)
+    summary: Claude·Codex 계정을 init·목록·추가·switch 하는 SKILL.md 와, init 때 ~/.ai-subscription 으로 복사되는 ai-switch 셸·PowerShell 함수 템플릿. 토큰은 저장소에 두지 않는다.
+    keywords: [ai-switch, 계정, 구독, claude, codex, 토큰, CLAUDE_CODE_OAUTH_TOKEN, CODEX_HOME, 상태줄]
 
   - path: hooks/
     title: git-convention 훅

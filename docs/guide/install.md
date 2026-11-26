@@ -7,7 +7,7 @@ keywords: [설치, install, install.sh, 세팅, 심볼릭링크, symlink, copy, 
 related_files:
   - install.sh
   - docs/guide/prerequisites.md
-last_updated: 2026-11-22
+last_updated: 2026-11-26
 ---
 
 # 설치와 세팅
@@ -66,6 +66,7 @@ Obsidian 커맨드는 볼트 경로를 치환해야 해서 **옵션과 무관하
 | `skills/issue-create/` `issue-start/` `issue-end/` `issue-merge/` | `~/.claude/skills/` | |
 | `skills/repo-init/` | `~/.claude/skills/repo-init/` | `issue-create` 와 같은 폴더에 있어야 한다 (스크립트를 가져다 쓴다) |
 | `skills/docs-tidy/` | `~/.claude/skills/docs-tidy/` | INDEX 생성에 python3 + uv(pyyaml) 사용 |
+| `skills/ai-switch/` | `~/.claude/skills/ai-switch/` | 설치 뒤 `/ai-switch` → init 으로 `~/.ai-subscription` 을 만든다 |
 | `skills/omc-learned/project-docs-gen/` | `~/.claude/skills/omc-learned/project-docs-gen/` | 템플릿 10종 |
 
 커맨드는 폴더 구조가 **펼쳐져서** 들어간다. 저장소에서는 `commands/project/project-docs.md` 지만
@@ -121,7 +122,7 @@ gh auth status
 ```bash
 mkdir -p ~/.claude/commands ~/.claude/skills
 cp commands/project/*.md ~/.claude/commands/
-for s in git-commit git-pr git-release git-board gh-setup issue-create issue-start issue-end issue-merge repo-init docs-tidy; do
+for s in git-commit git-pr git-release git-board gh-setup issue-create issue-start issue-end issue-merge repo-init docs-tidy ai-switch; do
   cp -R skills/$s ~/.claude/skills/
 done
 mkdir -p ~/.claude/skills/omc-learned
@@ -147,7 +148,7 @@ cat hooks/git-convention.CLAUDE.md >> ~/.claude/CLAUDE.md
 `--copy` 로 설치한 뒤 `~/.claude/` 쪽에서 고쳤다면 저장소로 되돌려 맞춘다.
 
 ```bash
-for s in git-commit git-pr git-release git-board gh-setup issue-create issue-start issue-end issue-merge repo-init docs-tidy; do
+for s in git-commit git-pr git-release git-board gh-setup issue-create issue-start issue-end issue-merge repo-init docs-tidy ai-switch; do
   rsync -a --delete --exclude '.DS_Store' ~/.claude/skills/$s/ skills/$s/
 done
 ```
