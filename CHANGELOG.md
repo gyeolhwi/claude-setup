@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.5.0 — 2026-11-26
+
+AI 구독 계정 전환 스킬(ai-switch)이 함께 설치됩니다. `/ai-switch` 로 Claude·Codex 계정을 세팅하고, 목록을 보고, 추가하고, 바꿀 수 있습니다.
+
+### 업데이트 전 확인할 것
+- 다른 컴퓨터는 `git pull` 후 `./install.sh --copy --no-obsidian` 으로 다시 설치해야 반영됨
+- 처음 쓰는 컴퓨터는 `/ai-switch` → init 을 한 번 실행해야 `~/.ai-subscription` 이 만들어짐
+
+### 새 기능
+- `/ai-switch`: Claude·Codex 구독 계정을 세팅·목록·추가·전환하는 스킬이 `install.sh` 로 함께 설치됨 (338de40)
+
+**전체 변경**: https://github.com/gyeolhwi/claude-setup/compare/v0.4.0...v0.5.0
+
 ## v0.4.0 — 2026-11-23
 
 문서 정리 스킬(docs-tidy)이 함께 설치되고, docs-tidy·repo-init 이 만드는 README 가 사람과 AI 모두 한 번에 프로젝트를 파악할 수 있는 정해진 형식으로 바뀌었습니다. 근거 없는 실행 명령(`npm run dev` 등)을 지어 넣던 문제도 고쳤습니다.
